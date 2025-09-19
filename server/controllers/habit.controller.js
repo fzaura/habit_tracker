@@ -86,6 +86,10 @@ const updateHabit = async (req, res, next) => {
 
   const { name, goal, frequency, endDate } = req.body;
 
+  if (frequency === "daily") {
+    frequency = [0, 1, 2, 3, 4, 5, 6];
+  }
+
   const { id } = req.params;
   const userId = req.user.userId;
 
