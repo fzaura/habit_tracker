@@ -249,6 +249,81 @@ const getTodaysHabits = async (req, res, next) => {
   }
 };
 
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getWeeklyHabits = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const userId = req.user.userId;
+
+    const { date: dateString } = req.body;
+
+    const today = new Date(dateString);
+    const dayOfWeek = today.getDay();
+    const offsetToMonday = (dayOfWeek + 6) % 7;
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - offsetToMonday);
+    startOfWeek.setUTCHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(today.getDate() + 6);
+    endOfWeek.setUTCHours(23, 59, 59, 999);
+
+    const habits = await Habit.find({ userId }).lean();
+
+    const completions = await HabitCompletion.find({
+      userId,
+      dateOfCompletion: {
+        $gte: startOfWeek,
+        $lse: endOfWeek,
+      },
+    }).lean();
+
+    const completionsMap = new Map();
+    completions.forEach((comp) => {
+      const dateKey = comp.dateOfCompletion.toISOString().split("T")[0];
+      if (!completionsMap.has(dateKey)) {
+        completionsMap.set(dateKey, new Set());
+      }
+
+      completionsMap.get(dateKey).add(comp.habitId.toString());
+    });
+
+    const weeklyData = {
+      startOfWeek,
+      endOfWeek,
+      habits: habits.map((habit) => {
+        const weeklyCompletions = {};
+        for (let i = 0; i < 7; i++) {
+          const day = new Date(startOfWeek);
+          day.setDate(startOfWeek.getDate() + i);
+          const dayKey = day.toISOString().split("T")[0];
+
+          weeklyCompletions[dayKey] =
+            completionsMap.has(dayKey) &&
+            completionsMap.get(dayKey).has(habit._id.toString());
+        }
+
+        return { ...habit, weeklyCompletions };
+      }),
+    };
+
+    return res.status(200).json({ weeklyData });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createHabit,
   getHabits,
