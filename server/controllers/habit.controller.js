@@ -331,4 +331,5 @@ module.exports = {
   updateHabit,
   markAsCompleted,
   getTodaysHabits,
+  getWeeklyHabits,
 };
