@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const { fnsParse, fnsIsValid } = require("date-fns");
 
 const addHabitValidator = [
   body("name")
@@ -45,4 +46,17 @@ const addHabitValidator = [
     .toDate(),
 ];
 
-module.exports = { addHabitValidator };
+const habitDateValidator = [
+  body("date", "Please provide a valid date in yyyy-MM-DD formar.")
+    .isString()
+    .custom((value) => {
+      const date = fnsParse(value, "yyyy-MM-dd", new Date());
+      if (!fnsIsValid(date)) {
+        throw new Error("Date provided is invalid.");
+      }
+
+      return true;
+    }),
+];
+
+module.exports = { addHabitValidator, habitDateValidator };
