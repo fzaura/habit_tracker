@@ -203,10 +203,50 @@ const markAsCompleted = async (req, res, next) => {
   }
 };
 
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getTodaysHabits = async (req, res, next) => {
+  const userId = req.user.userId;
+  const today = new Date().getUTCDay();
+
+  try {
+    const activeHabits = await Habit.findOne({
+      userId,
+      "frequency.daysOfWeek": { $in: [today] },
+    }).lean();
+
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
+
+    const todaysCompletions = await HabitCompletion.find({
+      userId,
+      dateOfCompletion: startOfToday,
+    });
+
+    const completedHabits = new Set(
+      todaysCompletions.map((comp) => comp.habitId.toString())
+    );
+
+    const todaysHabits = activeHabits.map((habit) => ({
+      ...habit,
+      isCompletedToday: completedHabits.has(habit._id.toString()),
+    }));
+
+    res.status(200).json({ data: todaysHabits });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createHabit,
   getHabits,
   deleteHabit,
   updateHabit,
   markAsCompleted,
+  getTodaysHabits,
 };
