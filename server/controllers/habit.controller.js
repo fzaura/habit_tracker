@@ -181,7 +181,7 @@ const markAsCompleted = async (req, res, next) => {
     const existingCompletion = await HabitCompletion.findOne({
       habitId: id,
       userId,
-      date: dateOfCompletion,
+      dateOfCompletion,
     });
 
     if (existingCompletion) {
