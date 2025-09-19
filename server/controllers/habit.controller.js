@@ -115,4 +115,36 @@ const updateHabit = async (req, res, next) => {
   }
 };
 
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getHabits = async (req, res, next) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  const skip = (page - 1) * limit;
+  const userId = req.user.userId;
+
+  try {
+    const [habits, numberOfDocuments] = await Promise.all([
+      Habit.find({ userId }).limit(limit).skip(skip),
+      Habit.countDocuments({ userId }),
+    ]);
+
+    const totalPages = Math.ceil(numberOfDocuments / limit);
+    return res.status(200).json({
+      data: habits,
+      pagination: {
+        totalItems: numberOfDocuments,
+        totalPages,
+        currentPage: page,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = { createHabit };
