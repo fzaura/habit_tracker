@@ -17,13 +17,16 @@ const createHabit = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, goal, completionStatus, frequency, endDate } = req.body;
+  const { name, goal, frequency, endDate } = req.body;
+
+  if (frequency === "daily") {
+    frequency.daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
+  }
 
   try {
     const newHabit = new Habit({
       name,
       goal,
-      completionStatus,
       frequency,
       endDate,
       userId: req.user.userId,
