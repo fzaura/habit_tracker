@@ -17,24 +17,26 @@ const addHabitValidator = [
     .withMessage("Habit goal cannot exceed 100 characters")
     .escape(),
 
-  body("completionStatus")
-    .isBoolean()
-    .withMessage("Completion status must be a boolean (true or false)"),
-
   body("frequency.type")
-    .isIn(["daily", "weekly", "specific_days"])
+    .isIn(["daily", "weekly"])
     .withMessage("Frequency must be one of: daily, weekly, or specific_days"),
 
-  body("frequency.times")
-    .optional()
+  body("frequency.timesPerDay")
     .isInt({ min: 1, max: 7 })
     .withMessage("Times must be a positive number."),
 
-  body("frequency.days")
-    .optional()
-    .isInt(
-      { min: 1, max: 7 }.withMessage("Day must be a number between 1 and 7")
-    ),
+  body("frequency.daysOfWeek")
+    .isArray()
+    .withMessage("daysOfWeek must be an array.")
+    .custom((days) => {
+      if (days.some((day) => typeof day !== number || day < 0 || day > 7)) {
+        throw new console.error(
+          "Each day in daysOfWeek must be a number between 0 and 6"
+        );
+      }
+
+      return true;
+    }),
 
   body("endDate")
     .optional()
