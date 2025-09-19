@@ -5,10 +5,12 @@ const habitCompletionSchema = new Schema(
   {
     habitId: {
       type: mongoose.Schema.ObjectId,
+      ref: "Habit",
       required: true,
     },
     userId: {
       type: mongoose.Schema.ObjectId,
+      ref: "User",
       required: true,
     },
     dateOfCompletion: {
