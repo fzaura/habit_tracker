@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const { validateJWT } = require("../middleware/auth.middleware");
 const Habit = require("../models/habit.model");
+const HabitCompletion = require("../models/habitCompletion.model");
 
 const { validationResult } = require("express-validator");
 /**
@@ -17,10 +18,6 @@ const createHabit = async (req, res, next) => {
   }
 
   const { name, goal, completionStatus, frequency, endDate } = req.body;
-
-  if ((!name || !goal || !completionStatus || !frequency, !endDate)) {
-    return res.status(400).json({ message: "Please provide all fields." });
-  }
 
   try {
     const newHabit = new Habit({
@@ -84,11 +81,8 @@ const updateHabit = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, goal, completionStatus, frequency, endDate } = req.body;
+  const { name, goal, frequency, endDate } = req.body;
 
-  if ((!name || !goal || !completionStatus || !frequency, !endDate)) {
-    return res.status(400).json({ message: "Please provide all fields." });
-  }
   const { id } = req.params;
   const userId = req.user.userId;
 
@@ -97,9 +91,9 @@ const updateHabit = async (req, res, next) => {
   }
 
   try {
-    const updatedHabit = Habit.findOneAndUpdate(
+    const updatedHabit = await Habit.findOneAndUpdate(
       { _id: id, userId },
-      { name, goal, completionStatus, frequency, endDate },
+      { name, goal, frequency, endDate },
       { new: true, runValidators: true }
     );
 
@@ -109,7 +103,9 @@ const updateHabit = async (req, res, next) => {
         .json({ message: "Habit not found or user is unauthorized." });
     }
 
-    return res.status(200).json({ message: "Habit updated successfully." });
+    return res
+      .status(200)
+      .json({ message: "Habit updated successfully.", habit: updateHabit });
   } catch (error) {
     next(error);
   }
@@ -122,8 +118,8 @@ const updateHabit = async (req, res, next) => {
  * @param {import('express').NextFunction} next
  */
 const getHabits = async (req, res, next) => {
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
   const userId = req.user.userId;
 
@@ -147,4 +143,67 @@ const getHabits = async (req, res, next) => {
   }
 };
 
-module.exports = { createHabit };
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const markAsCompleted = async (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid habit ID format" });
+  }
+
+  try {
+    const result = await Habit.findOne({ _id: id, userId });
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: "Habit not found or user is unauthorized." });
+    }
+
+    const dateOfCompletion = req.body.date
+      ? new Date(req.body.date)
+      : new Date();
+
+    dateOfCompletion.setUTCHours(0, 0, 0, 0);
+
+    const existingCompletion = await HabitCompletion.findOne({
+      habitId: id,
+      userId,
+      date: dateOfCompletion,
+    });
+
+    if (existingCompletion) {
+      return res
+        .status(409)
+        .json({ message: "Habit already marked as complete for the day." });
+    }
+
+    const newHabitCompletion = new HabitCompletion({
+      habitId: id,
+      userId,
+      dateOfCompletion,
+    });
+
+    await newHabitCompletion.save();
+
+    return res.status(201).json({
+      message: "Habit successfully marked as completed.",
+      completion: newHabitCompletion,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createHabit,
+  getHabits,
+  deleteHabit,
+  updateHabit,
+  markAsCompleted,
+};
