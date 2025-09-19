@@ -21,10 +21,6 @@ const habitSchema = new Schema(
         enum: ["daily", "weekly"],
         required: true,
       },
-      timesPerDay: {
-        type: Number,
-        default: 1,
-      },
       daysOfWeek: {
         type: [Number],
         required: true,
