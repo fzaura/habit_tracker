@@ -1,6 +1,8 @@
+const { default: mongoose } = require("mongoose");
 const { validateJWT } = require("../middleware/auth.middleware");
 const Habit = require("../models/habit.model");
 
+const { validationResult } = require("express-validator");
 /**
  *
  * @param {import('express').Request} req
@@ -8,6 +10,12 @@ const Habit = require("../models/habit.model");
  * @param {import('express').NextFunction} next
  */
 const createHabit = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { name, goal, completionStatus, frequency, endDate } = req.body;
 
   if ((!name || !goal || !completionStatus || !frequency, !endDate)) {
@@ -29,6 +37,79 @@ const createHabit = async (req, res, next) => {
     return res
       .status(201)
       .json({ message: "New habit successfully added.", habit: newHabit });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const deleteHabit = async (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid habit ID format." });
+  }
+
+  try {
+    const result = await Habit.deleteOne({ _id: id, userId });
+
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Task not found or user is unauthorized." });
+    }
+
+    return res.status(200).json({ message: "Task deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ *
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const updateHabit = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { name, goal, completionStatus, frequency, endDate } = req.body;
+
+  if ((!name || !goal || !completionStatus || !frequency, !endDate)) {
+    return res.status(400).json({ message: "Please provide all fields." });
+  }
+  const { id } = req.params;
+  const userId = req.user.userId;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid habit ID format" });
+  }
+
+  try {
+    const updatedHabit = Habit.findOneAndUpdate(
+      { _id: id, userId },
+      { name, goal, completionStatus, frequency, endDate },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedHabit) {
+      return res
+        .status(404)
+        .json({ message: "Habit not found or user is unauthorized." });
+    }
+
+    return res.status(200).json({ message: "Habit updated successfully." });
   } catch (error) {
     next(error);
   }
