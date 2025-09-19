@@ -6,7 +6,8 @@ const registerValidator = [
     .notEmpty()
     .withMessage("Username is required.")
     .isLength({ max: 12, min: 5 })
-    .withMessage("Username has to be between 5 and 12 characters long."),
+    .withMessage("Username has to be between 5 and 12 characters long.")
+    .escape(),
 
   body("email")
     .trim()
@@ -14,7 +15,8 @@ const registerValidator = [
     .withMessage("Email is required.")
     .isEmail()
     .withMessage("Please enter a valid email address.")
-    .normalizeEmail(),
+    .normalizeEmail()
+    .escape(),
 
   body("password")
     .trim()
