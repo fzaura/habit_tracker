@@ -160,29 +160,32 @@ const markAsCompleted = async (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.userId;
 
+  const { date: dateString } = req.body;
+  if (!dateString) {
+    return res
+      .status(400)
+      .json({ message: "A date string is required in the form YYYY-MM-DD" });
+  }
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid habit ID format" });
   }
 
   try {
-    const result = await Habit.findOne({ _id: id, userId });
-    if (!result) {
+    const habit = await Habit.findOne({ _id: id, userId });
+    if (!habit) {
       return res
         .status(404)
         .json({ message: "Habit not found or user is unauthorized." });
     }
 
-    const dateOfCompletion = req.body.date
-      ? new Date(req.body.date)
-      : new Date();
-
-    dateOfCompletion.setUTCHours(0, 0, 0, 0);
+    const dateOfCompletion = new Date(dateString);
 
     const existingCompletion = await HabitCompletion.findOne({
       habitId: id,
       userId,
       dateOfCompletion,
-    });
+    }).lean();
 
     if (existingCompletion) {
       return res
