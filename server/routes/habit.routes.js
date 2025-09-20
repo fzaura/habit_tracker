@@ -9,31 +9,22 @@ const {
   updateHabitValidator,
 } = require("../validators/habit.validator");
 
-router.post(
-  "/habits",
-  authenticateJWT,
-  addHabitValidator,
-  habitController.createHabit
-);
+router.use(authenticateJWT);
 
-router.delete("/habits/:id", authenticateJWT, habitController.deleteHabit);
+router.post("/habits", addHabitValidator, habitController.createHabit);
 
-router.put(
-  "/habits/:id",
-  authenticateJWT,
-  updateHabitValidator,
-  habitController.updateHabit
-);
+router.delete("/habits/:id", habitController.deleteHabit);
 
-router.get("/habits", authenticateJWT, habitController.getHabits);
+router.put("/habits/:id", updateHabitValidator, habitController.updateHabit);
 
-router.get("/todays-habits", authenticateJWT, habitController.getTodaysHabits);
+router.get("/habits", habitController.getHabits);
 
-router.get("/weekly-habits", authenticateJWT, habitController.getWeeklyHabits);
+router.get("/todays-habits", habitController.getTodaysHabits);
+
+router.get("/weekly-habits", habitController.getWeeklyHabits);
 
 router.post(
   "/habits/:id/completions",
-  authenticateJWT,
   markCompleteValidator,
   habitController.markAsCompleted
 );
