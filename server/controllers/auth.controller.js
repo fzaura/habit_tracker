@@ -115,34 +115,59 @@ const updateUser = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array });
+    return res.status(400).json({ errors: errors.array() });
   }
 
   const userId = req.user.userId;
+
   const { username, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
-      if (existingUser.username === username) {
-        return res.status(409).json({ message: "Username already in use." });
-      }
+    if (username || email) {
+      const existingUser = await User.findOne({
+        $or: [{ username }, { email }],
+        _id: { $ne: userId },
+      });
 
-      return res.status(409).json({ message: "Email already in use." });
+      if (existingUser) {
+        if (existingUser.username === username) {
+          return res.status(409).json({ message: "Username already in use." });
+        }
+
+        return res.status(409).json({ message: "Email already in use." });
+      }
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      parseInt(process.env.SALT_ROUNDS)
-    );
+    const updateFields = {};
+    if (username) updateFields.username = username;
+    if (email) updateFields.email = email;
+
+    if (password) {
+      const saltRounds = parseInt(process.env.SALT_ROUNDS || 10);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      updateFields.password = hashedPassword;
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No update information provided." });
+    }
 
     const updateUser = await User.findOneAndUpdate(
       { _id: userId },
-      { username, email, hashedPassword },
+      { $set: updateFields },
       { new: true, runValidators: true }
-    );
+    ).select("-password");
 
-    return res.status(200).json({ message: "User info successfully updated." });
+    if (!updateUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "User info successfully updated.", user: updateUser });
   } catch (error) {
     next(error);
   }
