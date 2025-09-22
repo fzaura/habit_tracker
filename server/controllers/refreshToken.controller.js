@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const RefreshToken = require("../models/refreshToken.model");
 
+const { validationResult } = require("express-validator");
+
 /**
  *
  * @param {import('express').Request} req
@@ -8,11 +10,12 @@ const RefreshToken = require("../models/refreshToken.model");
  * @param {import('express').NextFunction} next
  */
 exports.getNewAccessToken = async (req, res, next) => {
-  const { refreshToken } = req.body;
-
-  if (!refreshToken) {
-    return res.status(401).json({ message: "Refresh token is required." });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
+
+  const { refreshToken } = req.body;
 
   try {
     const storedToken = await RefreshToken.findOne({ value: refreshToken });
