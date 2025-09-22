@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const { parse, isValid } = require("date-fns");
 
 const validateDaysOfWeek = (value, { req }) => {
@@ -95,8 +95,13 @@ const updateHabitValidator = [
     .toDate(),
 ];
 
+const validateIdParam = [
+  param("id").isMongoId().withMessage("Invalid ID format in URL"),
+];
+
 module.exports = {
   addHabitValidator,
   markCompleteValidator,
   updateHabitValidator,
+  validateIdParam,
 };
