@@ -7,24 +7,28 @@ const {
   addHabitValidator,
   markCompleteValidator,
   updateHabitValidator,
+  validateIdParam,
 } = require("../validators/habit.validator");
 
 router.use(authenticateJWT);
 
-router.post("/habits", addHabitValidator, habitController.createHabit);
+router
+  .route("/")
+  .post(addHabitValidator, habitController.createHabit)
+  .get(habitController.getHabits);
 
-router.delete("/habits/:id", habitController.deleteHabit);
+router
+  .route("/:id")
+  .delete(validateIdParam, habitController.deleteHabit)
+  .put(validateIdParam, updateHabitValidator, habitController.updateHabit);
 
-router.put("/habits/:id", updateHabitValidator, habitController.updateHabit);
+router.get("/today", habitController.getTodaysHabits);
 
-router.get("/habits", habitController.getHabits);
-
-router.get("/todays-habits", habitController.getTodaysHabits);
-
-router.get("/weekly-habits", habitController.getWeeklyHabits);
+router.get("/weekly", habitController.getWeeklyHabits);
 
 router.post(
-  "/habits/:id/completions",
+  "/:id/completions",
+  validateIdParam,
   markCompleteValidator,
   habitController.markAsCompleted
 );
