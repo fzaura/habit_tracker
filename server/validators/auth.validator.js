@@ -100,4 +100,11 @@ const updateUserValidator = [
     }),
 ];
 
+const refreshTokenValidator = [
+  body("refreshToken")
+    .trim()
+    .notEmpty()
+    .withMessage("Refresh token is required."),
+];
+
 module.exports = { registerValidator, loginValidator, updateUserValidator };
