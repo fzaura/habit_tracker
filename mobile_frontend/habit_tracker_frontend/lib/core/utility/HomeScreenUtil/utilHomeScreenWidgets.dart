@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/globalData.dart';
 import 'package:habit_tracker/app/themes.dart';
-import 'package:habit_tracker/core/utility/stateFulUtil/habitsCheckCard.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsCheckCard.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
 import 'package:habit_tracker/data/Models/UIModels/habit.dart';
 
 class UtilHomeScreenWidgets {
@@ -63,7 +64,7 @@ class UtilHomeScreenWidgets {
     );
   }
 
-  static Widget listHeader(String name, {required VoidCallback onPressButton}) {
+  static Widget listHeader(String name, VoidCallback? onPressButton) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -76,24 +77,28 @@ class UtilHomeScreenWidgets {
           ),
         ),
         SizedBox(width: 128),
-        TextButton(
-          onPressed: onPressButton,
-          child: Text(
-            'See all',
-            style: GoogleFonts.nunito(
-              color: mainAppTheme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+        if (onPressButton != null)
+          TextButton(
+            onPressed: onPressButton,
+            child: Text(
+              'See all',
+              style: GoogleFonts.nunito(
+                color: mainAppTheme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
 
   static Widget todayHabitContainer(
     List<Habit> habits, {
-    required VoidCallback pressSeeAll,
+    VoidCallback? pressSeeAll,
+    required bool seeAllHabits,
+    required bool shrinkWrap,
+    double? requiredHeight,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -102,29 +107,18 @@ class UtilHomeScreenWidgets {
       ),
       margin: EdgeInsets.all(6),
       width: double.infinity,
-      constraints: BoxConstraints(maxHeight: 352),
 
+      constraints: requiredHeight != null
+          ? BoxConstraints(maxHeight: requiredHeight)
+          : null,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          listHeader('Today\'s Habits', onPressButton: pressSeeAll),
-          const SizedBox(height: 4),
-          habitsColumn(habits),
+       Flexible(flex: 1,child: listHeader('Today\'s Habits', pressSeeAll)),
+          Flexible(flex: 3,child: Habitslister(seeAll: seeAllHabits, shrinkWrap: shrinkWrap)),
         ],
       ),
     );
   }
-
-  static Widget habitsColumn(List<Habit> habits) {
-    return Column(
-      children: [
-        Habitscheckcard(habitToDisplay: habits[0]),
-        Habitscheckcard(habitToDisplay: habits[1]),
-        Habitscheckcard(habitToDisplay: habits[2]),
-      ],
-    );
-  }
-
-  
 }

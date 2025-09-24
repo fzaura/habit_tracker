@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/statelessUtil/utilAddNewHabit.dart';
-import 'package:habit_tracker/core/utility/stateFulUtil/addNewHabit.dart';
-import 'package:habit_tracker/core/utility/utilHomeScreenWidgets.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
+import 'package:habit_tracker/view(Screens)/HomeScreens/seeAllTodayHabits.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
@@ -69,8 +69,16 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           children: [
             UtilHomeScreenWidgets.homeProgressCard(),
             UtilHomeScreenWidgets.todayHabitContainer(
+              requiredHeight: 352,
+              seeAllHabits: false,
+              shrinkWrap: true,
               habitsList,
-              pressSeeAll: () {},
+              pressSeeAll: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SeeAllTodayHabits()),
+                );
+              },
             ),
           ],
         ),

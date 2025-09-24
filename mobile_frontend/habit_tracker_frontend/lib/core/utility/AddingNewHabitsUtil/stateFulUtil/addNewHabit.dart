@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/themes.dart';
-import 'package:habit_tracker/core/utility/statelessUtil/utilAddNewHabit.dart';
-import 'package:habit_tracker/core/utility/stateFulUtil/dropDownButtonTemp.dart';
-import 'package:habit_tracker/core/utility/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Models/UIModels/habit.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/sucessScreenUtil.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';

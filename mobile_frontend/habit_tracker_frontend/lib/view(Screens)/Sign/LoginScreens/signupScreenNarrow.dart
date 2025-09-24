@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/core/utility/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/data/Models/DataModels/user.dart';
 import 'package:habit_tracker/view(Screens)/Sign/LoginScreens/loginScreenNarrow.dart';

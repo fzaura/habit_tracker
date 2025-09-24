@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/themes.dart';
-import 'package:habit_tracker/core/utility/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/data/Models/DataModels/user.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/mainTabScreen.dart';
