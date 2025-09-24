@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utilAddNewHabit.dart';
+import 'package:habit_tracker/core/utility/statelessUtil/utilAddNewHabit.dart';
+import 'package:habit_tracker/core/utility/stateFulUtil/addNewHabit.dart';
 import 'package:habit_tracker/core/utility/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
@@ -20,11 +21,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   late TextEditingController yourHabitController;
 
   void onAddNewHabit() {
-    UtilAddNewHabit.addNewHabit(
-      context,
-      yourGoalController,
-      yourHabitController,
-    );
+    showDialog(context: context, builder: (context) => Addnewhabit());
   }
 
   @override
@@ -75,7 +72,6 @@ class _HomescreenState extends ConsumerState<Homescreen> {
               habitsList,
               pressSeeAll: () {},
             ),
-
           ],
         ),
       ),

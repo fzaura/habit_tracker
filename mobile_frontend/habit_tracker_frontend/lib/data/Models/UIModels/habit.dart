@@ -16,7 +16,7 @@ class Habit {
     required this.habitName,
     required this.goal,
     required this.habitType,
-    required this.periodValue,
+     this.periodValue=21,
     required this.periodUnit,
     required this.createdAt,
     this.isCompleted = false,

@@ -13,6 +13,10 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
     : super(HabitSamples.getSampleHabits()); //A-Initial Data
 
   //B- Variables that Change that Data in a non immutable way
+  void addNewHabit(Habit newHabit)
+  {
+    state=[...state,newHabit];
+  }
 }
 
 final habitSampleProvider =
