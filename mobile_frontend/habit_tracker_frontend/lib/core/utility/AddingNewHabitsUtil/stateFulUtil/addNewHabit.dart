@@ -71,7 +71,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
+          backgroundColor: Colors.transparent,
           foregroundColor: Colors.white, // Text color
           shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
           elevation: 5, // Shadow elevation
@@ -84,7 +84,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
             ), // Same border radius as text field
           ),
         ),
-        onPressed: () {},
+        onPressed: () {_addNewHabitLogic();},
         child: Text(
           'Add New Habit',
           style: mainAppTheme.textTheme.labelMedium?.copyWith(

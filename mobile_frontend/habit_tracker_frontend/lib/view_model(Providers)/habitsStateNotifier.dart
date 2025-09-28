@@ -20,7 +20,7 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
     state = state.where((habit) => habit.id != id).toList();
   }
 
-  void updateHabits(String id, Habit newEdittedHabit) {
+  void updateHabits(String oldHabitId, Habit newEdittedHabit) {
     state = state
         .map(
           (oldhabit) =>

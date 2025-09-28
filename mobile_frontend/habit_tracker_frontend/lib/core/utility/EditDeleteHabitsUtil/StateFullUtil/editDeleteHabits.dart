@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/themes.dart';
 import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habit.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
 class EditDeleteHabits extends ConsumerStatefulWidget {
   const EditDeleteHabits({super.key, required this.habitToEdit});
@@ -28,7 +30,21 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
     yourHabitController = TextEditingController();
   }
 
-  Widget editTextField(String mainHintText) {
+  void _updateHabitLogic() {
+    Habit newHabit = Habit(
+      id: widget.habitToEdit.id,
+      habitName: yourHabitController.text,
+      goal: yourGoalController.text,
+      habitType: habitGoal,
+      periodUnit: periodUnit,
+      createdAt: widget.habitToEdit.createdAt,
+    );
+    ref
+        .watch(habitSampleProvider.notifier)
+        .updateHabits(widget.habitToEdit.id, newHabit);
+  }
+
+  Widget editTextField(String mainHintText, TextEditingController controller) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -36,17 +52,19 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: TextField(
+        autofocus: true,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: mainHintText,
         ),
+        controller: controller,
       ),
     );
   }
 
   Widget defaultUpdateButton() {
     return Container(
-       decoration: BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [mainAppTheme.cardColor, mainAppTheme.colorScheme.primary],
           begin: Alignment.bottomLeft,
@@ -71,7 +89,10 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
             ), // Same border radius as text field
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          _updateHabitLogic();
+          Navigator.pop(context);
+        },
         child: Text(
           'Update',
           style: mainAppTheme.textTheme.labelMedium?.copyWith(
@@ -84,7 +105,6 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
 
   Widget deleteButton() {
     return Container(
-      
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
       child: ElevatedButton(
@@ -103,7 +123,11 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
           ),
         ),
         onPressed: () {
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (context) =>
+                ConfirmDelete(toDeleteHabitId: widget.habitToEdit.id),
+          );
         },
         child: Text('Delete', style: mainAppTheme.textTheme.labelMedium),
       ),
@@ -139,7 +163,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField(widget.habitToEdit.goal),
+            editTextField(widget.habitToEdit.goal,yourGoalController),
             SizedBox(height: 15),
 
             // Habit Name Field
@@ -151,7 +175,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField(widget.habitToEdit.habitName),
+            editTextField(widget.habitToEdit.habitName,yourHabitController),
 
             SizedBox(height: 15),
 
@@ -181,6 +205,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
                 defaultUpdateButton(),
 
                 // Delete Button
+                deleteButton(),
               ],
             ),
           ],
