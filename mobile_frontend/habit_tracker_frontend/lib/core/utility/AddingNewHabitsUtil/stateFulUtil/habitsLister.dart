@@ -17,7 +17,7 @@ class Habitslister extends ConsumerWidget {
     final habitsToList = ref.watch(habitSampleProvider);
     return ListView.builder(
       shrinkWrap: shrinkWrap,
-      itemCount: seeAll ? habitsToList.length : 3,
+      itemCount: seeAll || (habitsToList.length<=3) ? habitsToList.length : 3,
       itemBuilder: (context, index) {
         final habit = habitsToList[index];
         return Habitscheckcard(habitToDisplay: habit);

@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
+import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habit.dart';
 
 class Habitscheckcard extends StatefulWidget {
-   Habitscheckcard({super.key, required this.habitToDisplay});
+  Habitscheckcard({super.key, required this.habitToDisplay});
   Habit habitToDisplay;
   @override
   State<Habitscheckcard> createState() => _HabitscheckcardState();
 }
 
 class _HabitscheckcardState extends State<Habitscheckcard> {
+  void editOrDelete(String value) {
+    if (value == 'Edit') {
+      showDialog(
+        context: context,
+        builder: (context) =>
+            EditDeleteHabits(habitToEdit: widget.habitToDisplay),
+      );
+    } else if (value == 'Delete') {
+      showDialog(
+        context: context,
+        builder: (context) =>
+            ConfirmDelete(toDeleteHabitId: widget.habitToDisplay.id),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -67,22 +85,11 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                         size: 26,
                       ),
                       onSelected: (String value) {
-                        // Handle menu selection
-                        if (value == 'edit') {
-                          // Handle edit
-                          print(
-                            'Edit habit: ${widget.habitToDisplay.habitName}',
-                          );
-                        } else if (value == 'delete') {
-                          // Handle delete
-                          print(
-                            'Delete habit: ${widget.habitToDisplay.habitName}',
-                          );
-                        }
+                        editOrDelete(value);
                       },
                       itemBuilder: (context) => [
                         PopupMenuItem<String>(
-                          value: 'edit',
+                          value: 'Edit',
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -97,7 +104,7 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                           ),
                         ),
                         PopupMenuItem<String>(
-                          value: 'delete',
+                          value: 'Delete',
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
