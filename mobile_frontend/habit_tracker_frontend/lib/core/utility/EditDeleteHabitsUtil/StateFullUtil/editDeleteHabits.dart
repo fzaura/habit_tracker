@@ -78,6 +78,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
     return Dialog(
       child: Container(
         padding: EdgeInsets.all(24),
+        color: Colors.white,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +88,10 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               'Edit Habit Goal',
               style: mainAppTheme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
+                fontSize: 20
               ),
             ),
+            Divider(),
             SizedBox(height: 20),
 
             // Your Goal Field
