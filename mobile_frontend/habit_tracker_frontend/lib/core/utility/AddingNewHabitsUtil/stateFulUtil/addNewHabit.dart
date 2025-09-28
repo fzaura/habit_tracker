@@ -21,6 +21,22 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
   EnhabitGoal habitGoal = EnhabitGoal.buildHabit;
   EnperiodUnit periodUnit = EnperiodUnit.daily;
 
+  Widget editTextField(String mainHintText) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: mainHintText,
+        ),
+      ),
+    );
+  }
+
   void _addNewHabitLogic() {
     ref
         .read(habitSampleProvider.notifier)
@@ -41,6 +57,67 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
     );
   }
 
+  Widget defaultAddHabitButton() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [mainAppTheme.cardColor, mainAppTheme.colorScheme.primary],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
+          foregroundColor: Colors.white, // Text color
+          shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
+          elevation: 5, // Shadow elevation
+          padding: const EdgeInsets.symmetric(
+            vertical: 14,
+          ), // Matches text field height
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              6,
+            ), // Same border radius as text field
+          ),
+        ),
+        onPressed: () {},
+        child: Text(
+          'Add New Habit',
+          style: mainAppTheme.textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget cancelButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
+        foregroundColor: Colors.white, // Text color
+        shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
+        elevation: 5, // Shadow elevation
+        padding: const EdgeInsets.symmetric(
+          vertical: 14,
+        ), // Matches text field height
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            6,
+          ), // Same border radius as text field
+        ),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: Text('Cancel', style: mainAppTheme.textTheme.labelMedium),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,39 +127,81 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        'Create New Habit',
-        style: mainAppTheme.textTheme.headlineLarge?.copyWith(
-          fontWeight: FontWeight.bold,
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.all(24),
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title
+            Text(
+              'Edit Habit Goal',
+              style: mainAppTheme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            Divider(),
+            SizedBox(height: 20),
+
+            // Your Goal Field
+            Text(
+              'Your Goal',
+              style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5),
+            editTextField(''),
+            SizedBox(height: 15),
+
+            // Habit Name Field
+            Text(
+              'Habit Name',
+              style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5),
+            editTextField(''),
+
+            SizedBox(height: 15),
+
+            // Period Dropdown
+            SizedBox(height: 5),
+            DropDownButtonTemp(
+              buttonName: 'Period',
+              passedEnumValue: periodUnit,
+              enumValues: EnperiodUnit.values,
+            ),
+            SizedBox(height: 15),
+
+            // Habit Type Dropdown
+            DropDownButtonTemp(
+              buttonName: 'Habit Type',
+              passedEnumValue: habitGoal,
+              enumValues: EnhabitGoal.values,
+            ),
+
+            SizedBox(height: 25),
+
+            // Buttons
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Add Button
+                defaultAddHabitButton(),
+
+                // Cancel Button
+                cancelButton(),
+              ],
+            ),
+          ],
         ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Divider(),
-          SigninInputField('Your Goal', yourGoalController, context),
-          SigninInputField('Habit Name', yourHabitController, context),
-          DropDownButtonTemp(
-            buttonName: 'Period',
-            passedEnumValue: periodUnit,
-            enumValues: EnperiodUnit.values,
-          ),
-          DropDownButtonTemp(
-            buttonName: 'Habit Type',
-            passedEnumValue: habitGoal,
-            enumValues: EnhabitGoal.values,
-          ),
-          UtilAddNewHabitUI().defaultCreateHabitButton(
-            text: "Create Habit",
-            onPressed: (context) {
-              _addNewHabitLogic();
-            },
-            ctxt: context,
-          ),
-        ],
       ),
     );
   }

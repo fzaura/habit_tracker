@@ -46,6 +46,14 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
 
   Widget defaultUpdateButton() {
     return Container(
+       decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [mainAppTheme.cardColor, mainAppTheme.colorScheme.primary],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+      ),
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
       child: ElevatedButton(
@@ -74,6 +82,34 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
     );
   }
 
+  Widget deleteButton() {
+    return Container(
+      
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white, // Orange color
+          foregroundColor: Colors.black, // Text color
+          shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
+          elevation: 5, // Shadow elevation
+          padding: const EdgeInsets.symmetric(
+            vertical: 14,
+          ), // Matches text field height
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              6,
+            ), // Same border radius as text field
+          ),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('Delete', style: mainAppTheme.textTheme.labelMedium),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
@@ -88,7 +124,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               'Edit Habit Goal',
               style: mainAppTheme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 20
+                fontSize: 20,
               ),
             ),
             Divider(),
@@ -141,11 +177,10 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Delete Button
+                // Update Button
                 defaultUpdateButton(),
 
-                // Update Button
-                ElevatedButton(onPressed: () {}, child: Text('Delete')),
+                // Delete Button
               ],
             ),
           ],
