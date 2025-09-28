@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
 import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
 import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
-import 'package:habit_tracker/data/Models/UIModels/habit.dart';
+import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class Habitscheckcard extends StatefulWidget {
   Habitscheckcard({super.key, required this.habitToDisplay});
@@ -78,50 +79,8 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                   ),
                   Transform.translate(
                     offset: Offset(-8, 0),
-                    child: PopupMenuButton<String>(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Colors.grey.shade600,
-                        size: 26,
-                      ),
-                      onSelected: (String value) {
-                        editOrDelete(value);
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem<String>(
-                          value: 'Edit',
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.edit,
-                                size: 18,
-                                color: Colors.grey.shade700,
-                              ),
-                              const SizedBox(width: 8),
-                              Text('Edit'),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'Delete',
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.delete,
-                                size: 18,
-                                color: Colors.red.shade600,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.red.shade600),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: UtilAddNewHabitUI().showMoreButton(
+                      showMore: editOrDelete,
                     ),
                   ),
                 ],

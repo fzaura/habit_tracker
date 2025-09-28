@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/data/Dummy%20Data/dummyDataHabit.dart';
-import 'package:habit_tracker/data/Models/UIModels/habit.dart';
+import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }
 

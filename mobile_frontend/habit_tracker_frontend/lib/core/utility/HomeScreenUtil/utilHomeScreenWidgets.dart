@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/globalData.dart';
 import 'package:habit_tracker/app/themes.dart';
 import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
-import 'package:habit_tracker/data/Models/UIModels/habit.dart';
+import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class UtilHomeScreenWidgets {
   static Widget homeScreenWelcomeMessage(final String formattedDate) {

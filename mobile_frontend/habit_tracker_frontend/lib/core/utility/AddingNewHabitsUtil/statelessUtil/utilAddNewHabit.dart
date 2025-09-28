@@ -76,137 +76,36 @@ class UtilAddNewHabitUI {
     );
   }
 
-  void showEditHabitDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      child: Container(
-        padding: EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Edit Habit Goal',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            
-            // Your Goal Field
-            Text('Your Goal', style: TextStyle(fontWeight: FontWeight.w500)),
-            SizedBox(height: 5),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Finish 5 Philosophy Books',
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            
-            // Habit Name Field
-            Text('Habit Name', style: TextStyle(fontWeight: FontWeight.w500)),
-            SizedBox(height: 5),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Read Philosophy',
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            
-            // Period Dropdown
-            Text('Period', style: TextStyle(fontWeight: FontWeight.w500)),
-            SizedBox(height: 5),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: '1 Month (30 Days)',
-                  items: ['1 Month (30 Days)'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            
-            // Habit Type Dropdown
-            Text('Habit Type', style: TextStyle(fontWeight: FontWeight.w500)),
-            SizedBox(height: 5),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: 'Everyday',
-                  items: ['Everyday'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (_) {},
-                ),
-              ),
-            ),
-            SizedBox(height: 25),
-            
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Delete Button
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.red),
-                    ),
-                    child: Text('Delete', style: TextStyle(color: Colors.red)),
-                  ),
-                ),
-                SizedBox(width: 10),
-                
-                // Update Button
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Update'),
-                  ),
-                ),
-              ],
-            ),
-          ],
+  Widget showMoreButton( {required Function(String value) showMore}) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.more_vert, color: Colors.grey.shade600, size: 26),
+      onSelected: (String value) {
+        showMore(value);
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem<String>(
+          value: 'Edit',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.edit, size: 18, color: Colors.grey.shade700),
+              const SizedBox(width: 8),
+              Text('Edit'),
+            ],
+          ),
         ),
-      ),
-    ),
-  );
-}
-
+        PopupMenuItem<String>(
+          value: 'Delete',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.delete, size: 18, color: Colors.red.shade600),
+              const SizedBox(width: 8),
+              Text('Delete', style: TextStyle(color: Colors.red.shade600)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

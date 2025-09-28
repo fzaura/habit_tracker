@@ -3,7 +3,7 @@ class Habit {
   String habitName;
   String goal;
   EnhabitGoal habitType;
-  int periodValue; // How many days will be needed to make the habit a habit
+  int targettedPeriod; // How many days will be needed to make the habit a habit
   EnperiodUnit periodUnit; // daily, weekly, monthly
   DateTime createdAt;
   bool isCompleted;
@@ -16,7 +16,7 @@ class Habit {
     required this.habitName,
     required this.goal,
     required this.habitType,
-    this.periodValue = 21,
+    this.targettedPeriod = 21,
     required this.periodUnit,
     required this.createdAt,
     this.isCompleted = false,

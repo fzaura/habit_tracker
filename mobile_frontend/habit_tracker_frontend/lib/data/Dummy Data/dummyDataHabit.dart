@@ -1,5 +1,5 @@
 // Sample data for testing
-import 'package:habit_tracker/data/Models/UIModels/habit.dart';
+import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class HabitSamples {
   static List<Habit> getSampleHabits() {
@@ -9,7 +9,7 @@ class HabitSamples {
         habitName: 'Drink Water',
         goal: 'Drink 8 glasses of water daily',
         habitType: EnhabitGoal.buildHabit,
-        periodValue: 8,
+        targettedPeriod: 8,
         periodUnit: EnperiodUnit.daily,
         createdAt: DateTime.now().subtract(Duration(days: 7)),
         currentStreak: 5,
@@ -20,7 +20,7 @@ class HabitSamples {
         habitName: 'Morning Exercise',
         goal: 'Exercise for 30 minutes every morning',
         habitType: EnhabitGoal.buildHabit,
-        periodValue: 1,
+        targettedPeriod: 1,
         periodUnit: EnperiodUnit.daily,
         createdAt: DateTime.now().subtract(Duration(days: 14)),
         currentStreak: 3,
@@ -31,7 +31,7 @@ class HabitSamples {
         habitName: 'Social Media Break',
         goal: 'Avoid social media during work hours',
         habitType: EnhabitGoal.breakHabit,
-        periodValue: 1,
+        targettedPeriod: 1,
         periodUnit: EnperiodUnit.daily,
         createdAt: DateTime.now().subtract(Duration(days: 3)),
         currentStreak: 2,
@@ -42,7 +42,7 @@ class HabitSamples {
         habitName: 'Read Books',
         goal: 'Read for 1 hour, 3 times a week',
         habitType: EnhabitGoal.buildHabit,
-        periodValue: 3,
+        targettedPeriod: 3,
         periodUnit: EnperiodUnit.weekly,
         createdAt: DateTime.now().subtract(Duration(days: 21)),
         currentStreak: 1,
