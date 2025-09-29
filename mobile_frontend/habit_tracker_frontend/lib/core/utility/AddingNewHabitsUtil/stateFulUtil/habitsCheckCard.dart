@@ -80,7 +80,8 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                   Transform.translate(
                     offset: Offset(-8, 0),
                     child: UtilAddNewHabitUI().showMoreButton(
-                      showMore: editOrDelete,
+                     showMore: (value) => editOrDelete(value),
+                     context
                     ),
                   ),
                 ],
