@@ -92,11 +92,11 @@ class UtilHomeScreenWidgets {
     );
   }
 
-  static Widget todayHabitContainer(
+  static Widget todayTemplateContainer(
     List<Habit> habits, {
     VoidCallback? pressSeeAll,
-    required bool seeAllHabits,
-    required bool shrinkWrap,
+    required Widget listToView,
+    required String nameOfListHeader,
     double? requiredHeight,
   }) {
     return Container(
@@ -114,8 +114,8 @@ class UtilHomeScreenWidgets {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-       Flexible(flex: 1,child: listHeader('Today\'s Habits', pressSeeAll)),
-          Flexible(flex: 3,child: Habitslister(seeAll: seeAllHabits, shrinkWrap: shrinkWrap)),
+          Flexible(flex: 1, child: listHeader(nameOfListHeader, pressSeeAll)),
+          Flexible(flex: 3, child: listToView),
         ],
       ),
     );

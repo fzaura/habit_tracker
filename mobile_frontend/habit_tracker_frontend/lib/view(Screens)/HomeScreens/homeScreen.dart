@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
+import 'package:habit_tracker/core/utility/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/seeAllTodayHabits.dart';
+import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
@@ -68,15 +70,41 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             UtilHomeScreenWidgets.homeProgressCard(),
-            UtilHomeScreenWidgets.todayHabitContainer(
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: Habitslister(seeAll: false, shrinkWrap: true),
+              nameOfListHeader: 'Today\'s Habits',
               requiredHeight: 352,
-              seeAllHabits: false,
-              shrinkWrap: true,
               habitsList,
               pressSeeAll: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SeeAllTodayHabits()),
+                  MaterialPageRoute(
+                    builder: (context) => SeeAllList(
+                      nameOfListHeader: 'Today\'s Habits',
+                      appBarText: 'Your Habits',
+                      listToView: Habitslister(seeAll: true, shrinkWrap: false),
+                    ),
+                  ),
+                );
+              },
+            ),
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: GoalsCardLister(seeAll: false, shrinkWrap: true),
+              nameOfListHeader: 'Your Goals',
+              habitsList,
+              pressSeeAll: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SeeAllList(
+                      nameOfListHeader: 'Goals : ',
+                      appBarText: 'Your Goals',
+                      listToView: GoalsCardLister(
+                        seeAll: true,
+                        shrinkWrap: false,
+                      ),
+                    ),
+                  ),
                 );
               },
             ),

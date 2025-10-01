@@ -6,8 +6,16 @@ import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.
 import 'package:habit_tracker/core/utility/SeeAllUtil/StateFulWidgets/singleWeekRow.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
-class SeeAllTodayHabits extends ConsumerWidget {
-  const SeeAllTodayHabits({super.key});
+class SeeAllList extends ConsumerWidget {
+  const SeeAllList({
+    super.key,
+    required this.appBarText,
+    required this.nameOfListHeader,
+    required this.listToView,
+  });
+  final String appBarText;
+  final String nameOfListHeader;
+  final Widget listToView;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +24,7 @@ class SeeAllTodayHabits extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Your Habits : ',
+          appBarText,
           style: GoogleFonts.nunito(fontWeight: FontWeight.bold),
         ),
       ),
@@ -26,10 +34,10 @@ class SeeAllTodayHabits extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(width: 350, height: 100, child: SingleWeekRow()),
-            UtilHomeScreenWidgets.todayHabitContainer(
+            UtilHomeScreenWidgets.todayTemplateContainer(
               habitsList,
-              seeAllHabits: true,
-              shrinkWrap: false,
+              nameOfListHeader: nameOfListHeader,
+              listToView: listToView,
               requiredHeight: 400,
             ),
           ],
