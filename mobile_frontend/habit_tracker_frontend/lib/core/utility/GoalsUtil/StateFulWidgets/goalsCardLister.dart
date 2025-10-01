@@ -8,13 +8,19 @@ class GoalsCardLister extends ConsumerWidget {
     super.key,
     required this.seeAll,
     required this.shrinkWrap,
+    required this.canUserScroll,
   });
   final bool seeAll;
   final bool shrinkWrap;
+  final bool canUserScroll;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitLister = ref.watch(habitSampleProvider);
     return ListView.builder(
+      shrinkWrap: shrinkWrap,
+      physics: canUserScroll
+          ? AlwaysScrollableScrollPhysics()
+          : NeverScrollableScrollPhysics(),
       itemCount: (habitLister.length <= 3) || (seeAll == true)
           ? habitLister.length
           : 3,

@@ -71,7 +71,11 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           children: [
             UtilHomeScreenWidgets.homeProgressCard(),
             UtilHomeScreenWidgets.todayTemplateContainer(
-              listToView: Habitslister(seeAll: false, shrinkWrap: true),
+              listToView: Habitslister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
               nameOfListHeader: 'Today\'s Habits',
               requiredHeight: 352,
               habitsList,
@@ -82,14 +86,22 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                     builder: (context) => SeeAllList(
                       nameOfListHeader: 'Today\'s Habits',
                       appBarText: 'Your Habits',
-                      listToView: Habitslister(seeAll: true, shrinkWrap: false),
+                      listToView: Habitslister(
+                        seeAll: true,
+                        shrinkWrap: false,
+                        canUserScroll: true,
+                      ),
                     ),
                   ),
                 );
               },
             ),
             UtilHomeScreenWidgets.todayTemplateContainer(
-              listToView: GoalsCardLister(seeAll: false, shrinkWrap: true),
+              listToView: GoalsCardLister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
               nameOfListHeader: 'Your Goals',
               habitsList,
               pressSeeAll: () {
@@ -100,8 +112,9 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       nameOfListHeader: 'Goals : ',
                       appBarText: 'Your Goals',
                       listToView: GoalsCardLister(
-                        seeAll: true,
-                        shrinkWrap: false,
+                        seeAll: false,
+                        shrinkWrap: true,
+                        canUserScroll: true,
                       ),
                     ),
                   ),

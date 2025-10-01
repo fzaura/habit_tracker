@@ -8,16 +8,21 @@ class Habitslister extends ConsumerWidget {
     super.key,
     required this.seeAll,
     required this.shrinkWrap,
+    required this.canUserScroll,
   });
   final bool seeAll;
   final bool shrinkWrap;
+  final bool canUserScroll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitsToList = ref.watch(habitSampleProvider);
     return ListView.builder(
+      physics: canUserScroll
+          ? AlwaysScrollableScrollPhysics()
+          : NeverScrollableScrollPhysics(),
       shrinkWrap: shrinkWrap,
-      itemCount: seeAll || (habitsToList.length<=3) ? habitsToList.length : 3,
+      itemCount: seeAll || (habitsToList.length <= 3) ? habitsToList.length : 3,
       itemBuilder: (context, index) {
         final habit = habitsToList[index];
         return Habitscheckcard(habitToDisplay: habit);
