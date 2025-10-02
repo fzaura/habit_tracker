@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/themes.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
 
 class DropDownButtonTemp<enumTemp extends Enum> extends StatefulWidget {
   DropDownButtonTemp({
@@ -18,14 +19,6 @@ class DropDownButtonTemp<enumTemp extends Enum> extends StatefulWidget {
 }
 
 class _DropDownButtonTempState extends State<DropDownButtonTemp> {
-  String formatEnumName(String enumName) {
-    return enumName
-        .replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(1)}')
-        .split(' ')
-        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -43,7 +36,7 @@ class _DropDownButtonTempState extends State<DropDownButtonTemp> {
                 (item) => DropdownMenuItem(
                   value: item,
                   child: Text(
-                    formatEnumName(item.name),
+                    UtilHomeScreenWidgets.formatEnumName(item.name),
                     style: mainAppTheme.textTheme.labelMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w900,

@@ -57,9 +57,14 @@ class GoalsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
       child: Card(
+        color: Colors.white,
         child: Column(
+          
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            goalNameAndActions(context),
+             goalNameAndActions(context),
             progressBarForHabits(),
             Text(
               '${habitGoals.currentStreak} from ${habitGoals.targettedPeriod} target',
@@ -69,7 +74,7 @@ class GoalsCard extends StatelessWidget {
               ),
             ),
             Text(
-              '${habitGoals.habitType}',
+              habitGoals.periodUnit.periodName,
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

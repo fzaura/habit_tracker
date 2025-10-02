@@ -25,7 +25,10 @@ class Habitslister extends ConsumerWidget {
       itemCount: seeAll || (habitsToList.length <= 3) ? habitsToList.length : 3,
       itemBuilder: (context, index) {
         final habit = habitsToList[index];
-        return Habitscheckcard(habitToDisplay: habit);
+        return Habitscheckcard(
+          key: ValueKey(habitsToList[index]),
+          habitToDisplay: habit,
+        );
       },
     );
   }

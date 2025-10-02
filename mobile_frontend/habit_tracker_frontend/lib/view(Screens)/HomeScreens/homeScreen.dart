@@ -37,7 +37,11 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   Widget build(BuildContext context) {
     final habitsList = ref.watch(habitSampleProvider);
+    final int checkedHabits = habitsList.where((habit) => habit.isCompleted).length;
+    final int unCheckedHabits = habitsList.length;
+
     return Scaffold(
+      backgroundColor: Color(0xFFEDEDED),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -62,6 +66,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
         ),
       ),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate),
       ),
       body: SingleChildScrollView(
@@ -69,7 +74,11 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            UtilHomeScreenWidgets.homeProgressCard(),
+            UtilHomeScreenWidgets.homeProgressCard(
+              checkedHabits,
+              unCheckedHabits,
+            ),
+
             UtilHomeScreenWidgets.todayTemplateContainer(
               listToView: Habitslister(
                 seeAll: false,
@@ -77,7 +86,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 canUserScroll: false,
               ),
               nameOfListHeader: 'Today\'s Habits',
-              requiredHeight: 352,
+              requiredHeight: 400,
               habitsList,
               pressSeeAll: () {
                 Navigator.push(
@@ -96,6 +105,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 );
               },
             ),
+            const SizedBox(height: 29),
             UtilHomeScreenWidgets.todayTemplateContainer(
               listToView: GoalsCardLister(
                 seeAll: false,
