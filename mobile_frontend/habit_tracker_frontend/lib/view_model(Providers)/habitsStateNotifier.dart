@@ -32,23 +32,16 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   // In your StateNotifier
   void toggleHabit(String checkedHabitId) {
     //Make the State Provider Logic for it
-    state = state
-        .map(
-          (habit) => habit.id == checkedHabitId
-              ? habit.copyWith(isCompleted: !habit.isCompleted)
-              : habit,
-        )
-        .toList();
-  }
-
-  void achieveGoal(Habit habit) {
-    state = state
-        .map(
-          (oldHabit) => habit.id == oldHabit.id
-              ? habit.copyWith(currentStreak: oldHabit.currentStreak++)
-              : oldHabit,
-        )
-        .toList();
+    state = state.map((habit) {
+      if (habit.id == checkedHabitId) {
+        int currentStreak=habit.currentStreak;
+        return habit.copyWith(
+          isCompleted: !habit.isCompleted,
+          currentStreak: !habit.isCompleted ?currentStreak+1 : currentStreak-1,
+        );
+      }
+      return habit;
+    }).toList();
   }
 }
 

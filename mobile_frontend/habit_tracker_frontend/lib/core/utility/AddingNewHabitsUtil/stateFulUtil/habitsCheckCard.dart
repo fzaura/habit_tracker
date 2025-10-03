@@ -66,6 +66,7 @@ class Habitscheckcard extends ConsumerWidget {
                           ref
                               .read(habitSampleProvider.notifier)
                               .toggleHabit(habitToDisplay.id);
+                              
                         } 
                       },
                       activeColor: Colors.green.shade600,
