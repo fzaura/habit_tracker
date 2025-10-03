@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/core/utility/SeeAllUtil/StateFulWidgets/singleWeekRow.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/SeeAllUtil/StateFulWidgets/singleWeekRow.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
 class SeeAllList extends ConsumerWidget {

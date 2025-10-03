@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
-import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
-import 'package:habit_tracker/core/utility/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';

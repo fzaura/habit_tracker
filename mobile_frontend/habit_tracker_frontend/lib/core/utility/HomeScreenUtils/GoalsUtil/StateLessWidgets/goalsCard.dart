@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/themes.dart';
-import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
-import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
-import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 

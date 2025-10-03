@@ -1,23 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/themes.dart';
-import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/sucessScreenUtil.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
-class Addnewhabit extends ConsumerStatefulWidget {
-  const Addnewhabit({super.key});
+class EditDeleteHabits extends ConsumerStatefulWidget {
+  const EditDeleteHabits({super.key, required this.habitToEdit});
+  final Habit habitToEdit;
+
   @override
-  ConsumerState<Addnewhabit> createState() => _AddnewhabitState();
+  ConsumerState<EditDeleteHabits> createState() => _EditDeleteHabitsState();
 }
 
-class _AddnewhabitState extends ConsumerState<Addnewhabit> {
+class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
+  @override
   late TextEditingController yourGoalController;
   late TextEditingController yourHabitController;
 
   EnhabitGoal habitGoal = EnhabitGoal.buildHabit;
   EnperiodUnit periodUnit = EnperiodUnit.daily;
+
+  @override
+  void initState() {
+    super.initState();
+    yourGoalController = TextEditingController();
+    yourHabitController = TextEditingController();
+  }
+
+  void _updateHabitLogic() {
+    Habit newHabit = Habit(
+      id: widget.habitToEdit.id,
+      habitName: yourHabitController.text,
+      goal: yourGoalController.text,
+      habitType: habitGoal,
+      periodUnit: periodUnit,
+      createdAt: widget.habitToEdit.createdAt,
+    );
+    ref
+        .watch(habitSampleProvider.notifier)
+        .updateHabits(widget.habitToEdit.id, newHabit);
+  }
+
+
 
   Widget editTextField(String mainHintText, TextEditingController controller) {
     return Container(
@@ -27,36 +54,17 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: TextField(
-        controller: controller,
+        autofocus: true,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: mainHintText,
         ),
+        controller: controller,
       ),
     );
   }
 
-  void _addNewHabitLogic() {
-    ref
-        .read(habitSampleProvider.notifier)
-        .addNewHabit(
-          Habit(
-            id: '33',
-            habitName: yourHabitController.text,
-            goal: yourGoalController.text,
-            habitType: habitGoal,
-            periodUnit: periodUnit,
-            createdAt: DateTime.now(),
-          ),
-        );
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SucessScreenUtil()),
-    );
-  }
-
-  Widget defaultAddHabitButton() {
+  Widget defaultUpdateButton() {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -70,7 +78,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
+          backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
           foregroundColor: Colors.white, // Text color
           shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
           elevation: 5, // Shadow elevation
@@ -84,10 +92,11 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
           ),
         ),
         onPressed: () {
-          _addNewHabitLogic();
+          _updateHabitLogic();
+          Navigator.pop(context);
         },
         child: Text(
-          'Add New Habit',
+          'Update',
           style: mainAppTheme.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.w900,
           ),
@@ -96,37 +105,37 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
     );
   }
 
-  Widget cancelButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
-        foregroundColor: Colors.white, // Text color
-        shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
-        elevation: 5, // Shadow elevation
-        padding: const EdgeInsets.symmetric(
-          vertical: 14,
-        ), // Matches text field height
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            6,
-          ), // Same border radius as text field
+  Widget deleteButton() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white, // Orange color
+          foregroundColor: Colors.black, // Text color
+          shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
+          elevation: 5, // Shadow elevation
+          padding: const EdgeInsets.symmetric(
+            vertical: 14,
+          ), // Matches text field height
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              6,
+            ), // Same border radius as text field
+          ),
         ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                ConfirmDelete(toDeleteHabitId: widget.habitToEdit.id),
+          );
+        },
+        child: Text('Delete', style: mainAppTheme.textTheme.labelMedium),
       ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: Text('Cancel', style: mainAppTheme.textTheme.labelMedium),
     );
   }
-
-  @override
-  void initState() {
-    super.initState();
-    yourGoalController = TextEditingController();
-    yourHabitController = TextEditingController();
-  }
-
-  @override
+@override
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
@@ -138,7 +147,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
           children: [
             // Title
             Text(
-              'Add New Habit',
+              'Edit Habit Goal',
               style: mainAppTheme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -156,7 +165,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField('',yourGoalController),
+            editTextField(widget.habitToEdit.goal,yourGoalController),
             SizedBox(height: 15),
 
             // Habit Name Field
@@ -168,7 +177,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField('',yourHabitController),
+            editTextField(widget.habitToEdit.habitName,yourHabitController),
 
             SizedBox(height: 15),
 
@@ -194,11 +203,11 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Add Button
-                defaultAddHabitButton(),
+                // Update Button
+                defaultUpdateButton(),
 
-                // Cancel Button
-                cancelButton(),
+                // Delete Button
+                deleteButton(),
               ],
             ),
           ],
