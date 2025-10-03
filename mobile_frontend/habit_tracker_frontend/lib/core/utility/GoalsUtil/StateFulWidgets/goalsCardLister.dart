@@ -26,7 +26,10 @@ class GoalsCardLister extends ConsumerWidget {
           : 3,
       itemBuilder: (context, index) {
         final habitToDisplay = habitLister[index];
-        return GoalsCard(habitGoals: habitToDisplay);
+        return GoalsCard(
+          key: ValueKey(habitLister[index]),
+          habitGoals: habitToDisplay,
+        );
       },
     );
   }

@@ -4,39 +4,35 @@ import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/statelessUtil/uti
 import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
 import 'package:habit_tracker/core/utility/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
-class Habitscheckcard extends StatefulWidget {
-  Habitscheckcard({super.key, required this.habitToDisplay});
-  Habit habitToDisplay;
-  @override
-  State<Habitscheckcard> createState() => _HabitscheckcardState();
-}
+class Habitscheckcard extends ConsumerWidget {
+  const Habitscheckcard({super.key, required this.habitToDisplay});
+  final Habit habitToDisplay;
 
-class _HabitscheckcardState extends State<Habitscheckcard> {
-  void editOrDelete(String value) {
+  void editOrDelete(BuildContext context, String value) {
     if (value == 'Edit') {
       showDialog(
         context: context,
-        builder: (context) =>
-            EditDeleteHabits(habitToEdit: widget.habitToDisplay),
+        builder: (context) => EditDeleteHabits(habitToEdit: habitToDisplay),
       );
     } else if (value == 'Delete') {
       showDialog(
         context: context,
-        builder: (context) =>
-            ConfirmDelete(toDeleteHabitId: widget.habitToDisplay.id),
+        builder: (context) => ConfirmDelete(toDeleteHabitId: habitToDisplay.id),
       );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
       child: Card(
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        color: widget.habitToDisplay.isCompleted
+        color: habitToDisplay.isCompleted
             ? Colors.lightGreen.shade50
             : Colors.white,
         child: Container(
@@ -46,13 +42,13 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
             children: [
               Expanded(
                 child: Text(
-                  widget.habitToDisplay.habitName,
+                  habitToDisplay.habitName,
                   style: GoogleFonts.nunito(
                     fontSize: 20,
-                    color: widget.habitToDisplay.isCompleted
+                    color: habitToDisplay.isCompleted
                         ? Colors.green.shade700
                         : Colors.black87,
-                    decoration: widget.habitToDisplay.isCompleted
+                    decoration: habitToDisplay.isCompleted
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
@@ -64,11 +60,13 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                   Transform.scale(
                     scale: 1.5, // Make checkbox slightly bigger
                     child: Checkbox(
-                      value: widget.habitToDisplay.isCompleted,
+                      value: habitToDisplay.isCompleted,
                       onChanged: (bool? newValue) {
-                        setState(() {
-                          widget.habitToDisplay.isCompleted = newValue!;
-                        });
+                        if (newValue != null) {
+                          ref
+                              .read(habitSampleProvider.notifier)
+                              .toggleHabit(habitToDisplay.id);
+                        } 
                       },
                       activeColor: Colors.green.shade600,
                       checkColor: Colors.white,
@@ -80,8 +78,8 @@ class _HabitscheckcardState extends State<Habitscheckcard> {
                   Transform.translate(
                     offset: Offset(-8, 0),
                     child: UtilAddNewHabitUI().showMoreButton(
-                     showMore: (value) => editOrDelete(value),
-                     context
+                      context,
+                      showMore: (value) => editOrDelete(context, value),
                     ),
                   ),
                 ],
