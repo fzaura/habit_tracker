@@ -19,7 +19,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
   EnhabitGoal habitGoal = EnhabitGoal.buildHabit;
   EnperiodUnit periodUnit = EnperiodUnit.daily;
 
-  Widget editTextField(String mainHintText) {
+  Widget editTextField(String mainHintText, TextEditingController controller) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -27,6 +27,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: mainHintText,
@@ -82,7 +83,9 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
             ), // Same border radius as text field
           ),
         ),
-        onPressed: () {_addNewHabitLogic();},
+        onPressed: () {
+          _addNewHabitLogic();
+        },
         child: Text(
           'Add New Habit',
           style: mainAppTheme.textTheme.labelMedium?.copyWith(
@@ -135,7 +138,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
           children: [
             // Title
             Text(
-              'Edit Habit Goal',
+              'Add New Habit',
               style: mainAppTheme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -153,7 +156,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField(''),
+            editTextField('',yourGoalController),
             SizedBox(height: 15),
 
             // Habit Name Field
@@ -165,7 +168,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField(''),
+            editTextField('',yourHabitController),
 
             SizedBox(height: 15),
 
