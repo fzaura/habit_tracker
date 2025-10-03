@@ -21,9 +21,7 @@ class GoalsCardLister extends ConsumerWidget {
       physics: canUserScroll
           ? AlwaysScrollableScrollPhysics()
           : NeverScrollableScrollPhysics(),
-      itemCount: (habitLister.length <= 3) || (seeAll == true)
-          ? habitLister.length
-          : 3,
+      itemCount: (habitLister.length <= 3) || (seeAll) ? habitLister.length : 3,
       itemBuilder: (context, index) {
         final habitToDisplay = habitLister[index];
         return GoalsCard(

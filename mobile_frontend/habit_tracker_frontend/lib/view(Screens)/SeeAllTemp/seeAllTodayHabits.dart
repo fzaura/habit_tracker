@@ -38,7 +38,7 @@ class SeeAllList extends ConsumerWidget {
               habitsList,
               nameOfListHeader: nameOfListHeader,
               listToView: listToView,
-              requiredHeight: 400,
+              requiredHeight: double.infinity,
             ),
           ],
         ),

@@ -122,7 +122,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       nameOfListHeader: 'Goals : ',
                       appBarText: 'Your Goals',
                       listToView: GoalsCardLister(
-                        seeAll: false,
+                        seeAll: true,
                         shrinkWrap: true,
                         canUserScroll: true,
                       ),
