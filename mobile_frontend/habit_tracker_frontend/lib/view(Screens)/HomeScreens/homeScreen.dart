@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
+import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
+import 'package:habit_tracker/core/utility/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/seeAllTodayHabits.dart';
+import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
@@ -35,7 +37,11 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   Widget build(BuildContext context) {
     final habitsList = ref.watch(habitSampleProvider);
+    final int checkedHabits = habitsList.where((habit) => habit.isCompleted).length;
+    final int unCheckedHabits = habitsList.length;
+
     return Scaffold(
+      backgroundColor: Color(0xFFEDEDED),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -60,6 +66,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
         ),
       ),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate),
       ),
       body: SingleChildScrollView(
@@ -67,16 +74,60 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            UtilHomeScreenWidgets.homeProgressCard(),
-            UtilHomeScreenWidgets.todayHabitContainer(
-              requiredHeight: 352,
-              seeAllHabits: false,
-              shrinkWrap: true,
+            UtilHomeScreenWidgets.homeProgressCard(
+              checkedHabits,
+              unCheckedHabits,
+            ),
+
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: Habitslister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
+              nameOfListHeader: 'Today\'s Habits',
+              requiredHeight: 400,
               habitsList,
               pressSeeAll: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SeeAllTodayHabits()),
+                  MaterialPageRoute(
+                    builder: (context) => SeeAllList(
+                      nameOfListHeader: 'Today\'s Habits',
+                      appBarText: 'Your Habits',
+                      listToView: Habitslister(
+                        seeAll: true,
+                        shrinkWrap: false,
+                        canUserScroll: true,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 29),
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: GoalsCardLister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
+              nameOfListHeader: 'Your Goals',
+              habitsList,
+              pressSeeAll: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SeeAllList(
+                      nameOfListHeader: 'Goals : ',
+                      appBarText: 'Your Goals',
+                      listToView: GoalsCardLister(
+                        seeAll: false,
+                        shrinkWrap: true,
+                        canUserScroll: true,
+                      ),
+                    ),
+                  ),
                 );
               },
             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:habit_tracker/app/themes.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
 
 class DropDownButtonTemp<enumTemp extends Enum> extends StatefulWidget {
   DropDownButtonTemp({
@@ -31,7 +33,16 @@ class _DropDownButtonTempState extends State<DropDownButtonTemp> {
           value: widget.passedEnumValue,
           items: widget.enumValues
               .map(
-                (item) => DropdownMenuItem(value: item, child: Text(item.name)),
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    UtilHomeScreenWidgets.formatEnumName(item.name),
+                    style: mainAppTheme.textTheme.labelMedium?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
               )
               .toList(),
           onChanged: (value) => setState(() {
