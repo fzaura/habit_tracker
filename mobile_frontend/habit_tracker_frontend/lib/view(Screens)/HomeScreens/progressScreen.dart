@@ -9,7 +9,12 @@ class ProgressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFEDEDED),
-      appBar: (AppBar(toolbarHeight: 130,title: Utilprogressscreen.homeScreenWelcomeMessage())),
+      appBar: (AppBar(
+        backgroundColor: Colors.white,
+        toolbarHeight: 130,
+        title: Utilprogressscreen.homeScreenWelcomeMessage(),
+      )),
+      body: Column(children: [Utilprogressscreen.yourGoalsContainer(context)]),
     );
   }
 }
