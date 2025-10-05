@@ -37,7 +37,9 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   Widget build(BuildContext context) {
     final habitsList = ref.watch(habitSampleProvider);
-    final int checkedHabits = habitsList.where((habit) => habit.isCompleted).length;
+    final int checkedHabits = habitsList
+        .where((habit) => habit.isCompleted)
+        .length;
     final int unCheckedHabits = habitsList.length;
 
     return Scaffold(
@@ -89,18 +91,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
               requiredHeight: 400,
               habitsList,
               pressSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SeeAllList(
-                      nameOfListHeader: 'Today\'s Habits',
-                      appBarText: 'Your Habits',
-                      listToView: Habitslister(
-                        seeAll: true,
-                        shrinkWrap: false,
-                        canUserScroll: true,
-                      ),
-                    ),
+                UtilHomeScreenWidgets.takeToSeeAllPage(
+                  ctxt: context,
+                  nameOfListHeader: 'Today\'s Habits',
+                  appBarText: 'Your Habits ',
+                  lister: GoalsCardLister(
+                    seeAll: true,
+                    shrinkWrap: true,
+                    canUserScroll: true,
                   ),
                 );
               },
@@ -115,18 +113,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
               nameOfListHeader: 'Your Goals',
               habitsList,
               pressSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SeeAllList(
-                      nameOfListHeader: 'Goals : ',
-                      appBarText: 'Your Goals',
-                      listToView: GoalsCardLister(
-                        seeAll: true,
-                        shrinkWrap: false,
-                        canUserScroll: true,
-                      ),
-                    ),
+                UtilHomeScreenWidgets.takeToSeeAllPage(
+                  ctxt: context,
+                  nameOfListHeader: '',
+                  appBarText: 'Your Goals ',
+                  lister: GoalsCardLister(
+                    seeAll: true,
+                    shrinkWrap: true,
+                    canUserScroll: true,
                   ),
                 );
               },

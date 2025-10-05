@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
+import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 
 enum EnTimePhase { thisWeek, thisMonth, thisYear }
 
@@ -26,10 +29,7 @@ class Utilprogressscreen {
       children: [
         Text(
           'Progress',
-          style: GoogleFonts.nunito(
-            fontWeight: FontWeight.bold,
-            fontSize: 29,
-          ),
+          style: GoogleFonts.nunito(fontWeight: FontWeight.bold, fontSize: 29),
         ),
         const SizedBox(height: 12),
         Row(
@@ -51,6 +51,27 @@ class Utilprogressscreen {
           ],
         ),
       ],
+    );
+  }
+
+  static Widget yourGoalsContainer(BuildContext ctxt) {
+    return Container(
+      child: Column(
+        children: [
+          UtilHomeScreenWidgets.listHeader('Your Goals : ', () {
+            UtilHomeScreenWidgets.takeToSeeAllPage(
+              ctxt: ctxt,
+              nameOfListHeader: '',
+              appBarText: 'Your Goals ',
+              lister: GoalsCardLister(
+                seeAll: true,
+                shrinkWrap: true,
+                canUserScroll: true,
+              ),
+            );
+          }),
+        ],
+      ),
     );
   }
 }

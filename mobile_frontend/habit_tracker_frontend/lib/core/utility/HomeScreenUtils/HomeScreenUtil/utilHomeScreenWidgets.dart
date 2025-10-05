@@ -3,9 +3,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/globalData.dart';
 import 'package:habit_tracker/app/themes.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class UtilHomeScreenWidgets {
+  static takeToSeeAllPage({
+    required BuildContext ctxt,
+    required String nameOfListHeader,
+    required String appBarText,
+    required Widget lister,
+  }) {
+    Navigator.push(
+      ctxt,
+      MaterialPageRoute(
+        builder: (context) => SeeAllList(
+          nameOfListHeader: nameOfListHeader,
+          appBarText: appBarText,
+          listToView: lister,
+        ),
+      ),
+    );
+  }
+
   static Widget homeScreenWelcomeMessage(final String formattedDate) {
     return SafeArea(
       child: Column(
