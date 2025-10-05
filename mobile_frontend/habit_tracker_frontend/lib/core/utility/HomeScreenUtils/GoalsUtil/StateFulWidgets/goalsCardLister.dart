@@ -16,19 +16,24 @@ class GoalsCardLister extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitLister = ref.watch(habitSampleProvider);
-    return ListView.builder(
-      shrinkWrap: shrinkWrap,
-      physics: canUserScroll
-          ? AlwaysScrollableScrollPhysics()
-          : NeverScrollableScrollPhysics(),
-      itemCount: (habitLister.length <= 3) || (seeAll) ? habitLister.length : 3,
-      itemBuilder: (context, index) {
-        final habitToDisplay = habitLister[index];
-        return GoalsCard(
-          key: ValueKey(habitLister[index]),
-          habitGoals: habitToDisplay,
-        );
-      },
+    return Container(
+      constraints: BoxConstraints(minHeight: 300, maxHeight: 500),
+      child: ListView.builder(
+        shrinkWrap: shrinkWrap,
+        physics: canUserScroll
+            ? AlwaysScrollableScrollPhysics()
+            : NeverScrollableScrollPhysics(),
+        itemCount: (habitLister.length <= 3) || (seeAll)
+            ? habitLister.length
+            : 3,
+        itemBuilder: (context, index) {
+          final habitToDisplay = habitLister[index];
+          return GoalsCard(
+            key: ValueKey(habitLister[index]),
+            habitGoals: habitToDisplay,
+          );
+        },
+      ),
     );
   }
 }

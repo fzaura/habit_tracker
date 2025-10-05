@@ -53,7 +53,7 @@ class ConfirmDelete extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final myHabits = habitSampleProvider;
+  //  final myHabits = habitSampleProvider;
     return AlertDialog(
       content: SizedBox(
         width: 330,

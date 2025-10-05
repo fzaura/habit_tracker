@@ -30,15 +30,14 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   }
 
   // In your StateNotifier
-  void toggleHabit(String checkedHabitId) {
-    //Make the State Provider Logic for it
+  void toggleHabit(String habitID) {
     state = state.map((habit) {
-      if (habit.id == checkedHabitId) {
-        int currentStreak=habit.currentStreak;
+      int currentStreak = habit.currentStreak;
+      if (habit.id == habitID) {
         return habit.copyWith(
           isCompleted: !habit.isCompleted,
-          currentStreak: !habit.isCompleted ?currentStreak+1 : currentStreak-1,
-        );
+          currentStreak: habit.isCompleted ? currentStreak++ : currentStreak,
+        ); //Am Making a new habit using the copy with method so I don't mutate the object and have actual changes on my state
       }
       return habit;
     }).toList();
