@@ -4,7 +4,6 @@ import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/s
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
@@ -95,6 +94,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                   ctxt: context,
                   nameOfListHeader: 'Today\'s Habits',
                   appBarText: 'Your Habits ',
+                  showHorizentalCalendar: true,
                   lister: GoalsCardLister(
                     seeAll: true,
                     shrinkWrap: true,
@@ -117,6 +117,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                   ctxt: context,
                   nameOfListHeader: '',
                   appBarText: 'Your Goals ',
+                  showHorizentalCalendar: true,
                   lister: GoalsCardLister(
                     seeAll: true,
                     shrinkWrap: true,

@@ -12,10 +12,12 @@ class SeeAllList extends ConsumerWidget {
     required this.appBarText,
     required this.nameOfListHeader,
     required this.listToView,
+    required this.seeHorizentalCalendar,
   });
   final String appBarText;
   final String nameOfListHeader;
   final Widget listToView;
+  final bool seeHorizentalCalendar;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +35,9 @@ class SeeAllList extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(width: 350, height: 100, child: SingleWeekRow()),
+            if (seeHorizentalCalendar)
+              SizedBox(width: 350, height: 100, child: SingleWeekRow()),
+
             UtilHomeScreenWidgets.todayTemplateContainer(
               habitsList,
               nameOfListHeader: nameOfListHeader,

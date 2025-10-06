@@ -12,6 +12,7 @@ class UtilHomeScreenWidgets {
     required String nameOfListHeader,
     required String appBarText,
     required Widget lister,
+    required bool showHorizentalCalendar,
   }) {
     Navigator.push(
       ctxt,
@@ -20,6 +21,7 @@ class UtilHomeScreenWidgets {
           nameOfListHeader: nameOfListHeader,
           appBarText: appBarText,
           listToView: lister,
+          seeHorizentalCalendar: showHorizentalCalendar,
         ),
       ),
     );

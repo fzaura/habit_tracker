@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/themes.dart';
+import 'package:habit_tracker/view(Screens)/HomeScreens/homeScreen.dart';
+import 'package:habit_tracker/view(Screens)/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/progressScreen.dart';
 //import 'package:flutter/services.dart';
 
@@ -13,6 +15,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: mainAppTheme, home: ProgressScreen());
+    return MaterialApp(theme: mainAppTheme, home: MainTabScreen());
   }
 }

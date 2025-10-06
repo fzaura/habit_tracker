@@ -6,7 +6,6 @@ import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/s
 import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/core/utility/ProgressScreenUtil/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
-import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 enum EnTimePhase { thisWeek, thisMonth, thisYear }
@@ -137,31 +136,46 @@ class Utilprogressscreen {
       padding: EdgeInsets.all(24),
       margin: EdgeInsets.fromLTRB(6, 31, 6, 0),
       color: Colors.white,
-      width: double.infinity,
-      height: 700,
-      child: Column(
-        children: [
-          UtilHomeScreenWidgets.listHeader('Your Goals : ', () {
-            UtilHomeScreenWidgets.takeToSeeAllPage(
-              ctxt: ctxt,
-              nameOfListHeader: '',
-              appBarText: 'Your Goals ',
-              lister: GoalsCardLister(
-                seeAll: true,
-                shrinkWrap: true,
-                canUserScroll: true,
-              ),
-            );
-          }),
-          progressDoneTodayConatiner(4, 6),
-          Flexible(
-            child: Detailedgoalslister(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            UtilHomeScreenWidgets.listHeader('Your Goals : ', () {
+              UtilHomeScreenWidgets.takeToSeeAllPage(
+                ctxt: ctxt,
+                nameOfListHeader: '',
+                appBarText: 'Your Goals ',
+                showHorizentalCalendar: true,
+                lister: GoalsCardLister(
+                  seeAll: true,
+                  shrinkWrap: true,
+                  canUserScroll: true,
+                ),
+              );
+            }),
+            progressDoneTodayConatiner(4, 6),
+            Detailedgoalslister(
               canUserScroll: false,
               seeAll: false,
               shrinkWrap: true,
             ),
-          ),
-        ],
+            TextButton(
+              onPressed: () {
+                UtilHomeScreenWidgets.takeToSeeAllPage(
+                  ctxt: ctxt,
+                  nameOfListHeader: '',
+                  appBarText: 'Your Goals ',
+                  showHorizentalCalendar: false,
+                  lister: Detailedgoalslister(
+                    seeAll: true,
+                    shrinkWrap: true,
+                    canUserScroll: true,
+                  ),
+                );
+              },
+              child: Text('See all'),
+            ),
+          ],
+        ),
       ),
     );
   }

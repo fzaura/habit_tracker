@@ -64,7 +64,7 @@ class DetailedGoalCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: Container(
-        margin: EdgeInsets.all(12),
+        margin: EdgeInsets.all(16),
         padding: EdgeInsets.all(12),
         child: Row(
           children: [
