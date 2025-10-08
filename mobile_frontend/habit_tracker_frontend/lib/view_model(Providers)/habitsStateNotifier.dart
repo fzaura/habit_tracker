@@ -6,6 +6,8 @@ enum HabitGoal { buildHabit, breakHabit, maintain }
 
 enum PeriodUnit { daily, weekly, monthly }
 
+enum SortGoalsBYs {all , achieved , notAchieved}
+
 class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   HabitsStateNotifier()
     : super(HabitSamples.getSampleHabits()); //A-Initial Data

@@ -37,7 +37,7 @@ class SeeAllList extends ConsumerWidget {
           children: [
             if (seeHorizentalCalendar)
               SizedBox(width: 350, height: 100, child: SingleWeekRow()),
-
+              
             UtilHomeScreenWidgets.todayTemplateContainer(
               habitsList,
               nameOfListHeader: nameOfListHeader,

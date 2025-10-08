@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/Detailed%20Goals%20Lister/detailedGoalCard.dart';
+import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalCard.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
 class Detailedgoalslister extends ConsumerWidget {
@@ -24,8 +24,13 @@ class Detailedgoalslister extends ConsumerWidget {
           ? AlwaysScrollableScrollPhysics()
           : NeverScrollableScrollPhysics(),
       itemCount: habits.length <= 3 || (seeAll) ? habits.length : 3,
-      itemBuilder: (context, index) =>
-          DetailedGoalCard(key: ValueKey(index), habitToDisplay: habits[index]),
+      itemBuilder: (context, index) => InkWell(
+        child: DetailedGoalCard(
+          key: ValueKey(index),
+          habitToDisplay: habits[index],
+        ),
+        onTap: (){},
+      ),
     );
   }
 }

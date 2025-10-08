@@ -5,7 +5,7 @@ import 'package:habit_tracker/app/themes.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
+import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 enum EnTimePhase { thisWeek, thisMonth, thisYear }
@@ -179,4 +179,6 @@ class Utilprogressscreen {
       ),
     );
   }
+
+  
 }
