@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/homeScreen.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/progressScreen.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/settingsScreen.dart';
+import 'package:habit_tracker/view(Screens)/ProgressScreen/progressScreen.dart';
+import 'package:habit_tracker/view(Screens)/SettingsScreen/settingsScreen.dart';
 import 'package:intl/intl.dart';
 
 class MainTabScreen extends StatefulWidget {

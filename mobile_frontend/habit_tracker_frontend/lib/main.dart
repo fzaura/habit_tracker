@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/themes.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/homeScreen.dart';
 import 'package:habit_tracker/view(Screens)/HomeScreens/mainTabScreen.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/progressScreen.dart';
+import 'package:habit_tracker/view(Screens)/ProgressScreen/progressScreen.dart';
 //import 'package:flutter/services.dart';
 
 void main() {
