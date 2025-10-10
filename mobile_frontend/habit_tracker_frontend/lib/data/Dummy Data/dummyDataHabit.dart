@@ -14,6 +14,7 @@ class HabitSamples {
         createdAt: DateTime.now().subtract(Duration(days: 7)),
         currentStreak: 5,
         bestStreak: 12,
+        isGoalAchieved: false,
       ),
       Habit(
         id: '2',
@@ -25,6 +26,7 @@ class HabitSamples {
         createdAt: DateTime.now().subtract(Duration(days: 14)),
         currentStreak: 3,
         bestStreak: 8,
+        isGoalAchieved: false,
       ),
       Habit(
         id: '3',
@@ -36,6 +38,7 @@ class HabitSamples {
         createdAt: DateTime.now().subtract(Duration(days: 3)),
         currentStreak: 7,
         bestStreak: 2,
+        isGoalAchieved: true,
       ),
       Habit(
         id: '4',
@@ -47,6 +50,7 @@ class HabitSamples {
         createdAt: DateTime.now().subtract(Duration(days: 21)),
         currentStreak: 3,
         bestStreak: 4,
+        isGoalAchieved: true,
       ),
     ];
   }

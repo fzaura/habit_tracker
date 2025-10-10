@@ -131,7 +131,8 @@ class Utilprogressscreen {
     );
   }
 
-  static Widget yourGoalsContainer(BuildContext ctxt) {
+  static Widget yourGoalsContainer({required BuildContext ctxt,required int numberOfAchievedGoals ,required int allGoals}) {
+    
     return Container(
       padding: EdgeInsets.all(24),
       margin: EdgeInsets.fromLTRB(6, 31, 6, 0),
@@ -152,7 +153,8 @@ class Utilprogressscreen {
                 ),
               );
             }),
-            progressDoneTodayConatiner(4, 6),
+
+            progressDoneTodayConatiner(numberOfAchievedGoals,allGoals ),
             Detailedgoalslister(
               canUserScroll: false,
               seeAll: false,

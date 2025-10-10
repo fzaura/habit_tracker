@@ -6,7 +6,7 @@ enum HabitGoal { buildHabit, breakHabit, maintain }
 
 enum PeriodUnit { daily, weekly, monthly }
 
-enum SortGoalsBYs {all , achieved , notAchieved}
+enum SortGoalsBYs { all, achieved, notAchieved }
 
 class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   HabitsStateNotifier()
@@ -31,15 +31,23 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
         .toList();
   }
 
+
+
+
   // In your StateNotifier
   void toggleHabit(String habitID) {
     state = state.map((habit) {
       int currentStreak = habit.currentStreak;
       if (habit.id == habitID) {
         return habit.copyWith(
+
           isCompleted: !habit.isCompleted,
           currentStreak: habit.isCompleted ? currentStreak++ : currentStreak,
-        ); //Am Making a new habit using the copy with method so I don't mutate the object and have actual changes on my state
+          isGoalAchieved: habit.currentStreak == habit.targettedPeriod
+              ? true
+              : false,
+          completedDates: [],
+        ); 
       }
       return habit;
     }).toList();

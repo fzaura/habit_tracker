@@ -9,6 +9,7 @@ class Habit {
   bool isCompleted;
   int currentStreak;
   int bestStreak;
+  bool isGoalAchieved;
   List<DateTime> completedDates;
 
   Habit({
@@ -22,6 +23,7 @@ class Habit {
     this.isCompleted = false,
     this.currentStreak = 0,
     this.bestStreak = 0,
+    this.isGoalAchieved=false,
     this.completedDates = const [],
   });
 
@@ -43,6 +45,7 @@ Habit copyWith({String? id,String? habitName, String? goal,
   EnperiodUnit? periodUnit,
   DateTime? createdAt,
   bool? isCompleted,
+  bool? isGoalAchieved,
   int? currentStreak,
   int? bestStreak,
   List<DateTime>? completedDates, })

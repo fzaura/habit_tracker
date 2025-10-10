@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalCard.dart';
+import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/view(Screens)/ProgressScreen/theGoalInDetail.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 
 class Detailedgoalslister extends ConsumerWidget {
@@ -15,6 +17,14 @@ class Detailedgoalslister extends ConsumerWidget {
   final bool seeAll;
   final bool shrinkWrap;
   final bool canUserScroll;
+
+  void goToGoalInDetail(BuildContext context, Habit habit) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TheGoalInDetail(habit: habit)),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habits = ref.watch(habitSampleProvider);
@@ -29,7 +39,9 @@ class Detailedgoalslister extends ConsumerWidget {
           key: ValueKey(index),
           habitToDisplay: habits[index],
         ),
-        onTap: (){},
+        onTap: () {
+          goToGoalInDetail(context, habits[index]);
+        },
       ),
     );
   }
