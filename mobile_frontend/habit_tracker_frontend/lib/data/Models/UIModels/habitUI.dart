@@ -23,7 +23,7 @@ class Habit {
     this.isCompleted = false,
     this.currentStreak = 0,
     this.bestStreak = 0,
-    this.isGoalAchieved=false,
+    this.isGoalAchieved = false,
     this.completedDates = const [],
   });
 
@@ -39,34 +39,36 @@ class Habit {
     );
   }
 
-Habit copyWith({String? id,String? habitName, String? goal,
-  EnhabitGoal? habitType,
-  int? targettedPeriod,
-  EnperiodUnit? periodUnit,
-  DateTime? createdAt,
-  bool? isCompleted,
-  bool? isGoalAchieved,
-  int? currentStreak,
-  int? bestStreak,
-  List<DateTime>? completedDates, })
-  {
-    return   Habit(
-    id: id ?? this.id,
-    habitName: habitName ?? this.habitName,
-    goal: goal ?? this.goal,
-    habitType: habitType ?? this.habitType,
-    targettedPeriod: targettedPeriod ?? this.targettedPeriod,
-    periodUnit: periodUnit ?? this.periodUnit,
-    createdAt: createdAt ?? this.createdAt,
-    isCompleted: isCompleted ?? this.isCompleted,
-    currentStreak: currentStreak ?? this.currentStreak,
-    bestStreak: bestStreak ?? this.bestStreak,
-    completedDates: completedDates ?? this.completedDates,
-  );
+  Habit copyWith({
+    String? id,
+    String? habitName,
+    String? goal,
+    EnhabitGoal? habitType,
+    int? targettedPeriod,
+    EnperiodUnit? periodUnit,
+    DateTime? createdAt,
+    bool? isCompleted,
+    bool? isGoalAchieved,
+    int? currentStreak,
+    int? bestStreak,
+    List<DateTime>? completedDates,
+  }) {
+    return Habit(
+      id: id ?? this.id,
+      habitName: habitName ?? this.habitName,
+      goal: goal ?? this.goal,
+      habitType: habitType ?? this.habitType,
+      targettedPeriod: targettedPeriod ?? this.targettedPeriod,
+      periodUnit: periodUnit ?? this.periodUnit,
+      createdAt: createdAt ?? this.createdAt,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isGoalAchieved: isGoalAchieved ?? this.isGoalAchieved,
+      currentStreak: currentStreak ?? this.currentStreak,
+      bestStreak: bestStreak ?? this.bestStreak,
+      completedDates: completedDates ?? this.completedDates,
+    );
+  }
 }
-}
-
-
 
 enum EnhabitGoal { buildHabit, breakHabit, maintain }
 

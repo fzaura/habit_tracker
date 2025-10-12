@@ -9,13 +9,21 @@ class DetailedGoalCard extends ConsumerWidget {
   const DetailedGoalCard({super.key, required this.habitToDisplay});
   final Habit habitToDisplay;
   Widget _circlePercentage(int currentStreak, int targettedStreak) {
-    double percentageOfStreak = currentStreak / targettedStreak * 100;
-
+    double percentageOfStreak = (currentStreak / targettedStreak) * 100;
+    double actualPercent = currentStreak / targettedStreak;
     return Stack(
       alignment: AlignmentGeometry.center,
       children: [
-        CircularPercentIndicator(percent:  currentStreak / targettedStreak, radius: 25),
-        Text('${percentageOfStreak.toInt().toString()}%', style: mainAppTheme.textTheme.labelMedium),
+        CircularPercentIndicator(
+          percent: actualPercent > 1.0 ? 1.0 : actualPercent,
+          radius: 25,
+        ),
+        Text(
+          percentageOfStreak.toInt() >= 100
+              ? '100%'
+              : '${percentageOfStreak.toInt()}%',
+          style: mainAppTheme.textTheme.labelMedium,
+        ),
       ],
     );
   }
@@ -38,7 +46,7 @@ class DetailedGoalCard extends ConsumerWidget {
   }
 
   bool isTargetAchieved() {
-    if (habitToDisplay.currentStreak == habitToDisplay.targettedPeriod) {
+    if (habitToDisplay.isGoalAchieved) {
       return true;
     } else {
       return false;

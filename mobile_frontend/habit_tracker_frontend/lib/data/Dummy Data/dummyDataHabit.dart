@@ -1,8 +1,8 @@
-// Sample data for testing
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class HabitSamples {
   static List<Habit> getSampleHabits() {
+    final now = DateTime.now();
     return [
       Habit(
         id: '1',
@@ -11,10 +11,17 @@ class HabitSamples {
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 8,
         periodUnit: EnperiodUnit.daily,
-        createdAt: DateTime.now().subtract(Duration(days: 7)),
+        createdAt: now.subtract(Duration(days: 7)),
         currentStreak: 5,
         bestStreak: 12,
         isGoalAchieved: false,
+        completedDates: [
+          now.subtract(Duration(days: 1)),
+          now.subtract(Duration(days: 2)),
+          now.subtract(Duration(days: 3)),
+          now.subtract(Duration(days: 4)),
+          now.subtract(Duration(days: 5)),
+        ],
       ),
       Habit(
         id: '2',
@@ -23,10 +30,15 @@ class HabitSamples {
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 7,
         periodUnit: EnperiodUnit.daily,
-        createdAt: DateTime.now().subtract(Duration(days: 14)),
+        createdAt: now.subtract(Duration(days: 14)),
         currentStreak: 3,
         bestStreak: 8,
         isGoalAchieved: false,
+        completedDates: [
+          now.subtract(Duration(days: 1)),
+          now.subtract(Duration(days: 2)),
+          now.subtract(Duration(days: 3)),
+        ],
       ),
       Habit(
         id: '3',
@@ -35,10 +47,16 @@ class HabitSamples {
         habitType: EnhabitGoal.breakHabit,
         targettedPeriod: 7,
         periodUnit: EnperiodUnit.daily,
-        createdAt: DateTime.now().subtract(Duration(days: 3)),
+        createdAt: now.subtract(Duration(days: 3)),
         currentStreak: 7,
         bestStreak: 2,
         isGoalAchieved: true,
+        completedDates: [
+          now.subtract(Duration(days: 1)),
+          now.subtract(Duration(days: 2)),
+          now.subtract(Duration(days: 3)),
+          now,
+        ],
       ),
       Habit(
         id: '4',
@@ -47,10 +65,15 @@ class HabitSamples {
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 3,
         periodUnit: EnperiodUnit.weekly,
-        createdAt: DateTime.now().subtract(Duration(days: 21)),
+        createdAt: now.subtract(Duration(days: 21)),
         currentStreak: 3,
         bestStreak: 4,
         isGoalAchieved: true,
+        completedDates: [
+          now.subtract(Duration(days: 7)),
+          now.subtract(Duration(days: 14)),
+          now.subtract(Duration(days: 21)),
+        ],
       ),
     ];
   }
