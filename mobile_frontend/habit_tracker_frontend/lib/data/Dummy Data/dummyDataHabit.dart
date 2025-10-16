@@ -12,7 +12,7 @@ class HabitSamples {
         targettedPeriod: 8,
         periodUnit: EnperiodUnit.daily,
         createdAt: now.subtract(Duration(days: 7)),
-        currentStreak: 5,
+        currentStreak: 7,
         bestStreak: 12,
         isGoalAchieved: false,
         completedDates: [
@@ -66,7 +66,7 @@ class HabitSamples {
         targettedPeriod: 3,
         periodUnit: EnperiodUnit.weekly,
         createdAt: now.subtract(Duration(days: 21)),
-        currentStreak: 3,
+        currentStreak: 2,
         bestStreak: 4,
         isGoalAchieved: true,
         completedDates: [
