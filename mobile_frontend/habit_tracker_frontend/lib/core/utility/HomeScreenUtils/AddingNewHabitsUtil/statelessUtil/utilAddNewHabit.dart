@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/app/themes.dart';
+import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UtilAddNewHabitUI {

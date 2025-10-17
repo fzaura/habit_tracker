@@ -14,12 +14,10 @@ class Homescreen extends ConsumerStatefulWidget {
 }
 
 class _HomescreenState extends ConsumerState<Homescreen> {
-  final String formattedDate = DateFormat(
-    'EEE d,MMM,y',
-  ).format(DateTime.now());
+  final String formattedDate = DateFormat('EEE, MMM ,yyy').format(DateTime.now());   // Fri, Oct 17
 
 final String formattedDateAfterAWeek = DateFormat(
-    'EEE d,MMM,y',
+    'd/M/y',
   ).format(DateTime.now().add(Duration(days: 7)));
   late TextEditingController yourGoalController;
   late TextEditingController yourHabitController;

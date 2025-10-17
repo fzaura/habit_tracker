@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/globalData.dart';
-import 'package:habit_tracker/app/themes.dart';
+import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -44,14 +44,17 @@ class UtilHomeScreenWidgets {
               fontSize: 16,
             ),
           ),
+          const SizedBox(height: 6),
           Text(
             '$formattedDate to $formattedDateAfterAWeek',
 
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.bold,
               fontSize: 16,
+              shadows: [Shadow(offset: Offset(0, 1),blurRadius: 1)]
             ),
           ),
+          const SizedBox(height: 6),
 
           RichText(
             text: TextSpan(
