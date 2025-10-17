@@ -27,19 +27,32 @@ class UtilHomeScreenWidgets {
     );
   }
 
-  static Widget homeScreenWelcomeMessage(final String formattedDate) {
+  static Widget homeScreenWelcomeMessage(
+    final String formattedDate,
+    final String formattedDateAfterAWeek,
+  ) {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            formattedDate,
+            'Your Weekly Goals From :',
+
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
+          Text(
+            '$formattedDate to $formattedDateAfterAWeek',
+
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+
           RichText(
             text: TextSpan(
               children: [
@@ -69,9 +82,19 @@ class UtilHomeScreenWidgets {
 
   static Widget habitsDoneToday(int habitsCheckedToday, int allTheHabits) {
     return CircularPercentIndicator(
-      progressColor: mainAppTheme.colorScheme.onPrimary.withValues(alpha: 0.8),
-      lineWidth: 15,
-      radius: 60,
+      animation: true,
+      rotateLinearGradient: true,
+      backgroundColor: Colors.white.withValues(alpha: 0.6),
+      linearGradient: LinearGradient(
+        colors: [
+          Colors.white.withValues(alpha: 0.7),
+          Colors.white.withValues(alpha: 1),
+        ],
+        begin: AlignmentGeometry.bottomLeft,
+        end: AlignmentGeometry.topRight,
+      ),
+      lineWidth: 17,
+      radius: 63,
       percent: (habitsCheckedToday / allTheHabits),
     );
   }
@@ -80,7 +103,7 @@ class UtilHomeScreenWidgets {
     double mainPecetnage = habitsCheckedToday / allTheHabits * 100;
     return Container(
       width: double.infinity,
-      height: 189,
+      height: 199,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [mainAppTheme.cardColor, mainAppTheme.colorScheme.primary],
@@ -100,9 +123,9 @@ class UtilHomeScreenWidgets {
             child: habitsDoneToday(habitsCheckedToday, allTheHabits),
           ),
           Positioned(
-            top: 80,
+            top: 85,
 
-            bottom: 55,
+            bottom: 45,
             left: 85,
             right: 234,
 
@@ -115,17 +138,23 @@ class UtilHomeScreenWidgets {
               ),
             ),
           ),
-          const SizedBox(width: 20),
           Positioned(
             top: 61,
 
             bottom: 54,
-            left: 169,
+            left: 189,
             right: 10.24,
 
             child: Text(
-              '${habitsCheckedToday} of ${allTheHabits} \n Completed Today :D',
+              '${habitsCheckedToday} of ${allTheHabits} \nCompleted Today!',
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    blurRadius: 6,
+                    offset: Offset(2, 2),
+                  ),
+                ],
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -133,18 +162,19 @@ class UtilHomeScreenWidgets {
             ),
           ),
           Positioned(
-            top: 108,
+            top: 120,
 
-            bottom: 5,
-            left: 0.60,
-            right: 10.24,
+            bottom: 0,
+            left: 300.60,
+            right: 43.24,
 
-            child: Image.asset(
-              'resources/Calender_Flatline.png',
-              errorBuilder: (context, error, stackTrace) {
-                print('IMAGE ERROR: $error');
-                return Text('Image failed to load');
-              },
+            child: Transform.scale(
+              scale: 3.6,
+              child: Image.asset(
+                'resources/Calendar_Flatline.png',
+                width: 132,
+                height: 100,
+              ),
             ),
           ),
         ],

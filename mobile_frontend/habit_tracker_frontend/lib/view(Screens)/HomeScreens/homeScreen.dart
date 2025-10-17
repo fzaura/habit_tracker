@@ -15,9 +15,12 @@ class Homescreen extends ConsumerStatefulWidget {
 
 class _HomescreenState extends ConsumerState<Homescreen> {
   final String formattedDate = DateFormat(
-    'EEE d,MMMM,y',
+    'EEE d,MMM,y',
   ).format(DateTime.now());
 
+final String formattedDateAfterAWeek = DateFormat(
+    'EEE d,MMM,y',
+  ).format(DateTime.now().add(Duration(days: 7)));
   late TextEditingController yourGoalController;
   late TextEditingController yourHabitController;
 
@@ -68,7 +71,8 @@ class _HomescreenState extends ConsumerState<Homescreen> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate),
+        toolbarHeight: 100,
+        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate, formattedDateAfterAWeek),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -95,10 +99,10 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                   nameOfListHeader: 'Today\'s Habits',
                   appBarText: 'Your Habits ',
                   showHorizentalCalendar: true,
-                  lister: GoalsCardLister(
-                    seeAll: true,
+                  lister: Habitslister(
+                    seeAll: false,
                     shrinkWrap: true,
-                    canUserScroll: true,
+                    canUserScroll: false,
                   ),
                 );
               },
