@@ -10,10 +10,7 @@ class TheGoalInDetail extends StatelessWidget {
   Row detailsFormat(Widget fieldToFill, Widget filedWith) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        fieldToFill,
-        filedWith,
-      ],
+      children: [fieldToFill, filedWith],
     );
   }
 
@@ -32,7 +29,7 @@ class TheGoalInDetail extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.all(24),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,16 +48,16 @@ class TheGoalInDetail extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: habitToDisplay.isGoalAchieved 
-                      ? Colors.green.shade50 
+                  color: habitToDisplay.isGoalAchieved
+                      ? Colors.green.shade50
                       : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   habitToDisplay.isGoalAchieved ? 'Achieved' : 'In Progress',
                   style: TextStyle(
-                    color: habitToDisplay.isGoalAchieved 
-                        ? Colors.green 
+                    color: habitToDisplay.isGoalAchieved
+                        ? Colors.green
                         : Colors.grey.shade600,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
@@ -69,11 +66,11 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ],
           ),
-          
+
           SizedBox(height: 24),
           Divider(height: 1),
           SizedBox(height: 16),
-          
+
           // Habit Name
           detailsFormat(
             Text(
@@ -91,9 +88,9 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Target
           detailsFormat(
             Text(
@@ -111,9 +108,9 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Days complete
           detailsFormat(
             Text(
@@ -131,9 +128,9 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Days failed
           detailsFormat(
             Text(
@@ -151,9 +148,9 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Habit type
           detailsFormat(
             Text(
@@ -171,9 +168,9 @@ class TheGoalInDetail extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Created on
           detailsFormat(
             Text(
@@ -199,9 +196,18 @@ class TheGoalInDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+      backgroundColor:const Color(0xFFF5F5F5),
+      appBar: AppBar( toolbarHeight: 80,
+
+        backgroundColor:const Color(0xFFF5F5F5),
+        title: Text(
+          maxLines: 2,
+          habit.goal,
+          style: mainAppTheme.textTheme.labelLarge?.copyWith(
+            fontSize: 21,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         elevation: 0,
       ),
       body: SingleChildScrollView(

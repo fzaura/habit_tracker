@@ -59,10 +59,19 @@ class Utilprogressscreen {
   static Widget progressWheel(int habitGoalAchieved, int allHabitGoals) {
     return CircularPercentIndicator(
       startAngle: 3,
-      progressColor: mainAppTheme.colorScheme.onPrimary.withValues(alpha: 0.8),
       lineWidth: 25,
       radius: 95,
       percent: (habitGoalAchieved / allHabitGoals),
+      animation: true,
+      animationDuration: 500,
+      rotateLinearGradient: true,
+      backgroundColor: const Color.fromARGB(255, 235, 235, 235),
+      linearGradient: LinearGradient(
+        colors: [
+          const Color.fromARGB(255, 234, 59, 6),
+          const Color.fromARGB(255, 246, 161, 50),
+        ],
+      ),
     );
   }
 
@@ -103,7 +112,9 @@ class Utilprogressscreen {
               Text(
                 '${currentPercentage.toInt().toString()}%',
                 style: mainAppTheme.textTheme.labelMedium?.copyWith(
-                  fontSize: 29,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w800,
+                  color: mainAppTheme.colorScheme.primary,
                 ),
               ),
             ],
@@ -131,8 +142,11 @@ class Utilprogressscreen {
     );
   }
 
-  static Widget yourGoalsContainer({required BuildContext ctxt,required int numberOfAchievedGoals ,required int allGoals}) {
-    
+  static Widget yourGoalsContainer({
+    required BuildContext ctxt,
+    required int numberOfAchievedGoals,
+    required int allGoals,
+  }) {
     return Container(
       padding: EdgeInsets.all(24),
       margin: EdgeInsets.fromLTRB(6, 31, 6, 0),
@@ -152,9 +166,12 @@ class Utilprogressscreen {
                   canUserScroll: true,
                 ),
               );
-            }),//Lists All the Goals
+            }), //Lists All the Goals
 
-            progressDoneTodayContainer(numberOfAchievedGoals,allGoals ),//Main Container That tells how many goals are done
+            progressDoneTodayContainer(
+              numberOfAchievedGoals,
+              allGoals,
+            ), //Main Container That tells how many goals are done
             Detailedgoalslister(
               canUserScroll: false,
               seeAll: false,
@@ -181,6 +198,4 @@ class Utilprogressscreen {
       ),
     );
   }
-
-  
 }

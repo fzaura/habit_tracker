@@ -48,19 +48,23 @@ class _MainTabScreenState extends State<MainTabScreen> {
     return Scaffold(
       body: activeScreen,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         onTap: _changeScreen,
         currentIndex: activePageIndex,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined),
+            icon: const Icon(Icons.home_outlined,size: 33,),
             label: 'Home',
+          
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.published_with_changes),
+            icon: const Icon(Icons.add_chart_outlined,size: 33,),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined,size: 33,),
             label: 'Settings',
           ),
         ],
