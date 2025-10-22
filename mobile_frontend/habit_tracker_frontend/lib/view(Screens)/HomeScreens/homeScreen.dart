@@ -112,13 +112,13 @@ final String formattedDateAfterAWeek = DateFormat(
                 shrinkWrap: true,
                 canUserScroll: false,
               ),
-              nameOfListHeader: 'Your Goals',
+              nameOfListHeader: 'Your Weekly Goals',
               habitsList,
               pressSeeAll: () {
                 UtilHomeScreenWidgets.takeToSeeAllPage(
                   ctxt: context,
                   nameOfListHeader: '',
-                  appBarText: 'Your Goals ',
+                  appBarText: 'Your Weekly Goals ',
                   showHorizentalCalendar: true,
                   lister: GoalsCardLister(
                     seeAll: true,

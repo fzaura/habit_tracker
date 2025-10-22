@@ -186,31 +186,34 @@ class UtilHomeScreenWidgets {
   }
 
   static Widget listHeader(String name, VoidCallback? onPressButton) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          name,
-          style: GoogleFonts.nunito(
-            color: Colors.black,
-            fontSize: 21,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(width: 128),
-        if (onPressButton != null)
-          TextButton(
-            onPressed: onPressButton,
-            child: Text(
-              'See all',
-              style: GoogleFonts.nunito(
-                color: mainAppTheme.colorScheme.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            name,
+            style: GoogleFonts.nunito(
+              color: Colors.black,
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
             ),
           ),
-      ],
+          SizedBox(width: 100),
+          if (onPressButton != null)
+            TextButton(
+              onPressed: onPressButton,
+              child: Text(
+                'See all',
+                style: GoogleFonts.nunito(
+                  color: mainAppTheme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -224,7 +227,7 @@ class UtilHomeScreenWidgets {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
+        color: const Color.fromARGB(255, 251, 250, 250),
       ),
       margin: EdgeInsets.all(12),
       width: double.infinity,

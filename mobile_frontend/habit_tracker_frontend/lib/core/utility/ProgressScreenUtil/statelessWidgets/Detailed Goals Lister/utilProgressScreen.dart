@@ -24,7 +24,7 @@ extension StringtimePhase on EnTimePhase {
 }
 
 class Utilprogressscreen {
-  static Widget homeScreenWelcomeMessage() {
+  static Widget homeScreenProgressReport() {
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +84,7 @@ class Utilprogressscreen {
     );
   }
 
-  static Widget progressDoneTodayConatiner(
+  static Widget progressDoneTodayContainer(
     int habitGoalAchieved,
     int allHabitGoals,
   ) {
@@ -152,9 +152,9 @@ class Utilprogressscreen {
                   canUserScroll: true,
                 ),
               );
-            }),
+            }),//Lists All the Goals
 
-            progressDoneTodayConatiner(numberOfAchievedGoals,allGoals ),
+            progressDoneTodayContainer(numberOfAchievedGoals,allGoals ),//Main Container That tells how many goals are done
             Detailedgoalslister(
               canUserScroll: false,
               seeAll: false,

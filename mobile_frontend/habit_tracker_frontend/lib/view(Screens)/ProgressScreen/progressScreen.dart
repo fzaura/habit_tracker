@@ -21,7 +21,7 @@ class ProgressScreen extends ConsumerWidget {
       appBar: (AppBar(
         backgroundColor: Color(0xFFEDEDED),
         toolbarHeight: 80,
-        title: Utilprogressscreen.homeScreenWelcomeMessage(),
+        title: Utilprogressscreen.homeScreenProgressReport(),//Header of the Screen 
       )),
       body: Utilprogressscreen.yourGoalsContainer(
         ctxt: context,

@@ -13,12 +13,9 @@ ThemeData mainAppTheme = ThemeData(
   extensions: [
     GradientTheme(
       primaryGradient: LinearGradient(
-        colors: [
-          mainAppTheme.colorScheme.primary,
-          Colors.white.withValues(alpha: 0.7),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+        colors: [const Color.fromARGB(255, 234, 59, 6), Colors.orangeAccent],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
       ),
     ),
   ],

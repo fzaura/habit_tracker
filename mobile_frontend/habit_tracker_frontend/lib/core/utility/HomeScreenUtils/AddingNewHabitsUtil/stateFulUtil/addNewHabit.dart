@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/app/Themes/gradientTheme.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
@@ -59,12 +60,8 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
   Widget defaultAddHabitButton() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [mainAppTheme.cardColor, mainAppTheme.colorScheme.primary],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
+        gradient: Theme.of(context).extension<GradientTheme>()?.primaryGradient,
+        borderRadius: BorderRadius.circular(6),
       ),
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 33),
@@ -90,34 +87,14 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
           'Add New Habit',
           style: mainAppTheme.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.w900,
+            color: Colors.white,
           ),
         ),
       ),
     );
   }
 
-  Widget cancelButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: mainAppTheme.colorScheme.primary, // Orange color
-        foregroundColor: Colors.white, // Text color
-        shadowColor: Colors.orangeAccent.withOpacity(0.5), // Shadow color
-        elevation: 5, // Shadow elevation
-        padding: const EdgeInsets.symmetric(
-          vertical: 14,
-        ), // Matches text field height
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            6,
-          ), // Same border radius as text field
-        ),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: Text('Cancel', style: mainAppTheme.textTheme.labelMedium),
-    );
-  }
+  
 
   @override
   void initState() {
@@ -156,7 +133,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField('',yourGoalController),
+            editTextField('', yourGoalController),
             SizedBox(height: 15),
 
             // Habit Name Field
@@ -168,7 +145,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
               ),
             ),
             SizedBox(height: 5),
-            editTextField('',yourHabitController),
+            editTextField('', yourHabitController),
 
             SizedBox(height: 15),
 
@@ -197,8 +174,7 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
                 // Add Button
                 defaultAddHabitButton(),
 
-                // Cancel Button
-                cancelButton(),
+               
               ],
             ),
           ],
