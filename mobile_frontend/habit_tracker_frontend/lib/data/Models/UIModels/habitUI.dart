@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Habit {
   final String id;
   String habitName;
@@ -11,6 +13,10 @@ class Habit {
   int bestStreak;
   bool isGoalAchieved;
   List<DateTime> completedDates;
+  // New: icon to represent the habit in UI. Uses IconData so widgets can render
+  // with an Icon(habit.icon). If user doesn't choose an icon, this defaults
+  // to [Icons.flag] (a sensible generic icon).
+  IconData icon;
 
   Habit({
     required this.id,
@@ -25,6 +31,7 @@ class Habit {
     this.bestStreak = 0,
     this.isGoalAchieved = false,
     this.completedDates = const [],
+    this.icon = Icons.flag,
   });
 
   // Helper methods
@@ -52,6 +59,7 @@ class Habit {
     int? currentStreak,
     int? bestStreak,
     List<DateTime>? completedDates,
+    IconData? icon,
   }) {
     return Habit(
       id: id ?? this.id,
@@ -66,6 +74,7 @@ class Habit {
       currentStreak: currentStreak ?? this.currentStreak,
       bestStreak: bestStreak ?? this.bestStreak,
       completedDates: completedDates ?? this.completedDates,
+      icon: icon ?? this.icon,
     );
   }
 }

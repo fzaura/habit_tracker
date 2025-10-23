@@ -20,7 +20,8 @@ class DetailedGoalCard extends ConsumerWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildPercentageIndicator(),
+              // Icon badge on the far left (represents the habit)
+              _buildPercentageIndicator(),
             const SizedBox(width: 12),
             Expanded(child: _buildNameAndTarget(context)),
             const SizedBox(width: 12),
@@ -73,6 +74,11 @@ class DetailedGoalCard extends ConsumerWidget {
       ),
     );
   }
+
+  // Build a small circular badge that shows the habit icon. The badge uses
+  // the same status color for its background when achieved to keep visuals
+  // consistent. This is purely presentational.
+
 
   // Build the main name + subtext column.
   Widget _buildNameAndTarget(BuildContext context) {

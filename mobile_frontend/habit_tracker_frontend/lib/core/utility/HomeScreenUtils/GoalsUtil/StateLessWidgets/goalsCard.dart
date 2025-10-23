@@ -37,29 +37,18 @@ class GoalsCard extends StatelessWidget {
   }
 
   // WHAT: Get icon based on habit type
-  // WHY: Visual indicator for habit category
-  IconData _getHabitIcon() {
-    switch (habitGoals.habitType) {
-      case EnhabitGoal.buildHabit:
-        return Icons.trending_up;
-      case EnhabitGoal.breakHabit:
-        return Icons.block;
-      case EnhabitGoal.maintain:
-        return Icons.track_changes;
-    }
-  }
+  // NOTE: Removed icon-by-habit-type. Use the habit's `icon` property from
+  // the data model (Habit.icon). This keeps the icon selection explicit and
+  // controlled by the model (or user), and avoids hard-coded type icons.
 
-  // WHAT: Check if goal is achieved
-  // WHY: Determine which action widget to show
-  bool _isCompleted() {
-    return habitGoals.currentStreak >= habitGoals.targettedPeriod;
-  }
+
 
   // ========== WIDGET METHODS ==========
 
   // WHAT: Icon container with gradient background
   // WHY: Visual identity for each habit
   Widget _goalIcon(LinearGradient? gradient) {
+
     return Container(
       width: 56,
       height: 56,
@@ -67,7 +56,10 @@ class GoalsCard extends StatelessWidget {
         gradient: gradient,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(_getHabitIcon(), color: Colors.white, size: 28),
+      // Use the icon stored on the Habit model. This replaces the old
+      // habit-type based icons and gives each habit an explicit icon.
+     
+      child: Icon(habitGoals.icon, color: Colors.white, size: 28),
     );
   }
 

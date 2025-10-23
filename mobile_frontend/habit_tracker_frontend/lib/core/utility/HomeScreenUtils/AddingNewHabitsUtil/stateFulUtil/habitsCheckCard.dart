@@ -32,17 +32,32 @@ class Habitscheckcard extends ConsumerWidget {
       child: Card(
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        color: habitToDisplay.isCompleted
-            ? Colors.lightGreen.shade50
-            : Colors.white,
-        child: Container(
+        child: AnimatedContainer(
+          curve: Curves.easeInOutCubicEmphasized,
+          duration: Duration(milliseconds: 500),
+          decoration: BoxDecoration(
+            color: habitToDisplay.isCompleted
+                ? Colors.green.shade50
+                : const Color.fromARGB(255, 255, 255, 255),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              if (habitToDisplay.isCompleted)
+                BoxShadow(
+                  color: Colors.green.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+            ],
+          ),
           padding: const EdgeInsets.all(6),
+
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
-                child: Text(
-                  habitToDisplay.habitName,
+                child: AnimatedDefaultTextStyle(
+                  curve: Curves.easeInOut,
+                  duration: Duration(milliseconds: 500),
                   style: GoogleFonts.nunito(
                     fontSize: 20,
                     color: habitToDisplay.isCompleted
@@ -51,6 +66,10 @@ class Habitscheckcard extends ConsumerWidget {
                     decoration: habitToDisplay.isCompleted
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
+                  ),
+                  child: Text(
+                    habitToDisplay.habitName,
+                    // style: mainAppTheme.textTheme.labelLarge?.copyWith(fontSize: 20,color: Colors.black)
                   ),
                 ),
               ),
@@ -66,8 +85,7 @@ class Habitscheckcard extends ConsumerWidget {
                           ref
                               .read(habitSampleProvider.notifier)
                               .toggleHabit(habitToDisplay.id);
-                              
-                        } 
+                        }
                       },
                       activeColor: Colors.green.shade600,
                       checkColor: Colors.white,

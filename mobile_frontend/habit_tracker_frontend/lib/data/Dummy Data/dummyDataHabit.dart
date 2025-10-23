@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class HabitSamples {
@@ -15,6 +16,7 @@ class HabitSamples {
         currentStreak: 7,
         bestStreak: 12,
         isGoalAchieved: false,
+        icon: Icons.local_drink,
         completedDates: [
           now.subtract(Duration(days: 1)),
           now.subtract(Duration(days: 2)),
@@ -34,6 +36,7 @@ class HabitSamples {
         currentStreak: 3,
         bestStreak: 8,
         isGoalAchieved: false,
+        icon: Icons.fitness_center,
         completedDates: [
           now.subtract(Duration(days: 1)),
           now.subtract(Duration(days: 2)),
@@ -51,6 +54,7 @@ class HabitSamples {
         currentStreak: 7,
         bestStreak: 2,
         isGoalAchieved: true,
+        icon: Icons.phone_android,
         completedDates: [
           now.subtract(Duration(days: 1)),
           now.subtract(Duration(days: 2)),
@@ -69,6 +73,7 @@ class HabitSamples {
         currentStreak: 2,
         bestStreak: 4,
         isGoalAchieved: true,
+        icon: Icons.book,
         completedDates: [
           now.subtract(Duration(days: 7)),
           now.subtract(Duration(days: 14)),
