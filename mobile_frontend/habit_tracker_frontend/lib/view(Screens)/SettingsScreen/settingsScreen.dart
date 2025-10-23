@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/utilProgressScreen.dart';
+import 'package:habit_tracker/core/utility/SettingsScreenUtil/utilSettingsScreen.dart';
 import 'account_screen.dart';
 import 'terms_screen.dart';
 import 'policy_screen.dart';
@@ -8,39 +10,6 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   // Small helper that builds a tappable card used for each settings row.
-  Widget _buildSettingCard({required BuildContext context, required String title, required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
-            const Icon(Icons.chevron_right, color: Colors.black45),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +21,11 @@ class SettingsScreen extends StatelessWidget {
         centerTitle: false,
         title: const Text(
           'Setting',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            color: Colors.black87,
+          ),
         ),
       ),
       body: SafeArea(
@@ -62,28 +35,40 @@ class SettingsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Cards list
-              _buildSettingCard(
+              Utilsettingsscreen.buildSettingCard(
                 context: context,
                 title: 'Account',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AccountScreen()),
+                ),
               ),
 
-              _buildSettingCard(
+              Utilsettingsscreen.buildSettingCard(
                 context: context,
                 title: 'Term and Condition',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TermsScreen())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TermsScreen()),
+                ),
               ),
 
-              _buildSettingCard(
+              Utilsettingsscreen.buildSettingCard(
                 context: context,
                 title: 'Policy',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PolicyScreen())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PolicyScreen()),
+                ),
               ),
 
-              _buildSettingCard(
+              Utilsettingsscreen.buildSettingCard(
                 context: context,
                 title: 'About App',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AboutScreen()),
+                ),
               ),
 
               // Expand to push content up if needed
