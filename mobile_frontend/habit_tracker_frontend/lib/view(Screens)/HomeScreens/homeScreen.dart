@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/seeAllTodayHabits.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/addNewHabit.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
@@ -13,10 +14,11 @@ class Homescreen extends ConsumerStatefulWidget {
 }
 
 class _HomescreenState extends ConsumerState<Homescreen> {
-  final String formattedDate = DateFormat(
-    'EEE d,MMMM,y',
-  ).format(DateTime.now());
+  final String formattedDate = DateFormat('EEE, MMM ,yyy').format(DateTime.now());   // Fri, Oct 17
 
+final String formattedDateAfterAWeek = DateFormat(
+    'd/M/y',
+  ).format(DateTime.now().add(Duration(days: 7)));
   late TextEditingController yourGoalController;
   late TextEditingController yourHabitController;
 
@@ -35,7 +37,13 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   Widget build(BuildContext context) {
     final habitsList = ref.watch(habitSampleProvider);
+    final int checkedHabits = habitsList
+        .where((habit) => habit.isCompleted)
+        .length;
+    final int unCheckedHabits = habitsList.length;
+
     return Scaffold(
+      backgroundColor: Color(0xFFEDEDED),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -60,23 +68,63 @@ class _HomescreenState extends ConsumerState<Homescreen> {
         ),
       ),
       appBar: AppBar(
-        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate),
+        backgroundColor: Colors.white,
+        toolbarHeight: 100,
+        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate, formattedDateAfterAWeek),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            UtilHomeScreenWidgets.homeProgressCard(),
-            UtilHomeScreenWidgets.todayHabitContainer(
-              requiredHeight: 352,
-              seeAllHabits: false,
-              shrinkWrap: true,
+            UtilHomeScreenWidgets.homeProgressCard(
+              checkedHabits,
+              unCheckedHabits,
+            ),
+
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: Habitslister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
+              nameOfListHeader: 'Today\'s Habits',
+              requiredHeight: 400,
               habitsList,
               pressSeeAll: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SeeAllTodayHabits()),
+                UtilHomeScreenWidgets.takeToSeeAllPage(
+                  ctxt: context,
+                  nameOfListHeader: 'Today\'s Habits',
+                  appBarText: 'Your Habits ',
+                  showHorizentalCalendar: true,
+                  lister: Habitslister(
+                    seeAll: false,
+                    shrinkWrap: true,
+                    canUserScroll: false,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 29),
+            UtilHomeScreenWidgets.todayTemplateContainer(
+              listToView: GoalsCardLister(
+                seeAll: false,
+                shrinkWrap: true,
+                canUserScroll: false,
+              ),
+              nameOfListHeader: 'Your Weekly Goals',
+              habitsList,
+              pressSeeAll: () {
+                UtilHomeScreenWidgets.takeToSeeAllPage(
+                  ctxt: context,
+                  nameOfListHeader: '',
+                  appBarText: 'Your Weekly Goals ',
+                  showHorizentalCalendar: true,
+                  lister: GoalsCardLister(
+                    seeAll: true,
+                    shrinkWrap: true,
+                    canUserScroll: true,
+                  ),
                 );
               },
             ),
