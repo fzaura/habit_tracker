@@ -8,6 +8,11 @@ class IHabitRepository {
   updateHabit(habitId, habitData, userId) {
     throw new Error("Method not implemented.");
   }
+
+  getAllHabits(userId) {
+    throw new Error("Method not implemented.");
+  }
+
   getHabits(page, limit, userId) {
     throw new Error("Method not implemented.");
   }
