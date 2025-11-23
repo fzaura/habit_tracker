@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsCheckCard.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
 class Habitslister extends ConsumerWidget {
   const Habitslister({
@@ -30,7 +30,7 @@ class Habitslister extends ConsumerWidget {
         itemBuilder: (context, index) {
           final habit = habitsToList[index];
           return Habitscheckcard(
-            key: ValueKey(habitsToList[index]),
+            key: ValueKey(habitsToList[index].id),
             habitToDisplay: habit,
           );
         },

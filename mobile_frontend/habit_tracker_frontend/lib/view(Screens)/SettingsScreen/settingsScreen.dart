@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/utilProgressScreen.dart';
 import 'package:habit_tracker/core/utility/SettingsScreenUtil/utilSettingsScreen.dart';
 import 'account_screen.dart';
 import 'terms_screen.dart';
@@ -20,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: false,
         title: const Text(
-          'Setting',
+          'Settings',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w800,

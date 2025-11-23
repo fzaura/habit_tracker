@@ -13,10 +13,13 @@ class Homescreen extends ConsumerStatefulWidget {
   ConsumerState<Homescreen> createState() => _HomescreenState();
 }
 
-class _HomescreenState extends ConsumerState<Homescreen> {
-  final String formattedDate = DateFormat('EEE, MMM ,yyy').format(DateTime.now());   // Fri, Oct 17
+class _HomescreenState extends ConsumerState<Homescreen>
+    with SingleTickerProviderStateMixin {
+  final String formattedDate = DateFormat(
+    'EEE, MMM ,yyy',
+  ).format(DateTime.now()); // Fri, Oct 17
 
-final String formattedDateAfterAWeek = DateFormat(
+  final String formattedDateAfterAWeek = DateFormat(
     'd/M/y',
   ).format(DateTime.now().add(Duration(days: 7)));
   late TextEditingController yourGoalController;
@@ -26,11 +29,20 @@ final String formattedDateAfterAWeek = DateFormat(
     showDialog(context: context, builder: (context) => Addnewhabit());
   }
 
+  late AnimationController _animationcontroller;
+
   @override
   void initState() {
     yourGoalController = TextEditingController();
     yourHabitController = TextEditingController();
+    _animationcontroller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+      lowerBound: 0,
+      upperBound: 1,
+    );
 
+    _animationcontroller.forward();
     super.initState();
   }
 
@@ -70,65 +82,77 @@ final String formattedDateAfterAWeek = DateFormat(
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 100,
-        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(formattedDate, formattedDateAfterAWeek),
+        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(
+          formattedDate,
+          formattedDateAfterAWeek,
+        ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            UtilHomeScreenWidgets.homeProgressCard(
-              checkedHabits,
-              unCheckedHabits,
+        child: AnimatedBuilder(
+          builder: (context, child) => SlideTransition(
+            position: _animationcontroller.drive(
+              Tween(begin: const Offset(0, 0.4), end: const Offset(0, 0)),
             ),
+            child: child,
+          ),
+          animation: _animationcontroller,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              UtilHomeScreenWidgets.homeProgressCard(
+                checkedHabits,
+                unCheckedHabits,
+              ),
 
-            UtilHomeScreenWidgets.todayTemplateContainer(
-              listToView: Habitslister(
-                seeAll: false,
-                shrinkWrap: true,
-                canUserScroll: false,
+              UtilHomeScreenWidgets.todayTemplateContainer(
+                listToView: Habitslister(
+                  seeAll: false,
+                  shrinkWrap: true,
+                  canUserScroll: false,
+                ),
+                nameOfListHeader: 'Today\'s Habits',
+                requiredHeight: 400,
+                habitsList,
+                pressSeeAll: () {
+                  UtilHomeScreenWidgets.takeToSeeAllPage(
+                    ctxt: context,
+                    nameOfListHeader: 'Today\'s Habits',
+                    appBarText: 'Your Habits ',
+                    showHorizentalCalendar: true,
+                    lister: Habitslister(
+                      seeAll: false,
+                      shrinkWrap: true,
+                      canUserScroll: false,
+                    ),
+                  );
+                },
               ),
-              nameOfListHeader: 'Today\'s Habits',
-              requiredHeight: 400,
-              habitsList,
-              pressSeeAll: () {
-                UtilHomeScreenWidgets.takeToSeeAllPage(
-                  ctxt: context,
-                  nameOfListHeader: 'Today\'s Habits',
-                  appBarText: 'Your Habits ',
-                  showHorizentalCalendar: true,
-                  lister: Habitslister(
-                    seeAll: false,
-                    shrinkWrap: true,
-                    canUserScroll: false,
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 29),
-            UtilHomeScreenWidgets.todayTemplateContainer(
-              listToView: GoalsCardLister(
-                seeAll: false,
-                shrinkWrap: true,
-                canUserScroll: false,
+              const SizedBox(height: 29),
+              UtilHomeScreenWidgets.todayTemplateContainer(
+                listToView: GoalsCardLister(
+                  seeAll: false,
+                  shrinkWrap: true,
+                  canUserScroll: false,
+                ),
+                nameOfListHeader: 'Your Weekly Goals',
+                habitsList,
+                pressSeeAll: () {
+                  UtilHomeScreenWidgets.takeToSeeAllPage(
+                    ctxt: context,
+                    nameOfListHeader: '',
+                    appBarText: 'Your Weekly Goals ',
+                    showHorizentalCalendar: true,
+                    lister: GoalsCardLister(
+                      seeAll: true,
+                      shrinkWrap: true,
+                      canUserScroll: true,
+                    ),
+                  );
+                },
               ),
-              nameOfListHeader: 'Your Weekly Goals',
-              habitsList,
-              pressSeeAll: () {
-                UtilHomeScreenWidgets.takeToSeeAllPage(
-                  ctxt: context,
-                  nameOfListHeader: '',
-                  appBarText: 'Your Weekly Goals ',
-                  showHorizentalCalendar: true,
-                  lister: GoalsCardLister(
-                    seeAll: true,
-                    shrinkWrap: true,
-                    canUserScroll: true,
-                  ),
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -138,6 +162,7 @@ final String formattedDateAfterAWeek = DateFormat(
   void dispose() {
     yourGoalController.dispose();
     yourHabitController.dispose();
+    _animationcontroller.dispose();
     super.dispose();
   }
 }

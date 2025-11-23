@@ -5,7 +5,7 @@ import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
 class EditDeleteHabits extends ConsumerStatefulWidget {
   const EditDeleteHabits({super.key, required this.habitToEdit});
@@ -45,17 +45,21 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
   }
 
 
-
-  Widget editTextField(String mainHintText, TextEditingController controller) {
+  Widget editTextField(String mainHintText,String mainLabelText ,TextEditingController controller) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: TextField(
+      child: TextFormField(
         autofocus: true,
         decoration: InputDecoration(
+          labelText: mainLabelText,
+          labelStyle:   mainAppTheme.textTheme.titleSmall?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
           border: InputBorder.none,
           hintText: mainHintText,
         ),
@@ -141,76 +145,78 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
       child: Container(
         padding: EdgeInsets.all(24),
         color: Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Edit Habit Goal',
-              style: mainAppTheme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+        child: Form(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                'Edit Habit Goal',
+                style: mainAppTheme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
-            ),
-            Divider(),
-            SizedBox(height: 20),
-
-            // Your Goal Field
-            Text(
-              'Your Goal',
-              style: mainAppTheme.textTheme.titleSmall?.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+              Divider(),
+              SizedBox(height: 20),
+          
+              // Your Goal Field
+              Text(
+                'Your Goal',
+                style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 5),
-            editTextField(widget.habitToEdit.goal,yourGoalController),
-            SizedBox(height: 15),
-
-            // Habit Name Field
-            Text(
-              'Habit Name',
-              style: mainAppTheme.textTheme.titleSmall?.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 5),
+           //   editTextField(widget.habitToEdit.goal,yourGoalController),
+              SizedBox(height: 15),
+          
+              // Habit Name Field
+              Text(
+                'Habit Name',
+                style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 5),
-            editTextField(widget.habitToEdit.habitName,yourHabitController),
-
-            SizedBox(height: 15),
-
-            // Period Dropdown
-            SizedBox(height: 5),
-            DropDownButtonTemp(
-              buttonName: 'Period',
-              passedEnumValue: periodUnit,
-              enumValues: EnperiodUnit.values,
-            ),
-            SizedBox(height: 15),
-
-            // Habit Type Dropdown
-            DropDownButtonTemp(
-              buttonName: 'Habit Type',
-              passedEnumValue: habitGoal,
-              enumValues: EnhabitGoal.values,
-            ),
-
-            SizedBox(height: 25),
-
-            // Buttons
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Update Button
-                defaultUpdateButton(),
-
-                // Delete Button
-                deleteButton(),
-              ],
-            ),
-          ],
+              SizedBox(height: 5),
+             // editTextField(widget.habitToEdit.habitName,yourHabitController),
+          
+              SizedBox(height: 15),
+          
+              // Period Dropdown
+              SizedBox(height: 5),
+              DropDownButtonTemp(
+                buttonName: 'Period',
+                passedEnumValue: periodUnit,
+                enumValues: EnperiodUnit.values,
+              ),
+              SizedBox(height: 15),
+          
+              // Habit Type Dropdown
+              DropDownButtonTemp(
+                buttonName: 'Habit Type',
+                passedEnumValue: habitGoal,
+                enumValues: EnhabitGoal.values,
+              ),
+          
+              SizedBox(height: 25),
+          
+              // Buttons
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Update Button
+                  defaultUpdateButton(),
+          
+                  // Delete Button
+                  deleteButton(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

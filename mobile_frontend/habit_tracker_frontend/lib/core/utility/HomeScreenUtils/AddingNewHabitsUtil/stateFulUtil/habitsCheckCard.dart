@@ -5,43 +5,49 @@ import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/
 import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
-class Habitscheckcard extends ConsumerWidget {
+class Habitscheckcard extends ConsumerStatefulWidget {
   const Habitscheckcard({super.key, required this.habitToDisplay});
   final Habit habitToDisplay;
 
+  @override
+  ConsumerState<Habitscheckcard> createState() => _HabitscheckcardState();
+}
+
+class _HabitscheckcardState extends ConsumerState<Habitscheckcard> {
   void editOrDelete(BuildContext context, String value) {
     if (value == 'Edit') {
       showDialog(
         context: context,
-        builder: (context) => EditDeleteHabits(habitToEdit: habitToDisplay),
+        builder: (context) =>
+            EditDeleteHabits(habitToEdit: widget.habitToDisplay),
       );
     } else if (value == 'Delete') {
       showDialog(
         context: context,
-        builder: (context) => ConfirmDelete(toDeleteHabitId: habitToDisplay.id),
+        builder: (context) =>
+            ConfirmDelete(toDeleteHabitId: widget.habitToDisplay.id),
       );
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
       child: Card(
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: AnimatedContainer(
-          curve: Curves.easeInOutCubicEmphasized,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(microseconds: 300),
           decoration: BoxDecoration(
-            color: habitToDisplay.isCompleted
+            color: widget.habitToDisplay.isCompleted
                 ? Colors.green.shade50
                 : const Color.fromARGB(255, 255, 255, 255),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
-              if (habitToDisplay.isCompleted)
+              if (widget.habitToDisplay.isCompleted)
                 BoxShadow(
                   color: Colors.green.withOpacity(0.2),
                   blurRadius: 8,
@@ -50,41 +56,33 @@ class Habitscheckcard extends ConsumerWidget {
             ],
           ),
           padding: const EdgeInsets.all(6),
-
           width: double.infinity,
           child: Row(
             children: [
               Expanded(
                 child: AnimatedDefaultTextStyle(
-                  curve: Curves.easeInOut,
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   style: GoogleFonts.nunito(
                     fontSize: 20,
-                    color: habitToDisplay.isCompleted
+                    color: widget.habitToDisplay.isCompleted
                         ? Colors.green.shade700
                         : Colors.black87,
-                    decoration: habitToDisplay.isCompleted
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
                   ),
-                  child: Text(
-                    habitToDisplay.habitName,
-                    // style: mainAppTheme.textTheme.labelLarge?.copyWith(fontSize: 20,color: Colors.black)
-                  ),
+                  child: Text(widget.habitToDisplay.habitName),
                 ),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Transform.scale(
-                    scale: 1.5, // Make checkbox slightly bigger
+                    scale: 1.5,
                     child: Checkbox(
-                      value: habitToDisplay.isCompleted,
+                      value: widget.habitToDisplay.isCompleted,
                       onChanged: (bool? newValue) {
                         if (newValue != null) {
                           ref
                               .read(habitSampleProvider.notifier)
-                              .toggleHabit(habitToDisplay.id);
+                              .toggleHabit(widget.habitToDisplay.id);
                         }
                       },
                       activeColor: Colors.green.shade600,
