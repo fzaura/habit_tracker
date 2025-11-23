@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/habit.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/habit.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @module controllers/habit
  * @description Habit controller containing handlers for creating, updating, deleting and querying habits and their completions.
  */
@@ -18,7 +46,7 @@ const { validationResult } = require("express-validator");
  * @param {Object} req - Express request object containing habit data in body (name, goal, frequency, endDate)
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with created habit or error
+ * @returns {Promise&lt;void>} JSON response with created habit or error
  */
 const createHabit = async (req, res, next) => {
   const errors = validationResult(req);
@@ -62,7 +90,7 @@ const createHabit = async (req, res, next) => {
  * @param {Object} req - Express request object with habit ID in params
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response confirming deletion or error
+ * @returns {Promise&lt;void>} JSON response confirming deletion or error
  */
 const deleteHabit = async (req, res, next) => {
   const { id } = req.params;
@@ -97,7 +125,7 @@ const deleteHabit = async (req, res, next) => {
  * @param {Object} req - Express request object with habit ID in params and update data in body
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with updated habit or error
+ * @returns {Promise&lt;void>} JSON response with updated habit or error
  */
 const updateHabit = async (req, res, next) => {
   const errors = validationResult(req);
@@ -150,7 +178,7 @@ const updateHabit = async (req, res, next) => {
  * @param {Object} req - Express request object with optional page/limit query params
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with paginated habits list
+ * @returns {Promise&lt;void>} JSON response with paginated habits list
  */
 const getHabits = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
@@ -188,7 +216,7 @@ const getHabits = async (req, res, next) => {
  * @param {Object} req - Express request object with habit ID in params and date in body
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with completion record or error
+ * @returns {Promise&lt;void>} JSON response with completion record or error
  */
 const markAsCompleted = async (req, res, next) => {
   const { id } = req.params;
@@ -254,7 +282,7 @@ const markAsCompleted = async (req, res, next) => {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with today's habits and completion status
+ * @returns {Promise&lt;void>} JSON response with today's habits and completion status
  */
 const getTodaysHabits = async (req, res, next) => {
   const userId = req.user.userId;
@@ -299,7 +327,7 @@ const getTodaysHabits = async (req, res, next) => {
  * @param {Object} req - Express request object with date string in body
  * @param {Object} res - Express response object
  * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with weekly habit data and completion status
+ * @returns {Promise&lt;void>} JSON response with weekly habit data and completion status
  */
 const getWeeklyHabits = async (req, res, next) => {
   const errors = validationResult(req);
@@ -350,13 +378,13 @@ const getWeeklyHabits = async (req, res, next) => {
       endOfWeek,
       habits: habits.map((habit) => {
         const weeklyCompletions = {};
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i &lt; 7; i++) {
           const day = new Date(startOfWeek);
           day.setDate(startOfWeek.getDate() + i);
           const dayKey = day.toISOString().split("T")[0];
 
           weeklyCompletions[dayKey] =
-            completionsMap.has(dayKey) &&
+            completionsMap.has(dayKey) &amp;&amp;
             completionsMap.get(dayKey).has(habit._id.toString());
         }
 
@@ -379,3 +407,26 @@ module.exports = {
   getTodaysHabits,
   getWeeklyHabits,
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-server.html">server</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Sep 29 2025 01:54:25 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

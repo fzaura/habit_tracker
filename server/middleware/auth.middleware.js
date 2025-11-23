@@ -1,10 +1,19 @@
+/**
+ * @module middleware/auth
+ * @description JWT authentication middleware for protecting routes.
+ */
 const jwt = require("jsonwebtoken");
 
 /**
+ * JWT authentication middleware.
+ * Verifies Bearer token in Authorization header and attaches user payload to req.user.
  *
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
+ * @memberof module:middleware/auth
+ * @function authenticateJWT
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @returns {void} Calls next() on success or sends 401/403 response on failure
  */
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: types/common.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: types/common.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module types/common
+ * @description Common type definitions used across the application.
+ */
+
+/**
+ * Standard API response structure
+ * @typedef {Object} ApiResponse
+ * @property {string} message - Response message
+ * @property {*} [data] - Optional response data
+ * @property {Array} [errors] - Array of validation errors
+ */
+
+/**
+ * JWT token pair
+ * @typedef {Object} TokenPair
+ * @property {string} accessToken - JWT access token (15 minutes)
+ * @property {string} refreshToken - JWT refresh token (7 days)
+ */
+
+/**
+ * User registration request payload
+ * @typedef {Object} RegisterRequest
+ * @property {string} username - Username (5-12 characters)
+ * @property {string} email - Valid email address
+ * @property {string} password - Password (min 10 chars, must contain number and special char)
+ * @property {string} confirmPassword - Password confirmation
+ */
+
+/**
+ * User login request payload
+ * @typedef {Object} LoginRequest
+ * @property {string} email - User email
+ * @property {string} password - User password
+ */
+
+/**
+ * User update request payload
+ * @typedef {Object} UpdateUserRequest
+ * @property {string} [username] - New username
+ * @property {string} [email] - New email
+ * @property {string} [password] - New password
+ * @property {string} [confirmPassword] - Password confirmation
+ */
+
+/**
+ * Token refresh request payload
+ * @typedef {Object} RefreshTokenRequest
+ * @property {string} refreshToken - Valid refresh token
+ */
+
+/**
+ * Habit frequency configuration
+ * @typedef {Object} HabitFrequency
+ * @property {string} type - Frequency type: 'daily' or 'weekly'
+ * @property {number[]} [daysOfWeek] - Array of day indices (0-6) for weekly habits
+ */
+
+/**
+ * Habit creation request payload
+ * @typedef {Object} CreateHabitRequest
+ * @property {string} name - Habit name (max 100 characters)
+ * @property {string} goal - Habit description/goal (max 500 characters)
+ * @property {HabitFrequency} frequency - Frequency configuration
+ * @property {string} [endDate] - Optional end date (ISO format)
+ */
+
+/**
+ * Habit update request payload
+ * @typedef {Object} UpdateHabitRequest
+ * @property {string} [name] - Updated habit name
+ * @property {string} [goal] - Updated habit goal
+ * @property {HabitFrequency} [frequency] - Updated frequency configuration
+ * @property {string} [endDate] - Updated end date
+ */
+
+/**
+ * Habit completion request payload
+ * @typedef {Object} MarkCompletedRequest
+ * @property {string} date - Completion date in YYYY-MM-DD format
+ */
+
+/**
+ * Pagination query parameters
+ * @typedef {Object} PaginationQuery
+ * @property {number} [page=1] - Page number
+ * @property {number} [limit=10] - Items per page
+ */
+
+/**
+ * Pagination metadata
+ * @typedef {Object} PaginationMeta
+ * @property {number} totalItems - Total number of items
+ * @property {number} totalPages - Total number of pages
+ * @property {number} currentPage - Current page number
+ */
+
+/**
+ * Paginated response structure
+ * @typedef {Object} PaginatedResponse
+ * @property {Array} data - Array of items for current page
+ * @property {PaginationMeta} pagination - Pagination metadata
+ */
+
+/**
+ * User data (without sensitive fields)
+ * @typedef {Object} UserData
+ * @property {string} id - User ID
+ * @property {string} username - Username
+ * @property {string} email - Email address
+ */
+
+/**
+ * Authentication response
+ * @typedef {Object} AuthResponse
+ * @property {string} message - Success message
+ * @property {string} accessToken - JWT access token
+ * @property {string} refreshToken - JWT refresh token
+ * @property {UserData} user - User data
+ */
+
+/**
+ * Habit completion data
+ * @typedef {Object} HabitCompletion
+ * @property {string} habitId - Associated habit ID
+ * @property {string} userId - User ID
+ * @property {Date} dateOfCompletion - Completion date
+ * @property {Date} createdAt - Creation timestamp
+ * @property {Date} updatedAt - Update timestamp
+ */
+
+/**
+ * Weekly habit overview
+ * @typedef {Object} WeeklyHabitData
+ * @property {Date} startOfWeek - Start of week date
+ * @property {Date} endOfWeek - End of week date
+ * @property {Array} habits - Array of habits with weekly completion status
+ */
+
+module.exports = {};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-server.html">server</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Sep 29 2025 01:54:25 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
