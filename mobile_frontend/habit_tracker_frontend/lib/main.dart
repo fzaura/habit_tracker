@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/mainTabScreen.dart';
+import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/mainTabScreen.dart';
 //import 'package:flutter/services.dart';
 
 void main() {

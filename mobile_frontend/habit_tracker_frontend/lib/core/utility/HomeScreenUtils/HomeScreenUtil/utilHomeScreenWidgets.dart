@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/globalData.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
-import 'package:habit_tracker/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
+import 'package:habit_tracker/presentation/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class UtilHomeScreenWidgets {
