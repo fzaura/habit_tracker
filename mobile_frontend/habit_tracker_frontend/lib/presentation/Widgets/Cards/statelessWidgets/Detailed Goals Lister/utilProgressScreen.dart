@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
+import 'package:habit_tracker/domain/Features/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 enum EnTimePhase { thisWeek, thisMonth, thisYear }

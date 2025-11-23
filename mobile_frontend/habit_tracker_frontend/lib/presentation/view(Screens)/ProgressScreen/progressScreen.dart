@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/utilProgressScreen.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/statelessWidgets/Detailed%20Goals%20Lister/utilProgressScreen.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
