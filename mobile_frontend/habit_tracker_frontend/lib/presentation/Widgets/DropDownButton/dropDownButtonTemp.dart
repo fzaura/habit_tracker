@@ -29,7 +29,7 @@ class _DropDownButtonTempState extends State<DropDownButtonTemp> {
             style: GoogleFonts.nunito(fontSize: 16),
           ),
         ),
-        DropdownButton(
+        DropdownButtonFormField(
           value: widget.passedEnumValue,
           items: widget.enumValues
               .map(

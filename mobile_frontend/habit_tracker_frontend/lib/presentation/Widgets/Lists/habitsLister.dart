@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateLessWidgets/goalsCard.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
-class GoalsCardLister extends ConsumerWidget {
-  const GoalsCardLister({
+class Habitslister extends ConsumerWidget {
+  const Habitslister({
     super.key,
     required this.seeAll,
     required this.shrinkWrap,
@@ -13,24 +13,25 @@ class GoalsCardLister extends ConsumerWidget {
   final bool seeAll;
   final bool shrinkWrap;
   final bool canUserScroll;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitLister = ref.watch(habitSampleProvider);
+    final habitsToList = ref.watch(habitSampleProvider);
     return Container(
-      constraints: BoxConstraints(minHeight: 300, maxHeight: 500),
+      constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
       child: ListView.builder(
-        shrinkWrap: shrinkWrap,
         physics: canUserScroll
             ? AlwaysScrollableScrollPhysics()
             : NeverScrollableScrollPhysics(),
-        itemCount: (habitLister.length <= 3) || (seeAll)
-            ? habitLister.length
+        shrinkWrap: shrinkWrap,
+        itemCount: seeAll || (habitsToList.length <= 3)
+            ? habitsToList.length
             : 3,
         itemBuilder: (context, index) {
-          final habitToDisplay = habitLister[index];
-          return GoalsCard(
-            key: ValueKey(habitLister[index]),
-            habitGoals: habitToDisplay,
+          final habit = habitsToList[index];
+          return Habitscheckcard(
+            key: ValueKey(habitsToList[index].id),
+            habitToDisplay: habit,
           );
         },
       ),

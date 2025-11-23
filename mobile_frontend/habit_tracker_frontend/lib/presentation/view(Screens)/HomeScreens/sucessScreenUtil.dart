@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
+import 'package:habit_tracker/domain/Features/AddNewHabits/utilAddNewHabit.dart';
 
 class SucessScreenUtil extends StatelessWidget {
   const SucessScreenUtil({super.key});

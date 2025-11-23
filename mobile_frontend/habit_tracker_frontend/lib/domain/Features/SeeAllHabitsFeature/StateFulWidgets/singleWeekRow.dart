@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/SeeAllUtil/StatelessWidgets/dayOfWeek.dart';
+import 'package:habit_tracker/domain/Features/SeeAllHabitsFeature/StatelessWidgets/dayOfWeek.dart';
 import 'package:intl/intl.dart';
 
 class SingleWeekRow extends StatefulWidget {

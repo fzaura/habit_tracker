@@ -5,7 +5,7 @@ import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Widgets/DropDownButton/dropDownButtonTemp.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/presentation/Widgets/Lists/detailedGoalsLister.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalsLister.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 enum EnTimePhase { thisWeek, thisMonth, thisYear }

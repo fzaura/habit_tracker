@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/gradientTheme.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
+import 'package:habit_tracker/domain/Features/AddNewHabits/utilAddNewHabit.dart';
+import 'package:habit_tracker/domain/Features/EditHabits/editDeleteHabits.dart';
+import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 
 class GoalsCard extends StatelessWidget {
