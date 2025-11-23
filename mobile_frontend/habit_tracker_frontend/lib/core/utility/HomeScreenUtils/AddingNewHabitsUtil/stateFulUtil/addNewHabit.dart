@@ -4,8 +4,8 @@ import 'package:habit_tracker/app/Themes/gradientTheme.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/dropDownButtonTemp.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
-import 'package:habit_tracker/view(Screens)/HomeScreens/sucessScreenUtil.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/sucessScreenUtil.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
 class Addnewhabit extends ConsumerStatefulWidget {
   const Addnewhabit({super.key});
@@ -14,21 +14,22 @@ class Addnewhabit extends ConsumerStatefulWidget {
 }
 
 class _AddnewhabitState extends ConsumerState<Addnewhabit> {
-  late TextEditingController yourGoalController;
-  late TextEditingController yourHabitController;
+ 
+
 
   EnhabitGoal habitGoal = EnhabitGoal.buildHabit;
   EnperiodUnit periodUnit = EnperiodUnit.daily;
 
-  Widget editTextField(String mainHintText, TextEditingController controller) {
+  
+
+  Widget editTextField(String mainHintText) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: TextField(
-        controller: controller,
+      child: TextFormField(
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: mainHintText,
@@ -99,85 +100,80 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
   @override
   void initState() {
     super.initState();
-    yourGoalController = TextEditingController();
-    yourHabitController = TextEditingController();
+   
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Container(
-        padding: EdgeInsets.all(24),
-        color: Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Add New Habit',
-              style: mainAppTheme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+      child: Form(
+        child: Container(
+          padding: EdgeInsets.all(24),
+          color: Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                'Add New Habit',
+                style: mainAppTheme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
-            ),
-            Divider(),
-            SizedBox(height: 20),
-
-            // Your Goal Field
-            Text(
-              'Your Goal',
-              style: mainAppTheme.textTheme.titleSmall?.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+              Divider(),
+              SizedBox(height: 20),
+        
+              // Your Goal Field
+              Text(
+                'Your Goal',
+                style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 5),
-            editTextField('', yourGoalController),
-            SizedBox(height: 15),
-
-            // Habit Name Field
-            Text(
-              'Habit Name',
-              style: mainAppTheme.textTheme.titleSmall?.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 5),
+              editTextField('',),
+              SizedBox(height: 15),
+        
+              // Habit Name Field
+              Text(
+                'Habit Name',
+                style: mainAppTheme.textTheme.titleSmall?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 5),
-            editTextField('', yourHabitController),
-
-            SizedBox(height: 15),
-
-            // Period Dropdown
-            SizedBox(height: 5),
-            DropDownButtonTemp(
-              buttonName: 'Period',
-              passedEnumValue: periodUnit,
-              enumValues: EnperiodUnit.values,
-            ),
-            SizedBox(height: 15),
-
-            // Habit Type Dropdown
-            DropDownButtonTemp(
-              buttonName: 'Habit Type',
-              passedEnumValue: habitGoal,
-              enumValues: EnhabitGoal.values,
-            ),
-
-            SizedBox(height: 25),
-
-            // Buttons
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Add Button
-                defaultAddHabitButton(),
-
-               
-              ],
-            ),
-          ],
+              SizedBox(height: 5),
+              editTextField('',),
+        
+              SizedBox(height: 15),
+        
+              // Period Dropdown
+              SizedBox(height: 5),
+              DropdownButtonFormField(
+              
+              ),
+              SizedBox(height: 15),
+        
+              // Habit Type Dropdown
+             
+        
+              SizedBox(height: 25),
+        
+              // Buttons
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Add Button
+                  defaultAddHabitButton(),
+        
+                 
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

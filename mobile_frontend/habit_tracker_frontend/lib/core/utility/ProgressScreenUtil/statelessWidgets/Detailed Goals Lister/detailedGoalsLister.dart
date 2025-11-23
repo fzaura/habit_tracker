@@ -4,8 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/detailedGoalCard.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
-import 'package:habit_tracker/view(Screens)/ProgressScreen/theGoalInDetail.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/view(Screens)/ProgressScreen/theGoalInDetail.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
 class Detailedgoalslister extends ConsumerWidget {
   const Detailedgoalslister({

@@ -4,7 +4,7 @@ import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/s
 import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/GoalsUtil/StateFulWidgets/goalsCardLister.dart';
 import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
-import 'package:habit_tracker/view_model(Providers)/habitsStateNotifier.dart';
+import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 import 'package:intl/intl.dart';
 
 class Homescreen extends ConsumerStatefulWidget {
