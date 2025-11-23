@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/stateFulUtil/habitsCheckCard.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
 class Habitslister extends ConsumerWidget {
