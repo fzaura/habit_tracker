@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/domain/Features/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
-import 'package:habit_tracker/domain/Features/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
-import 'package:habit_tracker/domain/Features/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/AddingNewHabitsUtil/statelessUtil/utilAddNewHabit.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateFullUtil/editDeleteHabits.dart';
+import 'package:habit_tracker/core/utility/HomeScreenUtils/EditDeleteHabitsUtil/StateLessUtil/confirmDelete.dart';
 import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
