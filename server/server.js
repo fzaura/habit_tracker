@@ -20,17 +20,17 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const authRoutes = require("./routes/auth.routes");
-const habitRoutes = require("./routes/habit.routes");
 
 const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
 const HabitService = require("./services/HabitService");
-const createController = require("./controllers/habit.controller");
-const createRouter = require("./routes/habit.routes");
+const createHabitController = require("./controllers/habit.controller");
+const createHabitRouter = require("./routes/habit.routes");
 require("dotenv").config();
 
 const habitRepo = new MongooseHabitRepo();
 const habitService = new HabitService(habitRepo);
-const habitRouter = createRouter(createController(habitService));
+const habitController = createHabitController(habitService);
+const habitRouter = createHabitRouter(habitController);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
