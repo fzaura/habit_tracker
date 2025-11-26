@@ -1,381 +1,120 @@
-/**
- * @module controllers/habit
- * @description Habit controller containing handlers for creating, updating, deleting and querying habits and their completions.
- */
-const { default: mongoose } = require("mongoose");
-const { validateJWT } = require("../middleware/auth.middleware");
-const Habit = require("../models/habit.model");
-const HabitCompletion = require("../models/habitCompletion.model");
-
 const { validationResult } = require("express-validator");
-/**
- * Create a new habit for the authenticated user.
- * Validates input and creates habit with specified frequency and goals.
- *
- * @memberof module:controllers/habit
- * @async
- * @function createHabit
- * @param {Object} req - Express request object containing habit data in body (name, goal, frequency, endDate)
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with created habit or error
- */
-const createHabit = async (req, res, next) => {
-  const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { name, goal, frequency, endDate } = req.body;
-
-  if (frequency === "daily") {
-    frequency.daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
-  }
-
-  try {
-    const newHabit = new Habit({
-      name,
-      goal,
-      frequency,
-      endDate,
-      userId: req.user.userId,
-    });
-
-    await newHabit.save();
-
-    return res
-      .status(201)
-      .json({ message: "New habit successfully added.", habit: newHabit });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Delete a habit owned by the authenticated user.
- * Validates habit ID and ensures user owns the habit before deletion.
- *
- * @memberof module:controllers/habit
- * @async
- * @function deleteHabit
- * @param {Object} req - Express request object with habit ID in params
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response confirming deletion or error
- */
-const deleteHabit = async (req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.userId;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid habit ID format." });
-  }
-
-  try {
-    const result = await Habit.deleteOne({ _id: id, userId });
-
-    if (result.deletedCount === 0) {
-      return res
-        .status(404)
-        .json({ message: "Task not found or user is unauthorized." });
+const createHabitController = (habitService) => {
+  const createHabit = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    return res.status(200).json({ message: "Task deleted successfully." });
-  } catch (error) {
-    next(error);
-  }
-};
+    const { name, goal, frequency, endDate } = req.body;
 
-/**
- * Update a habit owned by the authenticated user.
- * Allows updating name, goal, frequency, and end date.
- *
- * @memberof module:controllers/habit
- * @async
- * @function updateHabit
- * @param {Object} req - Express request object with habit ID in params and update data in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with updated habit or error
- */
-const updateHabit = async (req, res, next) => {
-  const errors = validationResult(req);
+    try {
+      const newHabit = await habitService.createHabit(
+        { name, goal, frequency, endDate },
+        req.user.userId
+      );
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { name, goal, frequency, endDate } = req.body;
-
-  if (frequency === "daily") {
-    frequency = [0, 1, 2, 3, 4, 5, 6];
-  }
-
-  const { id } = req.params;
-  const userId = req.user.userId;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid habit ID format" });
-  }
-
-  try {
-    const updatedHabit = await Habit.findOneAndUpdate(
-      { _id: id, userId },
-      { name, goal, frequency, endDate },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedHabit) {
       return res
-        .status(404)
-        .json({ message: "Habit not found or user is unauthorized." });
+        .status(201)
+        .json({ message: "New habit successfully added.", habit: newHabit });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const deleteHabit = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Habit updated successfully.", habit: updateHabit });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Get paginated list of habits for the authenticated user.
- * Supports pagination through query parameters.
- *
- * @memberof module:controllers/habit
- * @async
- * @function getHabits
- * @param {Object} req - Express request object with optional page/limit query params
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with paginated habits list
- */
-const getHabits = async (req, res, next) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-  const userId = req.user.userId;
-
-  try {
-    const [habits, numberOfDocuments] = await Promise.all([
-      Habit.find({ userId }).limit(limit).skip(skip),
-      Habit.countDocuments({ userId }),
-    ]);
-
-    const totalPages = Math.ceil(numberOfDocuments / limit);
-    return res.status(200).json({
-      data: habits,
-      pagination: {
-        totalItems: numberOfDocuments,
-        totalPages,
-        currentPage: page,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Mark a habit as completed on a specific date.
- * Creates a completion record for tracking habit adherence.
- *
- * @memberof module:controllers/habit
- * @async
- * @function markAsCompleted
- * @param {Object} req - Express request object with habit ID in params and date in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with completion record or error
- */
-const markAsCompleted = async (req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.userId;
-
-  const { date: dateString } = req.body;
-  if (!dateString) {
-    return res
-      .status(400)
-      .json({ message: "A date string is required in the form YYYY-MM-DD" });
-  }
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid habit ID format" });
-  }
-
-  try {
-    const habit = await Habit.findOne({ _id: id, userId });
-    if (!habit) {
-      return res
-        .status(404)
-        .json({ message: "Habit not found or user is unauthorized." });
-    }
-
-    const dateOfCompletion = new Date(dateString);
-
-    const existingCompletion = await HabitCompletion.findOne({
-      habitId: id,
-      userId,
-      dateOfCompletion,
-    }).lean();
-
-    if (existingCompletion) {
-      return res
-        .status(409)
-        .json({ message: "Habit already marked as complete for the day." });
-    }
-
-    const newHabitCompletion = new HabitCompletion({
-      habitId: id,
-      userId,
-      dateOfCompletion,
-    });
-
-    await newHabitCompletion.save();
-
-    return res.status(201).json({
-      message: "Habit successfully marked as completed.",
-      completion: newHabitCompletion,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Get today's active habits with completion status for the authenticated user.
- * Returns habits scheduled for today with completion flags.
- *
- * @memberof module:controllers/habit
- * @async
- * @function getTodaysHabits
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with today's habits and completion status
- */
-const getTodaysHabits = async (req, res, next) => {
-  const userId = req.user.userId;
-  const today = new Date().getUTCDay();
-
-  try {
-    const activeHabits = await Habit.findOne({
-      userId,
-      "frequency.daysOfWeek": { $in: [today] },
-    }).lean();
-
-    const startOfToday = new Date();
-    startOfToday.setUTCHours(0, 0, 0, 0);
-
-    const todaysCompletions = await HabitCompletion.find({
-      userId,
-      dateOfCompletion: startOfToday,
-    });
-
-    const completedHabits = new Set(
-      todaysCompletions.map((comp) => comp.habitId.toString())
-    );
-
-    const todaysHabits = activeHabits.map((habit) => ({
-      ...habit,
-      isCompletedToday: completedHabits.has(habit._id.toString()),
-    }));
-
-    res.status(200).json({ data: todaysHabits });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Get weekly habit overview for a specified date range.
- * Returns habits with completion status for each day of the week.
- *
- * @memberof module:controllers/habit
- * @async
- * @function getWeeklyHabits
- * @param {Object} req - Express request object with date string in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with weekly habit data and completion status
- */
-const getWeeklyHabits = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
+    const { id: habitId } = req.params;
     const userId = req.user.userId;
 
-    const { date: dateString } = req.body;
+    try {
+      const result = await habitService.deleteHabit(habitId, userId);
 
-    const today = new Date(dateString);
-    const dayOfWeek = today.getDay();
-    const offsetToMonday = (dayOfWeek + 6) % 7;
+      return res.status(200).json({ message: "Task deleted successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - offsetToMonday);
-    startOfWeek.setUTCHours(0, 0, 0, 0);
+  const updateHabit = async (req, res, next) => {
+    const errors = validationResult(req);
 
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(today.getDate() + 6);
-    endOfWeek.setUTCHours(23, 59, 59, 999);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-    const habits = await Habit.find({ userId }).lean();
+    const { name, goal, frequency, endDate } = req.body;
 
-    const completions = await HabitCompletion.find({
-      userId,
-      dateOfCompletion: {
-        $gte: startOfWeek,
-        $lse: endOfWeek,
-      },
-    }).lean();
+    const { id: habitId } = req.params;
+    const userId = req.user.userId;
 
-    const completionsMap = new Map();
-    completions.forEach((comp) => {
-      const dateKey = comp.dateOfCompletion.toISOString().split("T")[0];
-      if (!completionsMap.has(dateKey)) {
-        completionsMap.set(dateKey, new Set());
-      }
+    try {
+      const updateHabit = await habitService.updateHabit(
+        habitId,
+        { name, goal, frequency, endDate },
+        userId
+      );
 
-      completionsMap.get(dateKey).add(comp.habitId.toString());
-    });
+      return res
+        .status(200)
+        .json({ message: "Habit updated successfully.", habit: updateHabit });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    const weeklyData = {
-      startOfWeek,
-      endOfWeek,
-      habits: habits.map((habit) => {
-        const weeklyCompletions = {};
-        for (let i = 0; i < 7; i++) {
-          const day = new Date(startOfWeek);
-          day.setDate(startOfWeek.getDate() + i);
-          const dayKey = day.toISOString().split("T")[0];
+  const getHabits = async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const userId = req.user.userId;
 
-          weeklyCompletions[dayKey] =
-            completionsMap.has(dayKey) &&
-            completionsMap.get(dayKey).has(habit._id.toString());
-        }
+    try {
+      const info = await habitService.getHabits(page, limit, userId);
 
-        return { ...habit, weeklyCompletions };
-      }),
-    };
+      return res.status(200).json({ info });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    return res.status(200).json({ weeklyData });
-  } catch (error) {
-    next(error);
-  }
+  const markAsCompleted = async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { id: habitId } = req.params;
+    const userId = req.user.userId;
+    const { dateString } = req.body;
+
+    try {
+      const habit = await habitService.markAsCompleted(
+        habitId,
+        userId,
+        dateString
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Habit marked as completed successfully." });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  return {
+    createHabit,
+    deleteHabit,
+    updateHabit,
+    getHabits,
+    markAsCompleted,
+  };
 };
 
-module.exports = {
-  createHabit,
-  getHabits,
-  deleteHabit,
-  updateHabit,
-  markAsCompleted,
-  getTodaysHabits,
-  getWeeklyHabits,
-};
+module.exports = createHabitController;
