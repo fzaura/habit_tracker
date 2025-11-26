@@ -21,7 +21,16 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const authRoutes = require("./routes/auth.routes");
 const habitRoutes = require("./routes/habit.routes");
+
+const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
+const HabitService = require("./services/HabitService");
+const createController = require("./controllers/habit.controller");
+const createRouter = require("./routes/habit.routes");
 require("dotenv").config();
+
+const habitRepo = new MongooseHabitRepo();
+const habitService = new HabitService(habitRepo);
+const habitRouter = createRouter(createController(habitService));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +41,7 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/habits", habitRoutes);
+app.use("/api/habits", habitRouter);
 
 /**
  * Global error handler middleware.
