@@ -71,3 +71,5 @@ class MongooseHabitRepository extends IHabitRepo {
     return completions;
   }
 }
+
+module.exports = MongooseHabitRepository;
