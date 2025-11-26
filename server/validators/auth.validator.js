@@ -120,4 +120,9 @@ const refreshTokenValidator = [
     .withMessage("Refresh token is required."),
 ];
 
-module.exports = { registerValidator, loginValidator, updateUserValidator };
+module.exports = {
+  registerValidator,
+  loginValidator,
+  updateUserValidator,
+  refreshTokenValidator,
+};
