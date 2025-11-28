@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class DetailedGoalCard extends ConsumerWidget {

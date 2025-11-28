@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/ProgressScreenUtil/statelessWidgets/Detailed%20Goals%20Lister/utilProgressScreen.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/Headers/homeScreenProgressReport.dart';
+import 'package:habit_tracker/presentation/Widgets/Container/ProgressScreen/YourGoalsConatiner.dart';
 
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
@@ -21,10 +22,9 @@ class ProgressScreen extends ConsumerWidget {
       appBar: (AppBar(
         backgroundColor: Color(0xFFEDEDED),
         toolbarHeight: 80,
-        title: Utilprogressscreen.homeScreenProgressReport(),//Header of the Screen 
+        title: HomeScreenProgressReport(),//Header of the Screen 
       )),
-      body: Utilprogressscreen.yourGoalsContainer(
-        ctxt: context,
+      body: YourGoalsConatiner(
         numberOfAchievedGoals: numberOfAchievedGoals(habitsList),
         allGoals: habitsList.length,
       ),

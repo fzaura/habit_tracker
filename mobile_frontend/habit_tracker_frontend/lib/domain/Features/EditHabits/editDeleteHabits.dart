@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Widgets/DropDownButton/dropDownButtonTemp.dart';
 import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Widgets/TextFields/editTextField.dart';
 
 class EditDeleteHabits extends ConsumerStatefulWidget {
   const EditDeleteHabits({super.key, required this.habitToEdit});
@@ -44,8 +45,11 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
         .updateHabits(widget.habitToEdit.id, newHabit);
   }
 
-
-  Widget editTextField(String mainHintText,String mainLabelText ,TextEditingController controller) {
+  Widget editTextField(
+    String mainHintText,
+    String mainLabelText,
+    TextEditingController controller,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -56,10 +60,10 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
         autofocus: true,
         decoration: InputDecoration(
           labelText: mainLabelText,
-          labelStyle:   mainAppTheme.textTheme.titleSmall?.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+          labelStyle: mainAppTheme.textTheme.titleSmall?.copyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
           border: InputBorder.none,
           hintText: mainHintText,
         ),
@@ -139,7 +143,8 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
       ),
     );
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
@@ -160,7 +165,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               ),
               Divider(),
               SizedBox(height: 20),
-          
+
               // Your Goal Field
               Text(
                 'Your Goal',
@@ -170,9 +175,13 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
                 ),
               ),
               SizedBox(height: 5),
-           //   editTextField(widget.habitToEdit.goal,yourGoalController),
+              EditTextFormField(
+                errorMessage: 'Nega',
+                mainHintText: '',
+                controller: yourGoalController,
+              ),
               SizedBox(height: 15),
-          
+
               // Habit Name Field
               Text(
                 'Habit Name',
@@ -182,35 +191,45 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
                 ),
               ),
               SizedBox(height: 5),
-             // editTextField(widget.habitToEdit.habitName,yourHabitController),
-          
+              EditTextFormField(
+                errorMessage: 'Nega',
+                mainHintText: '',
+                controller: yourHabitController,
+              ),
+
               SizedBox(height: 15),
-          
+
               // Period Dropdown
               SizedBox(height: 5),
               DropDownButtonTemp(
                 buttonName: 'Period',
                 passedEnumValue: periodUnit,
                 enumValues: EnperiodUnit.values,
+                onChanged: (passedValue) {
+                  periodUnit=passedValue as EnperiodUnit;
+                },
               ),
               SizedBox(height: 15),
-          
+
               // Habit Type Dropdown
               DropDownButtonTemp(
                 buttonName: 'Habit Type',
                 passedEnumValue: habitGoal,
                 enumValues: EnhabitGoal.values,
+                onChanged: (passedValue) {
+                  habitGoal=passedValue as EnhabitGoal;
+                },
               ),
-          
+
               SizedBox(height: 25),
-          
+
               // Buttons
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Update Button
                   defaultUpdateButton(),
-          
+
                   // Delete Button
                   deleteButton(),
                 ],

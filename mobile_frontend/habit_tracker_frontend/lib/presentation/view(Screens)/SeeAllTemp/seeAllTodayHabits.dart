@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/domain/Features/SeeAllHabitsFeature/StateFulWidgets/singleWeekRow.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';
 
 class SeeAllList extends ConsumerWidget {
   const SeeAllList({
@@ -37,9 +37,11 @@ class SeeAllList extends ConsumerWidget {
           children: [
             if (seeHorizentalCalendar)
               SizedBox(width: 350, height: 100, child: SingleWeekRow()),
-              
-            UtilHomeScreenWidgets.todayTemplateContainer(
-              habitsList,
+
+            TodayTempContainer(
+              habits: habitsList,
+              seeAllButton: true,
+              pressSeeAll: () {},//This Is Probably Wrong 
               nameOfListHeader: nameOfListHeader,
               listToView: listToView,
               requiredHeight: double.infinity,

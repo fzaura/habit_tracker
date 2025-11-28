@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/gradientTheme.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/domain/Features/AddNewHabits/utilAddNewHabit.dart';
 import 'package:habit_tracker/domain/Features/EditHabits/editDeleteHabits.dart';
 import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 
 class GoalsCard extends StatelessWidget {
   const GoalsCard({super.key, required this.habitGoals});
@@ -83,19 +82,20 @@ class GoalsCard extends StatelessWidget {
 
         const SizedBox(width: 8),
 
-        _buildActionWidget(context),
+        //_buildActionWidget(context),
       ],
     );
   }
 
   // WHAT: Shows check icon or more button
   // WHY: Different action based on completion status
-  Widget _buildActionWidget(BuildContext context) {
-    return UtilAddNewHabitUI().showMoreButton(
-      context,
-      showMore: (value) => _handleAction(value, context),
-    );
-  }
+  // Widget _buildActionWidget(BuildContext context) {
+  //   return Text('This is Wrong too needs correction');
+  //   //  UtilAddNewHabitUI().showMoreButton(
+  //   //   context,
+  //   //   showMore: (value) => _handleAction(value, context),
+  //   // );
+  // }
 
   // WHAT: Progress bar with gradient fill
   // WHY: Visual representation of goal progress

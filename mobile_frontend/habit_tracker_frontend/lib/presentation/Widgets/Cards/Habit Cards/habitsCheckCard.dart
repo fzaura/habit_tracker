@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/domain/Features/AddNewHabits/utilAddNewHabit.dart';
-import 'package:habit_tracker/domain/Features/EditHabits/editDeleteHabits.dart';
-import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Widgets/Buttons/showMoreButton.dart';
 
 class Habitscheckcard extends ConsumerStatefulWidget {
   const Habitscheckcard({super.key, required this.habitToDisplay});
@@ -16,8 +14,6 @@ class Habitscheckcard extends ConsumerStatefulWidget {
 }
 
 class _HabitscheckcardState extends ConsumerState<Habitscheckcard> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -80,9 +76,8 @@ class _HabitscheckcardState extends ConsumerState<Habitscheckcard> {
                   ),
                   Transform.translate(
                     offset: Offset(-8, 0),
-                    child: UtilAddNewHabitUI().showMoreButton(
-                      context,
-                      showMore: (value) => editOrDelete(context, value),
+                    child: Showmorebutton(
+                      habitToDisplay: widget.habitToDisplay,
                     ),
                   ),
                 ],

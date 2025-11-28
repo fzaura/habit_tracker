@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/domain/Features/AddNewHabits/utilAddNewHabit.dart';
+import 'package:habit_tracker/presentation/Widgets/Buttons/createHabitButton.dart';
 
 class SucessScreenUtil extends StatelessWidget {
   const SucessScreenUtil({super.key});
@@ -33,13 +33,14 @@ class SucessScreenUtil extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            UtilAddNewHabitUI().defaultCreateHabitButton(
-              text: 'OK',
-              onPressed: (context) {
-                Navigator.pop(context);
-              },
-              ctxt: context,
+            TextButton(
+              onPressed: () {},
+              child: CreateHabitButton(
+                labelText: 'OK',
+                onPressed: (context) => Navigator.pop(context),
+              ),
             ),
+         
           ],
         ),
       ),
