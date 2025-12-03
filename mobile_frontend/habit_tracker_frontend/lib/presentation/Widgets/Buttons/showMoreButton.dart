@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/domain/Features/EditHabits/editDeleteHabits.dart';
 
 class Showmorebutton extends StatelessWidget {
+  
   const Showmorebutton({super.key, required this.habitToDisplay});
   final Habit habitToDisplay;
 

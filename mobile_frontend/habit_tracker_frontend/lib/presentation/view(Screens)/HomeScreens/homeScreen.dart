@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Features/AddNewHabits/addNewHabit.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/HomeScreenCards/HomeScreenWelcomeCard.dart';
+import 'package:habit_tracker/presentation/Widgets/Title/HomeScreenWelcomeMessage.dart';
+import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/habitsLister.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/goalsCardLister.dart';
-import 'package:habit_tracker/core/utility/HomeScreenUtils/HomeScreenUtil/utilHomeScreenWidgets.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:intl/intl.dart';
 
 class Homescreen extends ConsumerStatefulWidget {
@@ -15,6 +18,26 @@ class Homescreen extends ConsumerStatefulWidget {
 
 class _HomescreenState extends ConsumerState<Homescreen>
     with SingleTickerProviderStateMixin {
+  takeToSeeAllPage({
+    required BuildContext ctxt,
+    required String nameOfListHeader,
+    required String appBarText,
+    required Widget lister,
+    required bool showHorizentalCalendar,
+  }) {
+    Navigator.push(
+      ctxt,
+      MaterialPageRoute(
+        builder: (context) => SeeAllList(
+          nameOfListHeader: nameOfListHeader,
+          appBarText: appBarText,
+          listToView: lister,
+          seeHorizentalCalendar: showHorizentalCalendar,
+        ),
+      ),
+    );
+  }
+
   final String formattedDate = DateFormat(
     'EEE, MMM ,yyy',
   ).format(DateTime.now()); // Fri, Oct 17
@@ -22,8 +45,6 @@ class _HomescreenState extends ConsumerState<Homescreen>
   final String formattedDateAfterAWeek = DateFormat(
     'd/M/y',
   ).format(DateTime.now().add(Duration(days: 7)));
-  late TextEditingController yourGoalController;
-  late TextEditingController yourHabitController;
 
   void onAddNewHabit() {
     showDialog(context: context, builder: (context) => Addnewhabit());
@@ -33,8 +54,6 @@ class _HomescreenState extends ConsumerState<Homescreen>
 
   @override
   void initState() {
-    yourGoalController = TextEditingController();
-    yourHabitController = TextEditingController();
     _animationcontroller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -82,9 +101,10 @@ class _HomescreenState extends ConsumerState<Homescreen>
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 100,
-        title: UtilHomeScreenWidgets.homeScreenWelcomeMessage(
-          formattedDate,
-          formattedDateAfterAWeek,
+        title: HomeScreenWelcomeMessage(
+          formattedDate: formattedDate,
+
+          formattedDateAfterAWeek: formattedDateAfterAWeek,
         ),
       ),
       body: SingleChildScrollView(
@@ -100,12 +120,14 @@ class _HomescreenState extends ConsumerState<Homescreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              UtilHomeScreenWidgets.homeProgressCard(
-                checkedHabits,
-                unCheckedHabits,
+              HomeScreenWelcomeCard(
+                habitsCheckedToday: checkedHabits,
+                allTheHabits: unCheckedHabits,
               ),
 
-              UtilHomeScreenWidgets.todayTemplateContainer(
+              TodayTempContainer(
+                seeAllButton: true,
+                habits: habitsList,
                 listToView: Habitslister(
                   seeAll: false,
                   shrinkWrap: true,
@@ -113,32 +135,33 @@ class _HomescreenState extends ConsumerState<Homescreen>
                 ),
                 nameOfListHeader: 'Today\'s Habits',
                 requiredHeight: 400,
-                habitsList,
                 pressSeeAll: () {
-                  UtilHomeScreenWidgets.takeToSeeAllPage(
+                  takeToSeeAllPage(
                     ctxt: context,
                     nameOfListHeader: 'Today\'s Habits',
                     appBarText: 'Your Habits ',
                     showHorizentalCalendar: true,
                     lister: Habitslister(
-                      seeAll: false,
+                      seeAll: true,
                       shrinkWrap: true,
-                      canUserScroll: false,
+                      canUserScroll: true,
                     ),
                   );
                 },
               ),
               const SizedBox(height: 29),
-              UtilHomeScreenWidgets.todayTemplateContainer(
+              TodayTempContainer(
+                habits: habitsList,
+                seeAllButton: true,
+                requiredHeight: 0,
                 listToView: GoalsCardLister(
                   seeAll: false,
                   shrinkWrap: true,
                   canUserScroll: false,
                 ),
                 nameOfListHeader: 'Your Weekly Goals',
-                habitsList,
                 pressSeeAll: () {
-                  UtilHomeScreenWidgets.takeToSeeAllPage(
+                  takeToSeeAllPage(
                     ctxt: context,
                     nameOfListHeader: '',
                     appBarText: 'Your Weekly Goals ',
@@ -160,8 +183,6 @@ class _HomescreenState extends ConsumerState<Homescreen>
 
   @override
   void dispose() {
-    yourGoalController.dispose();
-    yourHabitController.dispose();
     _animationcontroller.dispose();
     super.dispose();
   }

@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
@@ -29,9 +31,32 @@ class Habitslister extends ConsumerWidget {
             : 3,
         itemBuilder: (context, index) {
           final habit = habitsToList[index];
-          return Habitscheckcard(
+          return Dismissible(
+            background: Container(
+              width: 335,
+              height: 58,
+              color: const Color.fromARGB(255, 241, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {}, // Delete action
+                    icon: Icon(Icons.delete, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
             key: ValueKey(habitsToList[index].id),
-            habitToDisplay: habit,
+            child: Habitscheckcard(
+              key: ValueKey(habitsToList[index].id),
+              habitToDisplay: habit,
+            ),
+            onDismissed: (direction) {
+              showDialog(
+                context: context,
+                builder: (context) => ConfirmDelete(toDeleteHabitId: habit.id),
+              );
+            },
           );
         },
       ),

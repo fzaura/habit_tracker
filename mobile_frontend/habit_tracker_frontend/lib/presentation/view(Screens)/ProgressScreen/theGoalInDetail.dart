@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Widgets/Calendar/progressCalendarWidget.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 
 class TheGoalInDetail extends StatelessWidget {
   const TheGoalInDetail({super.key, required this.habit});

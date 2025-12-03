@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/detailedGoalCard.dart';
-import 'package:habit_tracker/data/Models/UIModels/habitUI.dart';
+import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/presentation/view(Screens)/ProgressScreen/theGoalInDetail.dart';
 import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
 
