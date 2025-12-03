@@ -11,7 +11,7 @@ class ITokenRepository {
     throw new Error("Method not implemented.");
   }
 
-  deleteTokenByUserId(userId) {
+  deleteTokensByUserId(userId) {
     throw new Error("Method not implemented.");
   }
 }
