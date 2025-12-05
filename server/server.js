@@ -19,7 +19,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-const authRoutes = require("./routes/auth.routes");
+
+const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
+const MongooseUserRepo = require("./repositories/MongooseUserRepository");
+const AuthService = require("./services/AuthService");
+const createAuthController = require("./controllers/auth.controller");
+const createAuthRouter = require("./routes/auth.routes");
 
 const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
 const HabitService = require("./services/HabitService");
@@ -32,6 +37,12 @@ const habitService = new HabitService(habitRepo);
 const habitController = createHabitController(habitService);
 const habitRouter = createHabitRouter(habitController);
 
+const userRepo = new MongooseUserRepo();
+const tokenRepo = new MongooseTokenRepo();
+const authService = new AuthService(userRepo, tokenRepo);
+const authController = createAuthController(authService);
+const authRouter = createAuthRouter(authController);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -40,7 +51,7 @@ const DB_NAME = process.env.DB_NAME;
 app.use(helmet());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRouter);
 app.use("/api/habits", habitRouter);
 
 /**
@@ -54,7 +65,10 @@ app.use("/api/habits", habitRouter);
  */
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "An internal server error has occurred." });
+  const status = err.status || 500;
+  res
+    .status(status)
+    .json({ message: err.message || "An internal server error has occurred." });
 });
 
 mongoose
