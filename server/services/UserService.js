@@ -49,3 +49,5 @@ class UserService {
     return updatedUser;
   }
 }
+
+module.exports = UserService;
