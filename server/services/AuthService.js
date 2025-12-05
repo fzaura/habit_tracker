@@ -78,7 +78,7 @@ class AuthService {
     return { user, accessToken, refreshToken };
   }
 
-  async getNewAccessToken(oldRefreshToken) {
+  async refreshUserSession(oldRefreshToken) {
     if (!oldRefreshToken) {
       throw new Error("Refresh token is required.");
     }
