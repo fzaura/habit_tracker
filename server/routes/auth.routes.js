@@ -1,84 +1,25 @@
-/**
- * @module routes/auth
- * @description Authentication routes for user registration, login, token refresh, and user updates.
- */
 const express = require("express");
-const router = express.Router();
 
-const authController = require("../controllers/auth.controller");
 const {
   registerValidator,
   loginValidator,
-  updateUserValidator,
   refreshTokenValidator,
 } = require("../validators/auth.validator");
-const { authenticateJWT } = require("../middleware/auth.middleware");
 
-/**
- * @name POST /register
- * @description Register a new user account
- * @memberof module:routes/auth
- * @param {Object} req.body - Registration data
- * @param {string} req.body.username - Username (5-12 chars)
- * @param {string} req.body.email - Valid email address
- * @param {string} req.body.password - Password (min 10 chars, must contain number and special char)
- * @param {string} req.body.confirmPassword - Password confirmation
- * @returns {Object} 201 - User created with tokens
- * @returns {Object} 400 - Validation errors
- * @returns {Object} 409 - Username or email already exists
- */
-router.post("/register", registerValidator, authController.registerUser);
+const createAuthRouter = (authController) => {
+  const router = express.Router();
 
-/**
- * @name POST /login
- * @description Authenticate user and return tokens
- * @memberof module:routes/auth
- * @param {Object} req.body - Login credentials
- * @param {string} req.body.email - User email
- * @param {string} req.body.password - User password
- * @returns {Object} 200 - Login successful with tokens
- * @returns {Object} 400 - Validation errors
- * @returns {Object} 401 - Invalid credentials
- */
-router.post("/login", loginValidator, authController.loginUser);
+  router.post("/register", registerValidator, authController.registerUser);
 
-/**
- * @name POST /access-token
- * @description Get new access token using refresh token
- * @memberof module:routes/auth
- * @param {Object} req.body - Token refresh data
- * @param {string} req.body.refreshToken - Valid refresh token
- * @returns {Object} 200 - New access and refresh tokens
- * @returns {Object} 400 - Validation errors
- * @returns {Object} 403 - Invalid or expired refresh token
- */
-router.post(
-  "/access-token",
-  refreshTokenValidator,
-  authController.getNewAccessToken
-);
+  router.post("/login", loginValidator, authController.loginUser);
 
-/**
- * @name PUT /update-user
- * @description Update user information (requires authentication)
- * @memberof module:routes/auth
- * @param {string} Authorization - Bearer token in header
- * @param {Object} req.body - Update data (all optional)
- * @param {string} [req.body.username] - New username (5-12 chars)
- * @param {string} [req.body.email] - New email address
- * @param {string} [req.body.password] - New password (min 10 chars)
- * @param {string} [req.body.confirmPassword] - Password confirmation if password provided
- * @returns {Object} 200 - User updated successfully
- * @returns {Object} 400 - Validation errors or no update data
- * @returns {Object} 401 - Authentication required
- * @returns {Object} 404 - User not found
- * @returns {Object} 409 - Username or email already in use
- */
-router.put(
-  "/update-user",
-  authenticateJWT,
-  updateUserValidator,
-  authController.updateUser
-);
+  router.post(
+    "/access-token",
+    refreshTokenValidator,
+    authController.getNewAccessToken
+  );
 
-module.exports = router;
+  return router;
+};
+
+module.exports = createAuthRouter;
