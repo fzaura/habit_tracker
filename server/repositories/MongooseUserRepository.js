@@ -9,13 +9,13 @@ class MongooseUserRepository extends IUserRepo {
   }
 
   async findUserById(userId) {
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(userId).lean();
 
     return user;
   }
 
   async findUserByEmail(email) {
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }).lean();
 
     return user;
   }
@@ -23,7 +23,7 @@ class MongooseUserRepository extends IUserRepo {
   async findUserByUsernameOrEmail(username, email) {
     const user = await UserModel.findOne({
       $or: [{ username }, { email }],
-    });
+    }).lean();
 
     return user;
   }
@@ -32,7 +32,7 @@ class MongooseUserRepository extends IUserRepo {
     const conflict = await UserModel.findOne({
       $or: [{ username }, { email }],
       _id: { $ne: userId },
-    });
+    }).lean();
 
     return conflict;
   }
@@ -42,7 +42,9 @@ class MongooseUserRepository extends IUserRepo {
       userId,
       { $set: updateData },
       { new: true, runValidators: true }
-    ).select("-password");
+    )
+      .select("-password")
+      .lean();
 
     return updatedUser;
   }
