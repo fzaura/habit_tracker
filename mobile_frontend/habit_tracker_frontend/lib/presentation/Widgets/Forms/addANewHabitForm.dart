@@ -22,7 +22,7 @@ class AddANewHabitForm extends StatefulWidget {
 class _AddANewHabitFormState extends State<AddANewHabitForm> {
   late TextEditingController habitController;
   late TextEditingController goalController;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     habitController = TextEditingController();
@@ -35,6 +35,7 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Container(
         width: 331,
         height: 430,
@@ -102,7 +103,6 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
                 enumValues: EnhabitGoal.values,
                 onChanged: (passedValue) => setState(() {
                   habitGoal = passedValue as EnhabitGoal;
-
                 }),
               ),
             ),
@@ -124,12 +124,15 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
             // Buttons
             AddnewhabitButton(
               onPressed: () {
-                widget.addNewHabitLogic(
-                  goalController.text,
-                  habitController.text,
-                  habitGoal,
-                  periodUnit,
-                );
+                if (_formKey.currentState!.validate()) {
+                  widget.addNewHabitLogic(
+                    goalController.text,
+                    habitController.text,
+                    habitGoal,
+                    periodUnit,
+                  );
+                }
+                
               },
             ),
           ],

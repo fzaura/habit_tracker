@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/app/Themes/themes.dart';
 
 class EditTextFormField extends StatelessWidget {
   const EditTextFormField({
     super.key,
     required this.mainHintText,
     required this.errorMessage,
-    required this.controller
+    required this.controller,
   });
+
   final String mainHintText;
   final String errorMessage;
-    final TextEditingController controller;
-
-
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +23,19 @@ class EditTextFormField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
+
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          
           border: InputBorder.none,
           hintText: mainHintText,
         ),
         validator: (value) {
-          if (value!.isEmpty || value.trim().length <= 1) {
-            return errorMessage;
-          }
-          else
-          {
-            return null;
-          }
+          if (value == null || value.isEmpty) return 'Field is required';
+          if (value.trim().length < 2) return 'Minimum 2 characters';
+          if (value.trim().length > 50) return 'Maximum 50 characters';
+          return null;
         },
-        onSaved: (newValue) {controller.text=newValue!;},
       ),
     );
-    
   }
 }

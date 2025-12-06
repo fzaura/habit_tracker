@@ -176,7 +176,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               ),
               SizedBox(height: 5),
               EditTextFormField(
-                errorMessage: 'Nega',
+                errorMessage: 'Goal Name Should be between 1 and 50 characters',
                 mainHintText: '',
                 controller: yourGoalController,
               ),
@@ -192,7 +192,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
               ),
               SizedBox(height: 5),
               EditTextFormField(
-                errorMessage: 'Nega',
+                errorMessage: 'Habit Name Should be between 1 and 50 characters',
                 mainHintText: '',
                 controller: yourHabitController,
               ),
