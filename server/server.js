@@ -19,18 +19,38 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-const authRoutes = require("./routes/auth.routes");
+
+const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
+const MongooseUserRepo = require("./repositories/MongooseUserRepository");
+const AuthService = require("./services/AuthService");
+const createAuthController = require("./controllers/auth.controller");
+const createAuthRouter = require("./routes/auth.routes");
 
 const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
 const HabitService = require("./services/HabitService");
 const createHabitController = require("./controllers/habit.controller");
 const createHabitRouter = require("./routes/habit.routes");
+
+const UserService = require("./services/UserService");
+const createUserController = require("./controllers/user.controller");
+const createUserRouter = require("./routes/user.routes");
+
 require("dotenv").config();
 
 const habitRepo = new MongooseHabitRepo();
 const habitService = new HabitService(habitRepo);
 const habitController = createHabitController(habitService);
 const habitRouter = createHabitRouter(habitController);
+
+const userRepo = new MongooseUserRepo();
+const tokenRepo = new MongooseTokenRepo();
+const authService = new AuthService(userRepo, tokenRepo);
+const authController = createAuthController(authService);
+const authRouter = createAuthRouter(authController);
+
+const userService = new UserService(userRepo);
+const userController = createUserController(userService);
+const userRouter = createUserRouter(userController);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,8 +60,9 @@ const DB_NAME = process.env.DB_NAME;
 app.use(helmet());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRouter);
 app.use("/api/habits", habitRouter);
+app.use("/api/users", userRouter);
 
 /**
  * Global error handler middleware.
@@ -54,7 +75,10 @@ app.use("/api/habits", habitRouter);
  */
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "An internal server error has occurred." });
+  const status = err.status || 500;
+  res
+    .status(status)
+    .json({ message: err.message || "An internal server error has occurred." });
 });
 
 mongoose

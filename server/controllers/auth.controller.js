@@ -1,263 +1,80 @@
-/**
- * @module controllers/auth
- * @description Authentication controller containing handlers for user registration, login, updating user info, and token refresh.
- */
-const bcrypt = require("bcrypt");
-const User = require("../models/user.models");
-const RefreshToken = require("../models/refreshToken.model");
-const jwt = require("jsonwebtoken");
+const { validationResult } = require("../validators/auth.validator");
 
-const { validationResult } = require("express-validator");
-const {
-  registerValidator,
-  loginValidator,
-} = require("../validators/auth.validator");
-const { generateTokens } = require("../utils/token");
-
-/**
- * Register a new user account.
- * Validates input, checks for existing users, hashes password, and creates new user with tokens.
- *
- * @memberof module:controllers/auth
- * @async
- * @function registerUser
- * @param {Object} req - Express request object containing username, email, password in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with user data and tokens or error
- */
-const registerUser = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array });
-  }
-
-  const { username, email, password } = req.body;
-
-  try {
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      if (existingUser.email === email) {
-        return res.status(409).json({ message: "Email already in use." });
-      }
-
-      return res.status(409).json({ message: "Username already in use." });
+const createAuthController = (authService) => {
+  const registerUser = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      parseInt(process.env.SALT_ROUNDS)
-    );
+    const { username, email, password } = req.body;
 
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
+    try {
+      const { newUser, accessToken, refreshToken } =
+        await authService.registerUser(username, email, password);
 
-    const { refreshToken, accessToken } = generateTokens(newUser);
+      const safeUser = newUser.toObject ? newUser.toObject() : { ...newUser };
+      delete safeUser.password;
 
-    const newRefreshToken = new RefreshToken({
-      value: refreshToken,
-      userId: newUser._id,
-    });
-    await newRefreshToken.save();
-
-    return res.status(201).json({
-      message: "User registered successfully.",
-      refreshToken,
-      accessToken,
-      user: { id: newUser._id, username: newUser.username },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Log in a user with email and password.
- * Validates credentials and returns access and refresh tokens.
- *
- * @memberof module:controllers/auth
- * @async
- * @function loginUser
- * @param {Object} req - Express request object containing email and password in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with user data and tokens or error
- */
-const loginUser = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(409).json({ errors: errors.array });
-  }
-
-  const { email, password } = req.body;
-
-  try {
-    const user = User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({ message: "Invalid credentials." });
-    }
-
-    const isMatched = await bcrypt.compare(password, user.password);
-    if (!isMatched) {
-      return res.status(401).json({ message: "Invalid credentials." });
-    }
-
-    const { refreshToken, accessToken } = generateTokens(user);
-
-    const newRefreshToken = new RefreshToken({
-      value: refreshToken,
-      userId: user._id,
-    });
-    await newRefreshToken.save();
-
-    return res.status(200).json({
-      message: "User logged in successfully.",
-      refreshToken,
-      accessToken,
-      user: { userId: user._id, username: user.username },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Update user information (username, email, or password).
- * Validates new data, checks for conflicts, and updates user record.
- *
- * @memberof module:controllers/auth
- * @async
- * @function updateUser
- * @param {Object} req - Express request object with user data in body and userId in req.user
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with updated user data or error
- */
-const updateUser = async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const userId = req.user.userId;
-
-  const { username, email, password } = req.body;
-
-  try {
-    if (username || email) {
-      const existingUser = await User.findOne({
-        $or: [{ username }, { email }],
-        _id: { $ne: userId },
+      return res.status(201).json({
+        message: "User registered successfully.",
+        accessToken,
+        refreshToken,
+        user: safeUser,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-      if (existingUser) {
-        if (existingUser.username === username) {
-          return res.status(409).json({ message: "Username already in use." });
-        }
-
-        return res.status(409).json({ message: "Email already in use." });
-      }
+  const loginUser = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const updateFields = {};
-    if (username) updateFields.username = username;
-    if (email) updateFields.email = email;
+    const { email, password } = req.body;
 
-    if (password) {
-      const saltRounds = parseInt(process.env.SALT_ROUNDS || 10);
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+    try {
+      const { user, accessToken, refreshToken } = await authService.loginUser(
+        email,
+        password
+      );
+      delete user.password;
 
-      updateFields.password = hashedPassword;
+      return res.status(200).json({
+        message: "User logged in successfully.",
+        accessToken,
+        refreshToken,
+        user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const getNewAccessToken = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    if (Object.keys(updateFields).length === 0) {
-      return res
-        .status(400)
-        .json({ message: "No update information provided." });
+    const { refreshToken: oldRefreshToken } = req.body;
+    try {
+      const { refreshToken, accessToken } =
+        await authService.refreshUserSession(oldRefreshToken);
+
+      return res.status(200).json({
+        message: "Session refreshed successfully.",
+        refreshToken,
+        accessToken,
+      });
+    } catch (error) {
+      next(error);
     }
+  };
 
-    const updateUser = await User.findOneAndUpdate(
-      { _id: userId },
-      { $set: updateFields },
-      { new: true, runValidators: true }
-    ).select("-password");
-
-    if (!updateUser) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "User info successfully updated.", user: updateUser });
-  } catch (error) {
-    next(error);
-  }
+  return { registerUser, loginUser, getNewAccessToken };
 };
 
-/**
- * Generate new access token using refresh token.
- * Validates refresh token and issues new access and refresh tokens.
- *
- * @memberof module:controllers/auth
- * @async
- * @function getNewAccessToken
- * @param {Object} req - Express request object containing refreshToken in body
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- * @returns {Promise<void>} JSON response with new tokens or error
- */
-const getNewAccessToken = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { refreshToken } = req.body;
-
-  try {
-    const storedToken = await RefreshToken.findOne({ value: refreshToken });
-
-    if (!storedToken) {
-      return res
-        .status(403)
-        .json({ message: "Refresh token is invalid or has been revoked." });
-    }
-
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-
-    await RefreshToken.findByIdAndDelete(storedToken._id);
-
-    const payload = { userId: decoded.userId, username: decoded.username };
-
-    const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
-    const newRefreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: "7d",
-    });
-
-    await new RefreshToken({
-      userId: decoded.userId,
-      value: newRefreshToken,
-    }).save();
-
-    return res
-      .status(200)
-      .json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
-  } catch (error) {
-    if (
-      error.name === "TokenExpiredError" ||
-      error.name === "JsonWebTokenError"
-    ) {
-      return res
-        .status(403)
-        .json({ message: "Refresh token is expired or invalid." });
-    }
-
-    next(error);
-  }
-};
-
-module.exports = { registerUser, loginUser, updateUser, getNewAccessToken };
+module.exports = createAuthController;
