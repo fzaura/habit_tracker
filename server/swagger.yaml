@@ -1,0 +1,301 @@
+openapi: 3.0.0
+info:
+  title: Habit Tracker API
+  version: 1.0.0
+  description: API documentation for the Habit Tracker application.
+servers:
+  - url: https://habit-tracker-19q1.onrender.com/api
+    description: Local Development Server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+
+paths:
+  # --- AUTH ROUTES ---
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password, confirmPassword]
+              properties:
+                username: { type: string, example: HabitHero }
+                email: { type: string, format: email, example: hero@test.com }
+                password: { type: string, format: password, example: Password123! }
+                confirmPassword: { type: string, format: password, example: Password123! }
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  message: { type: string, example: "User registered successfully" }
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+        400:
+          description: Validation error
+
+  /auth/login:
+    post:
+      summary: Login a user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, example: hero@test.com }
+                password: { type: string, format: password, example: Password123! }
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                      username: { type: string, example: "HabitHero" }
+                      email: { type: string, example: "hero@test.com" }
+        401:
+          description: Invalid credentials
+
+  /auth/access-token:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string, example: "your_refresh_token_here" }
+      responses:
+        200:
+          description: Tokens refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+        401:
+          description: Invalid token
+
+  # --- USER ROUTES ---
+  /users/me:
+    patch:
+      summary: Update user profile
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: { type: string, example: NewName }
+                email: { type: string, example: new@test.com }
+                password: { type: string, example: NewPass123! }
+                confirmPassword: { type: string, example: NewPass123! }
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      username: { type: string, example: NewName }
+                      email: { type: string, example: new@test.com }
+        400:
+          description: Validation error
+        401:
+          description: Unauthorized
+
+  # --- HABIT ROUTES ---
+  /habits:
+    get:
+      summary: Get all habits
+      tags: [Habits]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 10 }
+      responses:
+        200:
+          description: List of habits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          totalItems: { type: integer, example: 5 }
+                          totalPages: { type: integer, example: 1 }
+                          currentPage: { type: integer, example: 1 }
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                            name: { type: string, example: "Drink Water" }
+                            goal: { type: string, example: "2L daily" }
+                            frequency:
+                              type: object
+                              properties:
+                                type: { type: string, example: "daily" }
+                                daysOfWeek: { type: array, items: { type: integer }, example: [0, 1, 2, 3, 4, 5, 6] }
+                            createdAt: { type: string, format: date-time }
+    post:
+      summary: Create a new habit
+      tags: [Habits]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, goal, frequency, endDate]
+              properties:
+                name: { type: string, example: Drink Water }
+                goal: { type: string, example: Drink 2L daily }
+                endDate: { type: string, format: date, example: "2025-12-31" }
+                frequency:
+                  type: object
+                  properties:
+                    type: { type: string, enum: [daily, weekly] }
+      responses:
+        201:
+          description: Habit created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habit:
+                    type: object
+                    properties:
+                      _id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                      name: { type: string, example: "Drink Water" }
+                      status: { type: string, example: "active" }
+
+  /habits/{id}:
+    put:
+      summary: Update a habit
+      tags: [Habits]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habit:
+                    type: object
+                    properties:
+                      name: { type: string, example: "Drink MORE Water" }
+        404:
+          description: Not found
+    delete:
+      summary: Delete a habit
+      tags: [Habits]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200:
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: "Habit deleted successfully" }
+
+  /habits/{id}/completions:
+    post:
+      summary: Mark habit complete
+      tags: [Habits]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [dateString]
+              properties:
+                dateString: { type: string, format: date, example: "2025-01-01" }
+      responses:
+        201:
+          description: Marked complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completion:
+                    type: object
+                    properties:
+                      _id: { type: string, example: "..." }
+                      date: { type: string, format: date-time }

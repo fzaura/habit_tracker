@@ -47,7 +47,7 @@ class MongooseHabitRepository extends IHabitRepo {
    * @returns {Promise<Object>} Deletion result
    */
   async deleteHabit(habitId, userId) {
-    const result = Habit.deleteOne({ _id: habitId, userId });
+    const result = await Habit.deleteOne({ _id: habitId, userId });
 
     return result;
   }

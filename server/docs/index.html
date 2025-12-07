@@ -42,6 +42,187 @@
 
 
 
+    <section>
+        <article><h1>Habit Tracker Server</h1>
+<p>A secure RESTful API backend for the Habit Tracker app, built with Node.js, Express.js, and MongoDB. This server implements a clean architecture with repository pattern, dependency injection, and comprehensive input validation.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Authentication</strong>: User registration and login with JWT-based authentication (access &amp; refresh tokens)</li>
+<li><strong>Habit Management</strong>: Full CRUD operations for habits with frequency tracking (daily/weekly)</li>
+<li><strong>Habit Completion Tracking</strong>: Mark habits as completed on specific dates with duplicate prevention</li>
+<li><strong>User Profile Management</strong>: Update user information (username, email, password)</li>
+<li><strong>Security</strong>: Password hashing with bcrypt, helmet middleware, JWT authentication</li>
+<li><strong>Validation</strong>: Comprehensive input validation using express-validator</li>
+<li><strong>Clean Architecture</strong>: Separation of concerns with controllers, services, repositories, and models</li>
+<li><strong>Dependency Injection</strong>: Flexible and testable code structure</li>
+<li><strong>Environment Configuration</strong>: Secure configuration management via dotenv</li>
+</ul>
+<h2>Architecture</h2>
+<p>The application follows a layered architecture:</p>
+<ul>
+<li><strong>Controllers</strong> (<code>/controllers</code>): Handle HTTP requests, validate input, and send responses</li>
+<li><strong>Services</strong> (<code>/services</code>): Contain business logic and orchestrate repository operations</li>
+<li><strong>Repositories</strong> (<code>/repositories</code>): Abstract data access layer (interfaces + MongoDB implementations)</li>
+<li><strong>Models</strong> (<code>/models</code>): Mongoose schemas for MongoDB collections</li>
+<li><strong>Routes</strong> (<code>/routes</code>): Define API endpoints and apply middleware/validators</li>
+<li><strong>Middleware</strong> (<code>/middleware</code>): JWT authentication and error handling</li>
+<li><strong>Validators</strong> (<code>/validators</code>): Express-validator chains for request validation</li>
+<li><strong>Utils</strong> (<code>/utils</code>): Utility functions (token generation)</li>
+<li><strong>Types</strong> (<code>/types</code>): Common type definitions and JSDoc typedefs</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>Node.js (v14 or higher)</li>
+<li>MongoDB instance (local or cloud)</li>
+<li>npm or yarn package manager</li>
+</ul>
+<h2>Setup</h2>
+<ol>
+<li>
+<p><strong>Install dependencies</strong>:</p>
+<pre class="prettyprint source lang-bash"><code>npm install
+</code></pre>
+</li>
+<li>
+<p><strong>Configure environment variables</strong>:
+Create a <code>.env</code> file in the server root with the following variables:</p>
+<pre class="prettyprint source lang-env"><code>DATABASE_URL=mongodb://localhost:27017/your-database
+DB_NAME=habit_tracker
+PORT=3000
+JWT_SECRET=your-access-token-secret
+JWT_REFRESH_SECRET=your-refresh-token-secret
+SALT_ROUNDS=10
+</code></pre>
+</li>
+<li>
+<p><strong>Start the server</strong>:</p>
+<pre class="prettyprint source lang-bash"><code># Development mode with auto-reload
+npm run dev
+
+# Production mode
+npm start
+</code></pre>
+</li>
+<li>
+<p><strong>Generate documentation</strong>:</p>
+<pre class="prettyprint source lang-bash"><code>npm run docs
+</code></pre>
+<p>Documentation will be available at <code>docs/index.html</code></p>
+</li>
+</ol>
+<h2>API Endpoints</h2>
+<h3>Authentication (<code>/api/auth</code>)</h3>
+<ul>
+<li><code>POST /api/auth/register</code> — Register a new user account</li>
+<li><code>POST /api/auth/login</code> — Authenticate user and receive tokens</li>
+<li><code>POST /api/auth/access-token</code> — Refresh access token using refresh token</li>
+</ul>
+<h3>Habits (<code>/api/habits</code>) - Requires Authentication</h3>
+<ul>
+<li><code>POST /api/habits</code> — Create a new habit</li>
+<li><code>GET /api/habits</code> — Get paginated list of user's habits</li>
+<li><code>PUT /api/habits/:id</code> — Update a specific habit</li>
+<li><code>DELETE /api/habits/:id</code> — Delete a specific habit</li>
+<li><code>POST /api/habits/:id/completions</code> — Mark habit as completed for a date</li>
+</ul>
+<h3>Users (<code>/api/users</code>) - Requires Authentication</h3>
+<ul>
+<li><code>PATCH /api/users/me</code> — Update authenticated user's profile</li>
+</ul>
+<h2>Authentication</h2>
+<p>All authenticated endpoints require a Bearer token in the Authorization header:</p>
+<pre class="prettyprint source"><code>Authorization: Bearer &lt;access_token>
+</code></pre>
+<p>Access tokens expire after 15 minutes. Use the refresh token endpoint to obtain a new access token.</p>
+<h2>Documentation</h2>
+<p>Comprehensive JSDoc documentation is available for all modules. Generate and view it by:</p>
+<pre class="prettyprint source lang-bash"><code>npm run docs
+</code></pre>
+<p>Then open <code>docs/index.html</code> in your browser.</p>
+<p>The documentation includes:</p>
+<ul>
+<li>Module descriptions</li>
+<li>Class and interface definitions</li>
+<li>Function signatures with parameters and return types</li>
+<li>Request/response examples</li>
+<li>Type definitions</li>
+</ul>
+<h2>Project Structure</h2>
+<pre class="prettyprint source"><code>server/
+├── controllers/         # Request handlers
+├── services/           # Business logic
+├── repositories/       # Data access layer
+│   ├── I*Repository.js # Repository interfaces
+│   └── Mongoose*.js    # MongoDB implementations
+├── models/             # Mongoose schemas
+├── routes/             # API route definitions
+├── middleware/         # Custom middleware
+├── validators/         # Input validation
+├── utils/              # Utility functions
+├── types/              # Type definitions
+├── docs/               # Generated documentation
+├── server.js           # Application entry point
+├── package.json        # Dependencies and scripts
+└── jsdoc.json         # JSDoc configuration
+</code></pre>
+<h2>Technologies</h2>
+<ul>
+<li><strong>Runtime</strong>: Node.js</li>
+<li><strong>Framework</strong>: Express.js</li>
+<li><strong>Database</strong>: MongoDB with Mongoose ODM</li>
+<li><strong>Authentication</strong>: JSON Web Tokens (JWT)</li>
+<li><strong>Security</strong>: bcrypt (password hashing), helmet (HTTP headers)</li>
+<li><strong>Validation</strong>: express-validator</li>
+<li><strong>Date Handling</strong>: date-fns</li>
+<li><strong>Documentation</strong>: JSDoc</li>
+<li><strong>Development</strong>: nodemon (auto-reload)</li>
+</ul>
+<h2>Environment Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td>MongoDB connection string</td>
+<td><code>mongodb://localhost:27017/</code></td>
+</tr>
+<tr>
+<td><code>DB_NAME</code></td>
+<td>Database name</td>
+<td><code>habit_tracker</code></td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>Server port</td>
+<td><code>3000</code></td>
+</tr>
+<tr>
+<td><code>JWT_SECRET</code></td>
+<td>Secret for access tokens</td>
+<td><code>your-secret-key</code></td>
+</tr>
+<tr>
+<td><code>JWT_REFRESH_SECRET</code></td>
+<td>Secret for refresh tokens</td>
+<td><code>your-refresh-secret</code></td>
+</tr>
+<tr>
+<td><code>SALT_ROUNDS</code></td>
+<td>Bcrypt hashing rounds</td>
+<td><code>10</code></td>
+</tr>
+</tbody>
+</table>
+<h2>License</h2>
+<p>MIT</p></article>
+    </section>
+
 
 
 
@@ -56,7 +237,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 14:23:58 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>
