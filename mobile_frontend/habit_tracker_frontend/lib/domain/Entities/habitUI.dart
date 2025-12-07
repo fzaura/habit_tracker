@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 class Habit {
   final String id;
   String habitName;
-  String goal;
+  String goalName;
   EnhabitGoal habitType;
   int targettedPeriod; // How many days will be needed to make the habit a habit
   EnperiodUnit periodUnit; // daily, weekly, monthly
   DateTime createdAt;
+  DateTime? endedAt;
+  DateTime updatedAt;
+
   bool isCompleted;
   int currentStreak;
   int bestStreak;
   bool isGoalAchieved;
   List<DateTime> completedDates;
+  List<int> certainDaysOfWeek;
   // New: icon to represent the habit in UI. Uses IconData so widgets can render
   // with an Icon(habit.icon). If user doesn't choose an icon, this defaults
   // to [Icons.flag] (a sensible generic icon).
@@ -21,16 +25,19 @@ class Habit {
   Habit({
     required this.id,
     required this.habitName,
-    required this.goal,
+    required this.goalName,
     required this.habitType,
     this.targettedPeriod = 21,
     required this.periodUnit,
     required this.createdAt,
+    required this.endedAt,
+    required this.updatedAt,
     this.isCompleted = false,
     this.currentStreak = 0,
     this.bestStreak = 0,
     this.isGoalAchieved = false,
     this.completedDates = const [],
+    this.certainDaysOfWeek = const [],
     this.icon = Icons.flag,
   });
 
@@ -54,26 +61,33 @@ class Habit {
     int? targettedPeriod,
     EnperiodUnit? periodUnit,
     DateTime? createdAt,
+    DateTime? endedAt,
+    DateTime? updatedAt,
+
     bool? isCompleted,
     bool? isGoalAchieved,
     int? currentStreak,
     int? bestStreak,
     List<DateTime>? completedDates,
+    List<int>? certainDaysOfWeek,
     IconData? icon,
   }) {
     return Habit(
       id: id ?? this.id,
       habitName: habitName ?? this.habitName,
-      goal: goal ?? this.goal,
+      goalName: goal ?? this.goalName,
       habitType: habitType ?? this.habitType,
       targettedPeriod: targettedPeriod ?? this.targettedPeriod,
       periodUnit: periodUnit ?? this.periodUnit,
       createdAt: createdAt ?? this.createdAt,
+      endedAt: endedAt ?? this.endedAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       isCompleted: isCompleted ?? this.isCompleted,
       isGoalAchieved: isGoalAchieved ?? this.isGoalAchieved,
       currentStreak: currentStreak ?? this.currentStreak,
       bestStreak: bestStreak ?? this.bestStreak,
       completedDates: completedDates ?? this.completedDates,
+      certainDaysOfWeek: certainDaysOfWeek ?? this.certainDaysOfWeek,
       icon: icon ?? this.icon,
     );
   }

@@ -1,6 +1,33 @@
+import 'package:flutter/material.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
 class FormatNames {
   // For EnhabitGoal
+
+static EnperiodUnit mapStringToPeriodUnit(String type) {
+  switch (type.toLowerCase()) {
+    case 'daily': return EnperiodUnit.daily;
+    case 'weekly': return EnperiodUnit.weekly;
+    case 'monthly': return EnperiodUnit.monthly;
+    default: throw Exception('Invalid frequency type: $type');
+  }
+}
+
+static IconData stringToIconConverter(String iconName)
+{
+  if(iconName=='flag')
+  {
+    return Icons.flag;
+  }
+  else
+  {
+   return Icons.access_alarm_outlined;
+  }
+}
+// 2. Helper to map Frontend Enum to Mongoose String
+static String mapPeriodUnitToString(EnperiodUnit unit) {
+  return unit.toString().split('.').last; // e.g., EnperiodUnit.daily -> 'daily'
+}// lib/features/habit_management/data/models/frequency_model.dart
+
   static String formatHabitGoal(EnhabitGoal goal) {
     switch (goal) {
       case EnhabitGoal.breakHabit: return 'Break Habit';

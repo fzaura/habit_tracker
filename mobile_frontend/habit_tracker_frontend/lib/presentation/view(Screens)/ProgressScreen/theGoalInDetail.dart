@@ -39,7 +39,7 @@ class TheGoalInDetail extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                habitToDisplay.goal,
+                habitToDisplay.goalName,
                 style: mainAppTheme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -202,7 +202,7 @@ class TheGoalInDetail extends StatelessWidget {
         backgroundColor:const Color(0xFFF5F5F5),
         title: Text(
           maxLines: 2,
-          habit.goal,
+          habit.goalName,
           style: mainAppTheme.textTheme.labelLarge?.copyWith(
             fontSize: 21,
             fontWeight: FontWeight.bold,

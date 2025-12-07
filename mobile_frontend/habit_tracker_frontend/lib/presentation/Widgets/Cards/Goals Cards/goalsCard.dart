@@ -69,7 +69,7 @@ class GoalsCard extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            habitGoals.goal,
+            habitGoals.goalName,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,

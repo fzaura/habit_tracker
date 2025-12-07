@@ -31,9 +31,12 @@ class _AddnewhabitState extends ConsumerState<Addnewhabit> {
           Habit(
             id: '33',
             habitName: habitName,
-            goal: golaName,
+            goalName: golaName,
             habitType: habitGoal,
             periodUnit: periodUnit,
+            endedAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+
             createdAt: DateTime.now(),
           ),
         );

@@ -4,15 +4,18 @@ import 'package:habit_tracker/domain/Entities/habitUI.dart';
 class HabitSamples {
   static List<Habit> getSampleHabits() {
     final now = DateTime.now();
+    
     return [
       Habit(
         id: '1',
         habitName: 'Drink Water',
-        goal: 'Drink 8 glasses of water daily',
+        goalName: 'Drink 8 glasses of water daily',
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 8,
         periodUnit: EnperiodUnit.daily,
         createdAt: now.subtract(Duration(days: 7)),
+        updatedAt: now.subtract(Duration(hours: 2)), // Recently updated
+        endedAt: null, // ⬅️ Added: Still active
         currentStreak: 7,
         bestStreak: 12,
         isGoalAchieved: false,
@@ -28,11 +31,13 @@ class HabitSamples {
       Habit(
         id: '2',
         habitName: 'Morning Exercise',
-        goal: 'Exercise for 30 minutes every morning',
+        goalName: 'Exercise for 30 minutes every morning',
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 7,
         periodUnit: EnperiodUnit.daily,
         createdAt: now.subtract(Duration(days: 14)),
+        updatedAt: now.subtract(Duration(days: 1)),
+        endedAt: null, // ⬅️ Added: Still active
         currentStreak: 3,
         bestStreak: 8,
         isGoalAchieved: false,
@@ -46,11 +51,13 @@ class HabitSamples {
       Habit(
         id: '3',
         habitName: 'Social Media Break',
-        goal: 'Avoid social media during work hours',
+        goalName: 'Avoid social media during work hours',
         habitType: EnhabitGoal.breakHabit,
         targettedPeriod: 7,
         periodUnit: EnperiodUnit.daily,
         createdAt: now.subtract(Duration(days: 3)),
+        updatedAt: now, // Updated right now
+        endedAt: null, // ⬅️ Added: Still active
         currentStreak: 7,
         bestStreak: 2,
         isGoalAchieved: true,
@@ -65,11 +72,13 @@ class HabitSamples {
       Habit(
         id: '4',
         habitName: 'Read Books',
-        goal: 'Read for 1 hour, 3 times a week',
+        goalName: 'Read for 1 hour, 3 times a week',
         habitType: EnhabitGoal.buildHabit,
         targettedPeriod: 3,
         periodUnit: EnperiodUnit.weekly,
         createdAt: now.subtract(Duration(days: 21)),
+        updatedAt: now.subtract(Duration(hours: 1)),
+        endedAt: now.subtract(Duration(days: 5)), // ⬅️ Value retained: Ended in the past
         currentStreak: 2,
         bestStreak: 4,
         isGoalAchieved: true,

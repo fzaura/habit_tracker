@@ -35,10 +35,13 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
     Habit newHabit = Habit(
       id: widget.habitToEdit.id,
       habitName: yourHabitController.text,
-      goal: yourGoalController.text,
+      goalName: yourGoalController.text,
       habitType: habitGoal,
       periodUnit: periodUnit,
       createdAt: widget.habitToEdit.createdAt,
+      endedAt: widget.habitToEdit.endedAt,
+            updatedAt: widget.habitToEdit.updatedAt,
+
     );
     ref
         .watch(habitSampleProvider.notifier)
