@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API documentation for the Habit Tracker application.
 servers:
-  - url: http://localhost:3000/api
+  - url: https://habit-tracker-19q1.onrender.com/api
     description: Local Development Server
 components:
   securitySchemes:

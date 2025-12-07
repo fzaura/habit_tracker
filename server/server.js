@@ -93,7 +93,9 @@ if (require.main === module) {
     .then(() => {
       console.log("Successfully connected to the database.");
       app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(
+          `Server is running on https://habit-tracker-19q1.onrender.com/`
+        );
       });
     })
     .catch((err) => {
