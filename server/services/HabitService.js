@@ -78,7 +78,9 @@ class HabitService {
     const result = await this.habitRepository.deleteHabit(habitId, userId);
 
     if (!result || result.deletedCount === 0) {
-      throw new Error("Habit not found or user unauthorized.");
+      const error = new Error("Habit not found or user unauthorized.");
+      error.status = 404;
+      throw error;
     }
 
     return result;

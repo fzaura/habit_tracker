@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-// Use a separate DB for testing to allow safe data wiping
+// Use a separate DB for testing
 const TEST_DB_NAME = process.env.DB_NAME + "_test";
 
 beforeAll(async () => {
@@ -12,7 +12,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Clean up and close connection
-  await mongoose.connection.dropDatabase(); // Wipes the test DB clean
+  // Clean up: Drop the DB and close connection
+  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 });

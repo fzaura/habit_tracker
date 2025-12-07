@@ -74,7 +74,7 @@ const habitSchema = new Schema(
  * @returns {string} 'active' or 'completed' based on end date
  */
 habitSchema.virtual("status").get(function () {
-  if (this.endDate()) {
+  if (this.endDate) {
     return "active;";
   }
 

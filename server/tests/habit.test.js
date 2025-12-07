@@ -68,9 +68,25 @@ describe("Habit API", () => {
   });
 
   // Test 4: Delete Habit
+  // Test 4: Delete Habit
+  // Test 4: Delete Habit (Robust Version)
   it("should delete a habit", async () => {
+    // 1. Create a FRESH habit just for this test
+    const createRes = await request(app)
+      .post("/api/habits")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Habit To Delete",
+        goal: "Delete me",
+        frequency: { type: "daily" },
+        endDate: "2025-12-31",
+      });
+
+    const idToDelete = createRes.body.habit._id || createRes.body.habit.id;
+
+    // 2. Delete it
     const res = await request(app)
-      .delete(`/api/habits/${habitId}`)
+      .delete(`/api/habits/${idToDelete}`)
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toEqual(200);

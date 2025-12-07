@@ -13,13 +13,6 @@ const { updateUserValidator } = require("../validators/user.validator");
 const { authenticateJWT } = require("../middleware/auth.middleware");
 
 /**
- * @swagger
- * tags:
- * name: Users
- * description: User profile management
- */
-
-/**
  * Factory function to create user router with injected controller.
  *
  * @memberof module:routes/user
@@ -31,44 +24,6 @@ const createUserRouter = (userController) => {
   const router = express.Router();
   router.use(authenticateJWT);
 
-  /**
-   * @swagger
-   * /users/me:
-   * patch:
-   * summary: Update authenticated user's profile
-   * tags: [Users]
-   * security:
-   * - bearerAuth: []
-   * requestBody:
-   * required: true
-   * content:
-   * application/json:
-   * schema:
-   * type: object
-   * properties:
-   * username:
-   * type: string
-   * description: New username (5-12 chars)
-   * email:
-   * type: string
-   * format: email
-   * password:
-   * type: string
-   * format: password
-   * description: New password (min 10 chars)
-   * confirmPassword:
-   * type: string
-   * format: password
-   * responses:
-   * 200:
-   * description: User updated successfully
-   * 400:
-   * description: Validation errors
-   * 401:
-   * description: Authentication required
-   * 409:
-   * description: Username/email already in use
-   */
   /**
    * @name PATCH /me
    * @description Update authenticated user's profile

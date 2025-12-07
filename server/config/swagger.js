@@ -34,7 +34,7 @@ const options = {
     ],
   },
   // Look for swagger definitions in these files
-  apis: ["./src/routes/*.js"],
+  apis: ["./routes/*.js"],
 };
 
 const specs = swaggerJsdoc(options);
