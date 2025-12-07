@@ -81,15 +81,18 @@ app.use((err, req, res, next) => {
     .json({ message: err.message || "An internal server error has occurred." });
 });
 
-mongoose
-  .connect(DATABASE_URL, { dbName: DB_NAME })
-  .then(() => {
-    console.log("Successfully connected to the database.");
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+module.exports = app;
+if (require.main === module) {
+  mongoose
+    .connect(DATABASE_URL, { dbName: DB_NAME })
+    .then(() => {
+      console.log("Successfully connected to the database.");
+      app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Database connection error: ", err);
+      process.exit(1);
     });
-  })
-  .catch((err) => {
-    console.error("Database connection error: ", err);
-    process.exit(1);
-  });
+}
