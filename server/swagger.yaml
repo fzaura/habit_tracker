@@ -37,6 +37,15 @@ paths:
       responses:
         201:
           description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  message: { type: string, example: "User registered successfully" }
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
         400:
           description: Validation error
 
@@ -58,6 +67,19 @@ paths:
       responses:
         200:
           description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                      username: { type: string, example: "HabitHero" }
+                      email: { type: string, example: "hero@test.com" }
         401:
           description: Invalid credentials
 
@@ -78,6 +100,13 @@ paths:
       responses:
         200:
           description: Tokens refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
+                  refreshToken: { type: string, example: "eyJhbGciOiJIUzI1Ni..." }
         401:
           description: Invalid token
 
@@ -100,6 +129,16 @@ paths:
       responses:
         200:
           description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      username: { type: string, example: NewName }
+                      email: { type: string, example: new@test.com }
         400:
           description: Validation error
         401:
@@ -120,6 +159,34 @@ paths:
       responses:
         200:
           description: List of habits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          totalItems: { type: integer, example: 5 }
+                          totalPages: { type: integer, example: 1 }
+                          currentPage: { type: integer, example: 1 }
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            _id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                            name: { type: string, example: "Drink Water" }
+                            goal: { type: string, example: "2L daily" }
+                            frequency:
+                              type: object
+                              properties:
+                                type: { type: string, example: "daily" }
+                                daysOfWeek: { type: array, items: { type: integer }, example: [0, 1, 2, 3, 4, 5, 6] }
+                            createdAt: { type: string, format: date-time }
     post:
       summary: Create a new habit
       tags: [Habits]
@@ -141,6 +208,17 @@ paths:
       responses:
         201:
           description: Habit created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habit:
+                    type: object
+                    properties:
+                      _id: { type: string, example: "60d0fe4f5311236168a109ca" }
+                      name: { type: string, example: "Drink Water" }
+                      status: { type: string, example: "active" }
 
   /habits/{id}:
     put:
@@ -161,6 +239,15 @@ paths:
       responses:
         200:
           description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habit:
+                    type: object
+                    properties:
+                      name: { type: string, example: "Drink MORE Water" }
         404:
           description: Not found
     delete:
@@ -174,6 +261,12 @@ paths:
       responses:
         200:
           description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: "Habit deleted successfully" }
 
   /habits/{id}/completions:
     post:
@@ -196,3 +289,13 @@ paths:
       responses:
         201:
           description: Marked complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completion:
+                    type: object
+                    properties:
+                      _id: { type: string, example: "..." }
+                      date: { type: string, format: date-time }
