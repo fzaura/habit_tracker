@@ -13,10 +13,84 @@ const {
   validateIdParam,
 } = require("../validators/habit.validator");
 
+/**
+ * @swagger
+ * tags:
+ * name: Habits
+ * description: Habit management operations
+ */
+
 const createHabitRouter = (habitController) => {
   const router = express.Router();
   router.use(authenticateJWT);
 
+  /**
+   * @swagger
+   * /habits:
+   * post:
+   * summary: Create a new habit
+   * tags: [Habits]
+   * security:
+   * - bearerAuth: []
+   * requestBody:
+   * required: true
+   * content:
+   * application/json:
+   * schema:
+   * type: object
+   * required:
+   * - name
+   * - goal
+   * - frequency
+   * - endDate
+   * properties:
+   * name:
+   * type: string
+   * goal:
+   * type: string
+   * endDate:
+   * type: string
+   * format: date
+   * example: 2025-12-31
+   * frequency:
+   * type: object
+   * properties:
+   * type:
+   * type: string
+   * enum: [daily, weekly]
+   * daysOfWeek:
+   * type: array
+   * items:
+   * type: integer
+   * responses:
+   * 201:
+   * description: Habit created successfully
+   * 400:
+   * description: Validation errors
+   * 401:
+   * description: Authentication required
+   * get:
+   * summary: Get paginated list of user's habits
+   * tags: [Habits]
+   * security:
+   * - bearerAuth: []
+   * parameters:
+   * - in: query
+   * name: page
+   * schema:
+   * type: integer
+   * default: 1
+   * - in: query
+   * name: limit
+   * schema:
+   * type: integer
+   * default: 10
+   * responses:
+   * 200:
+   * description: Paginated habits list with metadata
+   * 401:
+   * description: Authentication required
+   */
   /**
    * @name POST /
    * @description Create a new habit
@@ -49,6 +123,67 @@ const createHabitRouter = (habitController) => {
     .get(habitController.getHabits);
 
   /**
+   * @swagger
+   * /habits/{id}:
+   * delete:
+   * summary: Delete a specific habit
+   * tags: [Habits]
+   * security:
+   * - bearerAuth: []
+   * parameters:
+   * - in: path
+   * name: id
+   * required: true
+   * schema:
+   * type: string
+   * description: Habit ID
+   * responses:
+   * 200:
+   * description: Habit deleted successfully
+   * 400:
+   * description: Invalid habit ID format
+   * 401:
+   * description: Authentication required
+   * 404:
+   * description: Habit not found or unauthorized
+   * put:
+   * summary: Update a specific habit
+   * tags: [Habits]
+   * security:
+   * - bearerAuth: []
+   * parameters:
+   * - in: path
+   * name: id
+   * required: true
+   * schema:
+   * type: string
+   * requestBody:
+   * required: true
+   * content:
+   * application/json:
+   * schema:
+   * type: object
+   * properties:
+   * name:
+   * type: string
+   * goal:
+   * type: string
+   * endDate:
+   * type: string
+   * format: date
+   * frequency:
+   * type: object
+   * responses:
+   * 200:
+   * description: Habit updated successfully
+   * 400:
+   * description: Validation errors
+   * 401:
+   * description: Authentication required
+   * 404:
+   * description: Habit not found
+   */
+  /**
    * @name DELETE /:id
    * @description Delete a specific habit
    * @memberof module:routes/habit
@@ -80,6 +215,45 @@ const createHabitRouter = (habitController) => {
     .delete(validateIdParam, habitController.deleteHabit)
     .put(validateIdParam, updateHabitValidator, habitController.updateHabit);
 
+  /**
+   * @swagger
+   * /habits/{id}/completions:
+   * post:
+   * summary: Mark a habit as completed
+   * tags: [Habits]
+   * security:
+   * - bearerAuth: []
+   * parameters:
+   * - in: path
+   * name: id
+   * required: true
+   * schema:
+   * type: string
+   * requestBody:
+   * required: true
+   * content:
+   * application/json:
+   * schema:
+   * type: object
+   * required:
+   * - dateString
+   * properties:
+   * dateString:
+   * type: string
+   * format: date
+   * example: 2025-01-01
+   * responses:
+   * 201:
+   * description: Habit marked as completed
+   * 400:
+   * description: Validation errors
+   * 401:
+   * description: Authentication required
+   * 404:
+   * description: Habit not found
+   * 409:
+   * description: Habit already completed for this date
+   */
   /**
    * @name POST /:id/completions
    * @description Mark a habit as completed on a specific date

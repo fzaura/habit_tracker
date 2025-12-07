@@ -1,13 +1,49 @@
+/**
+ * @fileoverview Authentication service handling user registration, login, and session refresh.
+ * Manages password hashing, token generation, and user authentication.
+ *
+ * @module services/AuthService
+ * @requires bcrypt
+ * @requires jsonwebtoken
+ * @requires ../utils/token
+ * @requires ../repositories/IUserRepository
+ * @requires ../repositories/ITokenRepository
+ */
 const bcrypt = require("bcrypt");
 const { generateTokens } = require("../utils/token");
 const jwt = require("jsonwebtoken");
 
+/**
+ * Service class for authentication operations.
+ * Handles user registration, login, and token refresh logic.
+ *
+ * @class AuthService
+ */
 class AuthService {
+  /**
+   * Create an AuthService instance.
+   *
+   * @constructor
+   * @param {Object} userRepository - Repository for user data operations
+   * @param {Object} tokenRepository - Repository for token data operations
+   */
   constructor(userRepository, tokenRepository) {
     this.userRepo = userRepository;
     this.tokenRepo = tokenRepository;
   }
 
+  /**
+   * Register a new user with hashed password and generate tokens.
+   * Checks for existing username/email before creating user.
+   *
+   * @async
+   * @function registerUser
+   * @param {string} username - Desired username (5-12 chars)
+   * @param {string} email - User email address
+   * @param {string} password - Plain text password (will be hashed)
+   * @returns {Promise<Object>} Object containing newUser, accessToken, and refreshToken
+   * @throws {Error} If username/email already exists or validation fails
+   */
   async registerUser(username, email, password) {
     if (!username) {
       throw new Error("Username is required");
@@ -26,9 +62,13 @@ class AuthService {
 
     if (userExists) {
       if (userExists.email === email) {
-        throw new Error("Email already in use.");
+        const error = new Error("Email already in use.");
+        error.status = 400;
+        throw error;
       } else {
-        throw new Error("Username already in use.");
+        const error = new Error("Username already in use.");
+        error.status = 400;
+        throw error;
       }
     }
 
@@ -50,6 +90,17 @@ class AuthService {
     return { newUser, accessToken, refreshToken };
   }
 
+  /**
+   * Authenticate user with email and password, generate new tokens.
+   * Validates credentials and creates new session tokens.
+   *
+   * @async
+   * @function loginUser
+   * @param {string} email - User email address
+   * @param {string} password - Plain text password
+   * @returns {Promise<Object>} Object containing user, accessToken, and refreshToken
+   * @throws {Error} If credentials are invalid
+   */
   async loginUser(email, password) {
     if (!email) {
       throw new Error("Email is required.");
@@ -60,24 +111,38 @@ class AuthService {
 
     const user = await this.userRepo.findUserByEmail(email);
     if (!user) {
-      throw new Error("Invalid credentials.");
+      const error = new Error("Invalid credentials.");
+      error.status = 401;
+      throw error;
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("Invalid credentials.");
+      const error = new Error("Invalid credentials.");
+      error.status = 401;
+      throw error;
     }
 
     const { refreshToken, accessToken } = generateTokens(user);
 
     const newRefreshToken = await this.tokenRepo.createToken(
-      user.id,
+      user._id,
       refreshToken
     );
 
     return { user, accessToken, refreshToken };
   }
 
+  /**
+   * Refresh user session using a valid refresh token.
+   * Verifies old token, revokes it, and generates new token pair.
+   *
+   * @async
+   * @function refreshUserSession
+   * @param {string} oldRefreshToken - Current valid refresh token
+   * @returns {Promise<Object>} Object containing new accessToken and refreshToken
+   * @throws {Error} If token is invalid, expired, or revoked
+   */
   async refreshUserSession(oldRefreshToken) {
     if (!oldRefreshToken) {
       throw new Error("Refresh token is required.");

@@ -74,6 +74,14 @@ const addHabitValidator = [
     .toDate(),
 ];
 
+/**
+ * Validation chain for marking habit as completed.
+ * Validates date format (YYYY-MM-DD).
+ *
+ * @memberof module:validators/habit
+ * @constant {Array} markCompleteValidator
+ * @type {Array}
+ */
 const markCompleteValidator = [
   body("date", "Please provide a valid date in yyyy-MM-DD format.")
     .notEmpty()
@@ -87,6 +95,14 @@ const markCompleteValidator = [
     }),
 ];
 
+/**
+ * Validation chain for updating existing habits.
+ * All fields are optional. Validates habit name, goal, frequency, and end date.
+ *
+ * @memberof module:validators/habit
+ * @constant {Array} updateHabitValidator
+ * @type {Array}
+ */
 const updateHabitValidator = [
   body("name")
     .optional()
@@ -120,6 +136,14 @@ const updateHabitValidator = [
     .toDate(),
 ];
 
+/**
+ * Validation chain for MongoDB ObjectId parameters.
+ * Validates ID format in URL parameters.
+ *
+ * @memberof module:validators/habit
+ * @constant {Array} validateIdParam
+ * @type {Array}
+ */
 const validateIdParam = [
   param("id").isMongoId().withMessage("Invalid ID format in URL"),
 ];

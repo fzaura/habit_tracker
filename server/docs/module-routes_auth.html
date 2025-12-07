@@ -38,7 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Authentication routes for user registration, login, token refresh, and user updates.</p></div>
+            <div class="description"><p>Authentication routes for user registration, login, and token refresh.
+Defines endpoints for authentication operations.</p></div>
         
 
         
@@ -124,6 +125,16 @@
     
 
     
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:express</li>
+        
+            <li>module:../validators/auth.validator</li>
+        
+            <li>module:../controllers/auth.controller</li>
+        </ul>
+    
 
     
 
@@ -144,7 +155,7 @@
 
 
 <div class="description">
-    <p>Get new access token using refresh token</p>
+    <p>Refresh user session with new tokens</p>
 </div>
 
 
@@ -182,7 +193,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line45">line 45</a>
+        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -206,7 +217,7 @@
 
 
 <div class="description">
-    <p>Authenticate user and return tokens</p>
+    <p>Authenticate existing user</p>
 </div>
 
 
@@ -244,7 +255,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line32">line 32</a>
+        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -306,7 +317,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line17">line 17</a>
+        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -323,16 +334,83 @@
 
 
         
-            
-<h4 class="name" id=".PUT/update-user"><span class="type-signature">(static) </span>PUT /update-user<span class="type-signature"></span></h4>
+    
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createAuthRouter"><span class="type-signature">(static) </span>createAuthRouter<span class="signature">(authController)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    <p>Update user information (requires authentication)</p>
+    <p>Factory function to create authentication router with injected controller.</p>
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>authController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Authentication controller instance</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -368,7 +446,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line61">line 61</a>
+        <a href="routes_auth.routes.js.html">routes/auth.routes.js</a>, <a href="routes_auth.routes.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -384,9 +462,43 @@
 
 
 
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
+<div class="param-desc">
+    <p>Express router with authentication routes</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
     
 
+
+
+
+
+        
     
 
     
@@ -402,13 +514,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-server.html">server</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Sep 29 2025 01:54:25 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>

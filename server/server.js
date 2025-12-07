@@ -20,6 +20,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 
+const swaggerUi = require("swagger-ui-express"); // <--- Import 1
+const swaggerSpecs = require("./config/swagger"); // <--- Import 2 (Adjust path if needed)
+
 const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
 const MongooseUserRepo = require("./repositories/MongooseUserRepository");
 const AuthService = require("./services/AuthService");
@@ -60,6 +63,8 @@ const DB_NAME = process.env.DB_NAME;
 app.use(helmet());
 app.use(express.json());
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
 app.use("/api/auth", authRouter);
 app.use("/api/habits", habitRouter);
 app.use("/api/users", userRouter);
@@ -81,15 +86,18 @@ app.use((err, req, res, next) => {
     .json({ message: err.message || "An internal server error has occurred." });
 });
 
-mongoose
-  .connect(DATABASE_URL, { dbName: DB_NAME })
-  .then(() => {
-    console.log("Successfully connected to the database.");
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+module.exports = app;
+if (require.main === module) {
+  mongoose
+    .connect(DATABASE_URL, { dbName: DB_NAME })
+    .then(() => {
+      console.log("Successfully connected to the database.");
+      app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Database connection error: ", err);
+      process.exit(1);
     });
-  })
-  .catch((err) => {
-    console.error("Database connection error: ", err);
-    process.exit(1);
-  });
+}

@@ -1,6 +1,38 @@
+/**
+ * @fileoverview Authentication controller handling user registration, login, and token refresh.
+ * Processes requests after validation and interacts with AuthService.
+ *
+ * @module controllers/auth
+ * @requires express-validator
+ * @requires ../services/AuthService
+ */
 const { validationResult } = require("../validators/auth.validator");
 
+/**
+ * Factory function to create authentication controller with injected dependencies.
+ *
+ * @memberof module:controllers/auth
+ * @function createAuthController
+ * @param {Object} authService - Instance of AuthService for handling auth operations
+ * @returns {Object} Object containing controller methods: registerUser, loginUser, getNewAccessToken
+ */
 const createAuthController = (authService) => {
+  /**
+   * Register a new user account.
+   * Validates input, creates user, generates tokens.
+   *
+   * @async
+   * @function registerUser
+   * @param {Object} req - Express request object
+   * @param {Object} req.body - Request body
+   * @param {string} req.body.username - Username (5-12 chars)
+   * @param {string} req.body.email - Email address
+   * @param {string} req.body.password - Password (min 10 chars)
+   * @param {string} req.body.confirmPassword - Password confirmation
+   * @param {Object} res - Express response object
+   * @param {Function} next - Express next middleware function
+   * @returns {Promise<void>} JSON response with user data and tokens
+   */
   const registerUser = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -27,6 +59,20 @@ const createAuthController = (authService) => {
     }
   };
 
+  /**
+   * Authenticate existing user and generate new tokens.
+   * Validates credentials and creates new session.
+   *
+   * @async
+   * @function loginUser
+   * @param {Object} req - Express request object
+   * @param {Object} req.body - Request body
+   * @param {string} req.body.email - User email
+   * @param {string} req.body.password - User password
+   * @param {Object} res - Express response object
+   * @param {Function} next - Express next middleware function
+   * @returns {Promise<void>} JSON response with user data and tokens
+   */
   const loginUser = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -53,6 +99,19 @@ const createAuthController = (authService) => {
     }
   };
 
+  /**
+   * Refresh user session using a valid refresh token.
+   * Validates refresh token, revokes old token, generates new token pair.
+   *
+   * @async
+   * @function getNewAccessToken
+   * @param {Object} req - Express request object
+   * @param {Object} req.body - Request body
+   * @param {string} req.body.refreshToken - Valid refresh token
+   * @param {Object} res - Express response object
+   * @param {Function} next - Express next middleware function
+   * @returns {Promise<void>} JSON response with new token pair
+   */
   const getNewAccessToken = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
