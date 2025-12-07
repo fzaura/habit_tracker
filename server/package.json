@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
     "docs": "jsdoc -c jsdoc.json",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000"
   },
   "keywords": [],
   "author": "",
