@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/AuthService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/AuthService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Authentication service handling user registration, login, and session refresh.
+ * Manages password hashing, token generation, and user authentication.
+ *
+ * @module services/AuthService
+ * @requires bcrypt
+ * @requires jsonwebtoken
+ * @requires ../utils/token
+ * @requires ../repositories/IUserRepository
+ * @requires ../repositories/ITokenRepository
+ */
+const bcrypt = require("bcrypt");
+const { generateTokens } = require("../utils/token");
+const jwt = require("jsonwebtoken");
+
+/**
+ * Service class for authentication operations.
+ * Handles user registration, login, and token refresh logic.
+ *
+ * @class AuthService
+ */
+class AuthService {
+  /**
+   * Create an AuthService instance.
+   *
+   * @constructor
+   * @param {Object} userRepository - Repository for user data operations
+   * @param {Object} tokenRepository - Repository for token data operations
+   */
+  constructor(userRepository, tokenRepository) {
+    this.userRepo = userRepository;
+    this.tokenRepo = tokenRepository;
+  }
+
+  /**
+   * Register a new user with hashed password and generate tokens.
+   * Checks for existing username/email before creating user.
+   *
+   * @async
+   * @function registerUser
+   * @param {string} username - Desired username (5-12 chars)
+   * @param {string} email - User email address
+   * @param {string} password - Plain text password (will be hashed)
+   * @returns {Promise&lt;Object>} Object containing newUser, accessToken, and refreshToken
+   * @throws {Error} If username/email already exists or validation fails
+   */
+  async registerUser(username, email, password) {
+    if (!username) {
+      throw new Error("Username is required");
+    }
+    if (!email) {
+      throw new Error("Email is required");
+    }
+    if (!password) {
+      throw new Error("Password is required");
+    }
+
+    const userExists = await this.userRepo.findUserByUsernameOrEmail(
+      username,
+      email
+    );
+
+    if (userExists) {
+      if (userExists.email === email) {
+        throw new Error("Email already in use.");
+      } else {
+        throw new Error("Username already in use.");
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      password,
+      parseInt(process.env.SALT_ROUNDS)
+    );
+
+    const userData = { username, email, password: hashedPassword };
+    const newUser = await this.userRepo.createUser(userData);
+
+    const { refreshToken, accessToken } = generateTokens(newUser);
+
+    const newRefreshToken = await this.tokenRepo.createToken(
+      newUser.id,
+      refreshToken
+    );
+
+    return { newUser, accessToken, refreshToken };
+  }
+
+  /**
+   * Authenticate user with email and password, generate new tokens.
+   * Validates credentials and creates new session tokens.
+   *
+   * @async
+   * @function loginUser
+   * @param {string} email - User email address
+   * @param {string} password - Plain text password
+   * @returns {Promise&lt;Object>} Object containing user, accessToken, and refreshToken
+   * @throws {Error} If credentials are invalid
+   */
+  async loginUser(email, password) {
+    if (!email) {
+      throw new Error("Email is required.");
+    }
+    if (!password) {
+      throw new Error("Password is required.");
+    }
+
+    const user = await this.userRepo.findUserByEmail(email);
+    if (!user) {
+      throw new Error("Invalid credentials.");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new Error("Invalid credentials.");
+    }
+
+    const { refreshToken, accessToken } = generateTokens(user);
+
+    const newRefreshToken = await this.tokenRepo.createToken(
+      user.id,
+      refreshToken
+    );
+
+    return { user, accessToken, refreshToken };
+  }
+
+  /**
+   * Refresh user session using a valid refresh token.
+   * Verifies old token, revokes it, and generates new token pair.
+   *
+   * @async
+   * @function refreshUserSession
+   * @param {string} oldRefreshToken - Current valid refresh token
+   * @returns {Promise&lt;Object>} Object containing new accessToken and refreshToken
+   * @throws {Error} If token is invalid, expired, or revoked
+   */
+  async refreshUserSession(oldRefreshToken) {
+    if (!oldRefreshToken) {
+      throw new Error("Refresh token is required.");
+    }
+
+    const storedToken = await this.tokenRepo.findTokenByValue(oldRefreshToken);
+    if (!storedToken) {
+      throw new Error("Token has been revoked or previously used.");
+    }
+    try {
+      const decoded = jwt.verify(
+        oldRefreshToken,
+        process.env.JWT_REFRESH_SECRET
+      );
+
+      await this.tokenRepo.deleteTokenById(storedToken.id);
+
+      const user = { id: decoded.userId, username: decoded.username };
+
+      const { refreshToken, accessToken } = generateTokens(user);
+
+      const newRefreshToken = await this.tokenRepo.createToken(
+        user.id,
+        refreshToken
+      );
+
+      return { accessToken, refreshToken };
+    } catch (error) {
+      if (
+        error.name === "TokenExpiredError" ||
+        error.name === "JsonWebTokenError"
+      ) {
+        await this.tokenRepo.deleteTokenById(storedToken.id);
+        throw new Error("Token has been revoked or expired.");
+      }
+    }
+  }
+}
+
+module.exports = AuthService;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

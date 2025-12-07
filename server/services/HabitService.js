@@ -1,8 +1,43 @@
+/**
+ * @fileoverview Habit service managing habit CRUD operations and completion tracking.
+ * Handles business logic for habit management and validation.
+ *
+ * @module services/HabitService
+ * @requires ../repositories/IHabitRepository
+ */
+
+/**
+ * Service class for habit management operations.
+ * Handles habit creation, updates, deletion, retrieval, and completion tracking.
+ *
+ * @class HabitService
+ */
 class HabitService {
+  /**
+   * Create a HabitService instance.
+   *
+   * @constructor
+   * @param {Object} habitRepository - Repository for habit data operations
+   */
   constructor(habitRepository) {
     this.habitRepository = habitRepository;
   }
 
+  /**
+   * Create a new habit for a user.
+   * Validates required fields and normalizes daily frequency.
+   *
+   * @async
+   * @function createHabit
+   * @param {Object} habitData - Habit information
+   * @param {string} habitData.name - Habit name
+   * @param {string} habitData.goal - Habit description/goal
+   * @param {Object|string} habitData.frequency - Frequency config or 'daily'
+   * @param {string} habitData.endDate - End date
+   * @param {string} userId - ID of user creating the habit
+   * @returns {Promise<Object>} Created habit object
+   * @throws {Error} If required fields are missing
+   */
   async createHabit(habitData, userId) {
     if (!habitData.name) {
       throw new Error("Habit name is required");
@@ -28,6 +63,17 @@ class HabitService {
     return newHabit;
   }
 
+  /**
+   * Delete a habit belonging to a specific user.
+   * Ensures user authorization before deletion.
+   *
+   * @async
+   * @function deleteHabit
+   * @param {string} habitId - ID of habit to delete
+   * @param {string} userId - ID of user requesting deletion
+   * @returns {Promise<Object>} Deletion result
+   * @throws {Error} If habit not found or user unauthorized
+   */
   async deleteHabit(habitId, userId) {
     const result = await this.habitRepository.deleteHabit(habitId, userId);
 
@@ -38,6 +84,22 @@ class HabitService {
     return result;
   }
 
+  /**
+   * Update an existing habit with new data.
+   * Validates required parameters and normalizes daily frequency.
+   *
+   * @async
+   * @function updateHabit
+   * @param {string} habitId - ID of habit to update
+   * @param {Object} habitData - Updated habit information
+   * @param {string} [habitData.name] - Updated habit name
+   * @param {string} [habitData.goal] - Updated goal
+   * @param {Object|string} [habitData.frequency] - Updated frequency
+   * @param {string} [habitData.endDate] - Updated end date
+   * @param {string} userId - ID of user requesting update
+   * @returns {Promise<Object>} Updated habit object
+   * @throws {Error} If required parameters missing or habit not found
+   */
   async updateHabit(habitId, habitData, userId) {
     if (!habitId) {
       throw new Error("Habit ID is required.");
@@ -68,6 +130,17 @@ class HabitService {
     return updatedHabit;
   }
 
+  /**
+   * Retrieve paginated list of habits for a user.
+   * Returns habits with pagination metadata.
+   *
+   * @async
+   * @function getHabits
+   * @param {number} page - Page number (1-indexed)
+   * @param {number} limit - Number of items per page
+   * @param {string} userId - ID of user
+   * @returns {Promise<Object>} Object with data array and pagination info
+   */
   async getHabits(page, limit, userId) {
     const { habits, total } = await this.habitRepository.getHabits(
       page,
@@ -89,6 +162,18 @@ class HabitService {
     return info;
   }
 
+  /**
+   * Mark a habit as completed for a specific date.
+   * Prevents duplicate completions on the same date.
+   *
+   * @async
+   * @function markAsCompleted
+   * @param {string} habitId - ID of habit to mark complete
+   * @param {string} userId - ID of user
+   * @param {string} dateString - Date in ISO format (YYYY-MM-DD)
+   * @returns {Promise<Object>} Created completion record
+   * @throws {Error} If required params missing, date invalid, or already completed
+   */
   async markAsCompleted(habitId, userId, dateString) {
     if (!userId) {
       throw new Error("User ID is required.");

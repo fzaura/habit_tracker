@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/UserService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/UserService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview User service managing user profile updates.
+ * Handles business logic for user account modifications.
+ *
+ * @module services/UserService
+ * @requires bcrypt
+ * @requires ../repositories/IUserRepository
+ */
+const bcrypt = require("bcrypt");
+
+/**
+ * Service class for user management operations.
+ * Handles user profile updates with validation and security.
+ *
+ * @class UserService
+ */
+class UserService {
+  /**
+   * Create a UserService instance.
+   *
+   * @constructor
+   * @param {Object} userRepository - Repository for user data operations
+   */
+  constructor(userRepository) {
+    this.userRepo = userRepository;
+  }
+
+  /**
+   * Update user profile information.
+   * Validates uniqueness of username/email and hashes password if provided.
+   *
+   * @async
+   * @function updateUser
+   * @param {string} userId - ID of user to update
+   * @param {Object} updateData - Data to update
+   * @param {string} [updateData.username] - New username
+   * @param {string} [updateData.email] - New email
+   * @param {string} [updateData.password] - New password (will be hashed)
+   * @returns {Promise&lt;Object>} Updated user object (without password)
+   * @throws {Error} If username or email already in use
+   */
+  async updateUser(userId, updateData) {
+    const safeUpdates = {};
+
+    if (updateData.username) {
+      safeUpdates.username = updateData.username;
+    }
+
+    if (updateData.email) {
+      safeUpdates.email = updateData.email;
+    }
+
+    if (updateData.password) {
+      safeUpdates.password = updateData.password;
+    }
+
+    if (safeUpdates.email || safeUpdates.username) {
+      const userConflicts = await this.userRepo.findUserConflicts(
+        userId,
+        safeUpdates.username,
+        safeUpdates.email
+      );
+
+      if (userConflicts) {
+        if (userConflicts.email === safeUpdates.email) {
+          throw new Error("Email already in use.");
+        } else {
+          throw new Error("Username already in use.");
+        }
+      }
+    }
+
+    if (updateData.password) {
+      const hashedPassword = await bcrypt.hash(
+        safeUpdates.password,
+        parseInt(process.env.SALT_ROUNDS)
+      );
+      safeUpdates.password = hashedPassword;
+    }
+
+    const updatedUser = await this.userRepo.updateUser(userId, safeUpdates);
+
+    return updatedUser;
+  }
+}
+
+module.exports = UserService;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

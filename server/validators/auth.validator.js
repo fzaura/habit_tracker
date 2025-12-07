@@ -2,6 +2,7 @@
  * @module validators/auth
  * @description Express-validator middleware chains for authentication endpoints.
  * Provides validation for registration, login, user updates, and token refresh.
+ * Also re-exports validationResult from express-validator for convenience.
  */
 const { body } = require("express-validator");
 
@@ -53,6 +54,14 @@ const registerValidator = [
     }),
 ];
 
+/**
+ * Validation chain for user login.
+ * Validates email and password presence.
+ *
+ * @memberof module:validators/auth
+ * @constant {Array} loginValidator
+ * @type {Array}
+ */
 const loginValidator = [
   body("email")
     .trim()
@@ -63,6 +72,14 @@ const loginValidator = [
   body("password").trim().notEmpty().withMessage("Password is required."),
 ];
 
+/**
+ * Validation chain for refresh token requests.
+ * Validates presence of refresh token.
+ *
+ * @memberof module:validators/auth
+ * @constant {Array} refreshTokenValidator
+ * @type {Array}
+ */
 const refreshTokenValidator = [
   body("refreshToken")
     .trim()
@@ -74,4 +91,5 @@ module.exports = {
   registerValidator,
   loginValidator,
   refreshTokenValidator,
+  validationResult: require("express-validator").validationResult,
 };

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: models/habit</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: models/habit</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Habit model schema definition.
+Defines the structure and validation for habit documents in MongoDB.</p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_habit.model.js.html">models/habit.model.js</a>, <a href="models_habit.model.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="module:models/habit"><span class="type-signature"></span>module:models/habit<span class="type-signature"> :mongoose.Model</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Habit model for MongoDB operations.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_habit.model.js.html">models/habit.model.js</a>, <a href="models_habit.model.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:mongoose</li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".status"><span class="type-signature">(static) </span>status<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Virtual property to compute habit status based on end date.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_habit.model.js.html">models/habit.model.js</a>, <a href="models_habit.model.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="~Habit">Habit</h4>
+
+
+
+
+<div class="description">
+    <p>Habit schema definition.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Habit name (required, trimmed)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>goal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Habit description/goal (required, trimmed)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>frequency</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Frequency configuration</p>
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>'daily' or 'weekly'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>daysOfWeek</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Days of week (0-6)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional end date for habit</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ObjectId</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to User who owns habit</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>createdAt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Auto-generated creation timestamp</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>updatedAt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Auto-generated update timestamp</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_habit.model.js.html">models/habit.model.js</a>, <a href="models_habit.model.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

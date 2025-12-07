@@ -1,5 +1,20 @@
+/**
+ * @fileoverview Express-validator middleware for user profile updates.
+ * Validates user update request data.
+ *
+ * @module validators/user
+ * @requires express-validator
+ */
 const { body } = require("express-validator");
 
+/**
+ * Validation chain for user profile updates.
+ * All fields are optional. Validates username length, email format, and password strength.
+ *
+ * @memberof module:validators/user
+ * @constant {Array} updateUserValidator
+ * @type {Array}
+ */
 const updateUserValidator = [
   body("username")
     .optional()

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: repositories/MongooseHabitRepository.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: repositories/MongooseHabitRepository.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Mongoose implementation of habit repository.
+ * Provides MongoDB-specific habit and habit completion data access operations.
+ *
+ * @module repositories/MongooseHabitRepository
+ * @requires ./IHabitRepository
+ * @requires ../models/habit.model
+ * @requires ../models/habitCompletion.model
+ */
+const IHabitRepo = require("./IHabitRepository");
+const Habit = require("../models/habit.model");
+const HabitCompletion = require("../models/habitCompletion.model");
+
+/**
+ * Mongoose implementation of habit repository interface.
+ * Handles habit and completion CRUD operations using MongoDB.
+ *
+ * @class MongooseHabitRepository
+ * @extends IHabitRepo
+ */
+class MongooseHabitRepository extends IHabitRepo {
+  /**
+   * Create a new habit for a user.
+   *
+   * @async
+   * @param {Object} habitData - Habit information
+   * @param {string} userId - User ID to associate with habit
+   * @returns {Promise&lt;Object>} Created habit document
+   */
+  async createHabit(habitData, userId) {
+    const habitToCreate = {
+      ...habitData,
+      userId,
+    };
+
+    const newHabit = await Habit.create(habitToCreate);
+
+    return newHabit;
+  }
+
+  /**
+   * Delete a habit by ID for a specific user.
+   *
+   * @async
+   * @param {string} habitId - Habit ID to delete
+   * @param {string} userId - User ID for authorization
+   * @returns {Promise&lt;Object>} Deletion result
+   */
+  async deleteHabit(habitId, userId) {
+    const result = Habit.deleteOne({ _id: habitId, userId });
+
+    return result;
+  }
+
+  /**
+   * Update an existing habit.
+   *
+   * @async
+   * @param {string} habitId - Habit ID to update
+   * @param {Object} habitData - Updated habit data
+   * @param {string} userId - User ID for authorization
+   * @returns {Promise&lt;Object|null>} Updated habit (lean) or null
+   */
+  async updateHabit(habitId, habitData, userId) {
+    const updatedHabit = await Habit.findOneAndUpdate(
+      { _id: habitId, userId },
+      habitData,
+      { new: true, runValidators: true }
+    ).lean();
+
+    return updatedHabit;
+  }
+
+  /**
+   * Get all habits for a user (unpaginated).
+   *
+   * @async
+   * @param {string} userId - User ID
+   * @returns {Promise&lt;Array>} Array of habit objects (lean)
+   */
+  async getAllHabits(userId) {
+    return Habit.find({ userId }).lean();
+  }
+
+  /**
+   * Get paginated habits for a user.
+   *
+   * @async
+   * @param {number} page - Page number (1-indexed)
+   * @param {number} limit - Items per page
+   * @param {string} userId - User ID
+   * @returns {Promise&lt;Object>} Object with habits array and total count
+   */
+  async getHabits(page, limit, userId) {
+    const skip = (page - 1) * limit;
+
+    const [habits, total] = await Promise.all([
+      Habit.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean(),
+      Habit.countDocuments({ userId }),
+    ]);
+
+    return { habits, total };
+  }
+
+  /**
+   * Create a habit completion record.
+   *
+   * @async
+   * @param {string} habitId - Habit ID
+   * @param {string} userId - User ID
+   * @param {Date} date - Completion date
+   * @returns {Promise&lt;Object>} Created completion document
+   */
+  async createCompletion(habitId, userId, date) {
+    const newHabitCompletion = HabitCompletion.create({
+      habitId: habitId,
+      userId,
+      date,
+    });
+
+    return newHabitCompletion;
+  }
+
+  /**
+   * Get habit completions within a date range for a user.
+   *
+   * @async
+   * @param {string} userId - User ID
+   * @param {Date} startDate - Start of date range
+   * @param {Date} endDate - End of date range
+   * @returns {Promise&lt;Array>} Array of completion objects (lean)
+   */
+  async getCompletedHabitsByDateRange(userId, startDate, endDate) {
+    const completions = await HabitCompletion.find({
+      userId,
+      dateOfCompletion: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    }).lean();
+
+    return completions;
+  }
+}
+
+module.exports = MongooseHabitRepository;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

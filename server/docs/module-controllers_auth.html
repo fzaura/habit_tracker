@@ -38,7 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Authentication controller containing handlers for user registration, login, updating user info, and token refresh.</p></div>
+            <div class="description"><p>Authentication controller handling user registration, login, and token refresh.
+Processes requests after validation and interacts with AuthService.</p></div>
         
 
         
@@ -124,6 +125,14 @@
     
 
     
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:express-validator</li>
+        
+            <li>module:../services/AuthService</li>
+        </ul>
+    
 
     
 
@@ -144,7 +153,7 @@
     
 
     
-    <h4 class="name" id=".getNewAccessToken"><span class="type-signature">(async, static) </span>getNewAccessToken<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    <h4 class="name" id=".createAuthController"><span class="type-signature">(static) </span>createAuthController<span class="signature">(authService)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -152,8 +161,167 @@
 
 
 <div class="description">
-    <p>Generate new access token using refresh token.
-Validates refresh token and issues new access and refresh tokens.</p>
+    <p>Factory function to create authentication controller with injected dependencies.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>authService</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Instance of AuthService for handling auth operations</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Object containing controller methods: registerUser, loginUser, getNewAccessToken</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~getNewAccessToken"><span class="type-signature">(async, inner) </span>getNewAccessToken<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Refresh user session using a valid refresh token.
+Validates refresh token, revokes old token, generates new token pair.</p>
 </div>
 
 
@@ -205,7 +373,105 @@ Validates refresh token and issues new access and refresh tokens.</p>
 
             
 
-            <td class="description last"><p>Express request object containing refreshToken in body</p></td>
+            <td class="description last"><p>Express request object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request body</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>refreshToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Valid refresh token</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -292,7 +558,7 @@ Validates refresh token and issues new access and refresh tokens.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line199">line 199</a>
+        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -321,7 +587,7 @@ Validates refresh token and issues new access and refresh tokens.</p>
 
         
 <div class="param-desc">
-    <p>JSON response with new tokens or error</p>
+    <p>JSON response with new token pair</p>
 </div>
 
 
@@ -350,7 +616,7 @@ Validates refresh token and issues new access and refresh tokens.</p>
     
 
     
-    <h4 class="name" id=".loginUser"><span class="type-signature">(async, static) </span>loginUser<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    <h4 class="name" id="~loginUser"><span class="type-signature">(async, inner) </span>loginUser<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -358,8 +624,8 @@ Validates refresh token and issues new access and refresh tokens.</p>
 
 
 <div class="description">
-    <p>Log in a user with email and password.
-Validates credentials and returns access and refresh tokens.</p>
+    <p>Authenticate existing user and generate new tokens.
+Validates credentials and creates new session.</p>
 </div>
 
 
@@ -411,7 +677,128 @@ Validates credentials and returns access and refresh tokens.</p>
 
             
 
-            <td class="description last"><p>Express request object containing email and password in body</p></td>
+            <td class="description last"><p>Express request object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request body</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>User email</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>User password</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -498,7 +885,7 @@ Validates credentials and returns access and refresh tokens.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line74">line 74</a>
+        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -527,7 +914,7 @@ Validates credentials and returns access and refresh tokens.</p>
 
         
 <div class="param-desc">
-    <p>JSON response with user data and tokens or error</p>
+    <p>JSON response with user data and tokens</p>
 </div>
 
 
@@ -556,7 +943,7 @@ Validates credentials and returns access and refresh tokens.</p>
     
 
     
-    <h4 class="name" id=".registerUser"><span class="type-signature">(async, static) </span>registerUser<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    <h4 class="name" id="~registerUser"><span class="type-signature">(async, inner) </span>registerUser<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -565,7 +952,7 @@ Validates credentials and returns access and refresh tokens.</p>
 
 <div class="description">
     <p>Register a new user account.
-Validates input, checks for existing users, hashes password, and creates new user with tokens.</p>
+Validates input, creates user, generates tokens.</p>
 </div>
 
 
@@ -617,7 +1004,174 @@ Validates input, checks for existing users, hashes password, and creates new use
 
             
 
-            <td class="description last"><p>Express request object containing username, email, password in body</p></td>
+            <td class="description last"><p>Express request object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request body</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>username</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Username (5-12 chars)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Email address</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Password (min 10 chars)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>confirmPassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Password confirmation</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -704,7 +1258,7 @@ Validates input, checks for existing users, hashes password, and creates new use
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line17">line 17</a>
+        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -733,213 +1287,7 @@ Validates input, checks for existing users, hashes password, and creates new use
 
         
 <div class="param-desc">
-    <p>JSON response with user data and tokens or error</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;void></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".updateUser"><span class="type-signature">(async, static) </span>updateUser<span class="signature">(req, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Update user information (username, email, or password).
-Validates new data, checks for conflicts, and updates user record.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express request object with user data in body and userId in req.user</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express response object</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Express next middleware function</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_auth.controller.js.html">controllers/auth.controller.js</a>, <a href="controllers_auth.controller.js.html#line125">line 125</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>JSON response with updated user data or error</p>
+    <p>JSON response with user data and tokens</p>
 </div>
 
 
@@ -978,13 +1326,13 @@ Validates new data, checks for conflicts, and updates user record.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-server.html">server</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Sep 29 2025 01:54:25 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>

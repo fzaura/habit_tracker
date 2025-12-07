@@ -1,10 +1,44 @@
+/**
+ * @fileoverview User service managing user profile updates.
+ * Handles business logic for user account modifications.
+ *
+ * @module services/UserService
+ * @requires bcrypt
+ * @requires ../repositories/IUserRepository
+ */
 const bcrypt = require("bcrypt");
 
+/**
+ * Service class for user management operations.
+ * Handles user profile updates with validation and security.
+ *
+ * @class UserService
+ */
 class UserService {
+  /**
+   * Create a UserService instance.
+   *
+   * @constructor
+   * @param {Object} userRepository - Repository for user data operations
+   */
   constructor(userRepository) {
     this.userRepo = userRepository;
   }
 
+  /**
+   * Update user profile information.
+   * Validates uniqueness of username/email and hashes password if provided.
+   *
+   * @async
+   * @function updateUser
+   * @param {string} userId - ID of user to update
+   * @param {Object} updateData - Data to update
+   * @param {string} [updateData.username] - New username
+   * @param {string} [updateData.email] - New email
+   * @param {string} [updateData.password] - New password (will be hashed)
+   * @returns {Promise<Object>} Updated user object (without password)
+   * @throws {Error} If username or email already in use
+   */
   async updateUser(userId, updateData) {
     const safeUpdates = {};
 

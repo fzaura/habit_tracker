@@ -34,3 +34,5 @@ const generateTokens = (user) => {
     throw new Error("Could not generate tokens.");
   }
 };
+
+module.exports = { generateTokens };

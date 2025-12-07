@@ -29,13 +29,13 @@
             <pre class="prettyprint source linenums"><code>/**
  * @fileoverview Main server application file for the Habit Tracker API.
  * Sets up Express server, database connection, middleware, and routes.
- * 
+ *
  * @module server
  * @requires express
  * @requires mongoose
  * @requires helmet
  * @requires dotenv
- * 
+ *
  * Environment Variables Required:
  * - DATABASE_URL: MongoDB connection string
  * - DB_NAME: Database name
@@ -47,9 +47,38 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-const authRoutes = require("./routes/auth.routes");
-const habitRoutes = require("./routes/habit.routes");
+
+const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
+const MongooseUserRepo = require("./repositories/MongooseUserRepository");
+const AuthService = require("./services/AuthService");
+const createAuthController = require("./controllers/auth.controller");
+const createAuthRouter = require("./routes/auth.routes");
+
+const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
+const HabitService = require("./services/HabitService");
+const createHabitController = require("./controllers/habit.controller");
+const createHabitRouter = require("./routes/habit.routes");
+
+const UserService = require("./services/UserService");
+const createUserController = require("./controllers/user.controller");
+const createUserRouter = require("./routes/user.routes");
+
 require("dotenv").config();
+
+const habitRepo = new MongooseHabitRepo();
+const habitService = new HabitService(habitRepo);
+const habitController = createHabitController(habitService);
+const habitRouter = createHabitRouter(habitController);
+
+const userRepo = new MongooseUserRepo();
+const tokenRepo = new MongooseTokenRepo();
+const authService = new AuthService(userRepo, tokenRepo);
+const authController = createAuthController(authService);
+const authRouter = createAuthRouter(authController);
+
+const userService = new UserService(userRepo);
+const userController = createUserController(userService);
+const userRouter = createUserRouter(userController);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,13 +88,14 @@ const DB_NAME = process.env.DB_NAME;
 app.use(helmet());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/habits", habitRoutes);
+app.use("/api/auth", authRouter);
+app.use("/api/habits", habitRouter);
+app.use("/api/users", userRouter);
 
 /**
  * Global error handler middleware.
  * Catches and handles all unhandled errors in the application.
- * 
+ *
  * @param {Error} err - Error object
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
@@ -73,7 +103,10 @@ app.use("/api/habits", habitRoutes);
  */
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "An internal server error has occurred." });
+  const status = err.status || 500;
+  res
+    .status(status)
+    .json({ message: err.message || "An internal server error has occurred." });
 });
 
 mongoose
@@ -98,13 +131,13 @@ mongoose
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-server.html">server</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Sep 29 2025 01:54:25 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 11:53:29 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>
