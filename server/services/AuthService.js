@@ -126,7 +126,7 @@ class AuthService {
     const { refreshToken, accessToken } = generateTokens(user);
 
     const newRefreshToken = await this.tokenRepo.createToken(
-      user.id,
+      user._id,
       refreshToken
     );
 
