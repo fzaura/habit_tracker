@@ -19,9 +19,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-
-const swaggerUi = require("swagger-ui-express"); // <--- Import 1
-const swaggerSpecs = require("./config/swagger"); // <--- Import 2 (Adjust path if needed)
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 
 const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
 const MongooseUserRepo = require("./repositories/MongooseUserRepository");
@@ -63,7 +62,8 @@ const DB_NAME = process.env.DB_NAME;
 app.use(helmet());
 app.use(express.json());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+const swaggerDocument = YAML.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRouter);
 app.use("/api/habits", habitRouter);
