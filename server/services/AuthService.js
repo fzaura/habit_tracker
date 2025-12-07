@@ -62,9 +62,13 @@ class AuthService {
 
     if (userExists) {
       if (userExists.email === email) {
-        throw new Error("Email already in use.");
+        const error = new Error("Email already in use.");
+        error.status = 400;
+        throw error;
       } else {
-        throw new Error("Username already in use.");
+        const error = new Error("Username already in use.");
+        error.status = 400;
+        throw error;
       }
     }
 
@@ -107,12 +111,16 @@ class AuthService {
 
     const user = await this.userRepo.findUserByEmail(email);
     if (!user) {
-      throw new Error("Invalid credentials.");
+      const error = new Error("Invalid credentials.");
+      error.status = 401;
+      throw error;
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("Invalid credentials.");
+      const error = new Error("Invalid credentials.");
+      error.status = 401;
+      throw error;
     }
 
     const { refreshToken, accessToken } = generateTokens(user);
