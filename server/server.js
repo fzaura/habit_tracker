@@ -20,6 +20,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 
+const swaggerUi = require("swagger-ui-express"); // <--- Import 1
+const swaggerSpecs = require("./config/swagger"); // <--- Import 2 (Adjust path if needed)
+
 const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
 const MongooseUserRepo = require("./repositories/MongooseUserRepository");
 const AuthService = require("./services/AuthService");
@@ -59,6 +62,8 @@ const DB_NAME = process.env.DB_NAME;
 
 app.use(helmet());
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use("/api/auth", authRouter);
 app.use("/api/habits", habitRouter);

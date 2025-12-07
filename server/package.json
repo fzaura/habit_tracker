@@ -21,11 +21,15 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFilesAfterEnv": ["./tests/setup.js"]
+    "setupFilesAfterEnv": [
+      "./tests/setup.js"
+    ]
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

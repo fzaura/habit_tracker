@@ -16,6 +16,132 @@ const {
 } = require("../validators/auth.validator");
 
 /**
+ * @swagger
+ * tags:
+ * name: Auth
+ * description: User registration and login management
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ * post:
+ * summary: Register a new user
+ * tags: [Auth]
+ * security: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * required:
+ * - username
+ * - email
+ * - password
+ * - confirmPassword
+ * properties:
+ * username:
+ * type: string
+ * example: HabitHero
+ * email:
+ * type: string
+ * format: email
+ * example: hero@test.com
+ * password:
+ * type: string
+ * format: password
+ * example: Password123!
+ * confirmPassword:
+ * type: string
+ * format: password
+ * example: Password123!
+ * responses:
+ * 201:
+ * description: User registered successfully
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * accessToken:
+ * type: string
+ * refreshToken:
+ * type: string
+ * 400:
+ * description: Validation error or email already in use
+ */
+
+/**
+ * @swagger
+ * /auth/login:
+ * post:
+ * summary: Login a user
+ * tags: [Auth]
+ * security: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * required:
+ * - email
+ * - password
+ * properties:
+ * email:
+ * type: string
+ * format: email
+ * example: hero@test.com
+ * password:
+ * type: string
+ * format: password
+ * example: Password123!
+ * responses:
+ * 200:
+ * description: Login successful
+ * 401:
+ * description: Invalid credentials
+ */
+/**
+ * @swagger
+ * /auth/access-token:
+ * post:
+ * summary: Refresh access token
+ * description: Exchange a valid refresh token for a new access token pair.
+ * tags: [Auth]
+ * security: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * required:
+ * - refreshToken
+ * properties:
+ * refreshToken:
+ * type: string
+ * example: eyJhbGciOiJIUzI1Ni...
+ * responses:
+ * 200:
+ * description: Tokens refreshed successfully
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * accessToken:
+ * type: string
+ * refreshToken:
+ * type: string
+ * 400:
+ * description: Validation error or missing token
+ * 401:
+ * description: Invalid or expired refresh token
+ */
+
+/**
  * Factory function to create authentication router with injected controller.
  *
  * @memberof module:routes/auth
