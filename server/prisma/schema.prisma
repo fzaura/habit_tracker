@@ -5,10 +5,68 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique @map("user_name")
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  habits       Habit[]
+  completions  HabitCompletion[]
+  refreshToken RefreshToken[]
+
+  @@map("users")
+}
+
+model Habit {
+  id        String    @id @default(uuid())
+  name      String
+  goal      String
+  frequency Json
+  endDate   DateTime? @map("end_date")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  completions HabitCompletion[]
+
+  @@map("habits")
+}
+
+model HabitCompletion {
+  id               String   @id @default(uuid())
+  dateOfCompletion DateTime @map("date_of_completion")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  habitId String @map("habit_id")
+  habit   Habit  @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("habit_completions")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("refresh_token")
 }
