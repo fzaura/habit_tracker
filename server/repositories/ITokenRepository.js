@@ -21,7 +21,7 @@ class ITokenRepository {
    * @returns {Promise<Object>} Created token object
    * @throws {Error} Method not implemented
    */
-  createToken(userId, tokenValue) {
+  createToken(userId, tokenValue, expiresAt) {
     throw new Error("Method not implemented.");
   }
 

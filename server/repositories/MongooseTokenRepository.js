@@ -25,8 +25,12 @@ class MongooseTokenRepository extends ITokenRepo {
    * @param {string} tokenValue - JWT refresh token value
    * @returns {Promise<Object>} Created token document
    */
-  async createToken(userId, tokenValue) {
-    const refreshToken = await TokenModel.create({ value: tokenValue, userId });
+  async createToken(userId, tokenValue, expiresAt) {
+    const refreshToken = await TokenModel.create({
+      value: tokenValue,
+      userId,
+      expiresAt,
+    });
 
     return refreshToken;
   }
@@ -52,7 +56,7 @@ class MongooseTokenRepository extends ITokenRepo {
    * @returns {Promise<Object|null>} Deleted token document or null
    */
   async deleteTokenById(tokenId) {
-    const deletedToken = await TokenModel.findByIdAndDelete(TokenId);
+    const deletedToken = await TokenModel.findByIdAndDelete(tokenId);
     return deletedToken;
   }
 
