@@ -41,11 +41,11 @@ class ITokenRepository {
    * Delete a token by its ID.
    *
    * @abstract
-   * @param {string} TokenId - Token ID to delete
+   * @param {string} tokenId - Token ID to delete
    * @returns {Promise<Object>} Deletion result
    * @throws {Error} Method not implemented
    */
-  deleteTokenById(TokenId) {
+  deleteTokenById(tokenId) {
     throw new Error("Method not implemented.");
   }
 
@@ -57,7 +57,7 @@ class ITokenRepository {
    * @returns {Promise<Object>} Deletion result with count
    * @throws {Error} Method not implemented
    */
-  deleteTokenByUserId(userId) {
+  deleteTokensByUserId(userId) {
     throw new Error("Method not implemented.");
   }
 }
