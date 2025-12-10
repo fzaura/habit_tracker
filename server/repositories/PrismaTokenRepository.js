@@ -5,16 +5,20 @@ const prisma = require("../config/prisma");
 const ITokenRepo = require("./ITokenRepository");
 
 class PrismaTokenRepository extends ITokenRepo {
-  async createToken(userId, tokenValue) {
+  async createToken(userId, tokenValue, expiresAt) {
     const token = await prisma.refreshToken.create({
-      data: { userId, value: tokenValue },
+      data: {
+        userId,
+        value: tokenValue,
+        expiresAt: new Date(expiresAt),
+      },
     });
 
     return token;
   }
 
   async findTokenByValue(tokenValue) {
-    const token = await prisma.refreshToken.findFirst({
+    const token = await prisma.refreshToken.findUnique({
       where: { value: tokenValue },
     });
 
