@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:habit_tracker/data/Dummy%20Data/dummyDataHabit.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }
@@ -10,8 +10,15 @@ enum PeriodUnit { daily, weekly, monthly }
 enum SortGoalsBYs { all, achieved, notAchieved }
 
 class HabitsStateNotifier extends StateNotifier<List<Habit>> {
-  HabitsStateNotifier()
-    : super(HabitSamples.getSampleHabits()); //A-Initial Data
+  HabitsStateNotifier({required this.habitToList}) : super([]) {
+    loadNewHabits();
+  } //A-Initial DataGive
+  //Making Dependency Injection Methods :
+  final listHabitsFeature habitToList;
+  Future<void> loadNewHabits()async {
+    List<Habit> habits = await habitToList.getHabitsList();
+    state=habits;
+  }
 
   //B- Variables that Change that Data in a non immutable way
   void addNewHabit(Habit newHabit) {
@@ -42,8 +49,7 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
       (currentDate) => isSameDay(todayDate, currentDate),
     );
     if (currentIndexToUpdate != -1) {
-      currentDates = [...currentDates]
-        ..[currentIndexToUpdate] = now;
+      currentDates = [...currentDates]..[currentIndexToUpdate] = now;
     }
     return currentDates;
   }

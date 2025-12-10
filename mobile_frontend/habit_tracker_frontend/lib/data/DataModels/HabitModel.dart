@@ -76,6 +76,7 @@ class HabitModel {
     );
   }
 
+
   // ➡️ COMPOSITION METHOD (HabitModel -> HabitEntity)
   // This is the CRITICAL step that converts the network format 
   // into the Domain format.
@@ -107,6 +108,26 @@ class HabitModel {
     );
   }
   
+  static List<Habit> toHabits(List<HabitModel> models)
+  {
+  final  List<Habit> normalHabits=[];
+  for(final habit in models)
+  {
+  normalHabits.add(habit.toEntity());
+  }
+  return normalHabits;
+  }
+
+ static List<HabitModel> fromJsonToModels(Map<String, dynamic> json)
+  {
+    final List<HabitModel> habitModels=[];
+    for(final model in json.values)
+    {
+      habitModels.add(HabitModel.fromJson(model));
+    }
+
+    return habitModels;
+  }
   // 📝 SERIALIZATION (HabitModel -> JSON for POST/PUT)
   // Converts the Entity back to the structure the server expects (usually done 
   // via a static method that takes the Entity as input).
