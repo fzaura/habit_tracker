@@ -16,6 +16,7 @@
  * - JWT_REFRESH_SECRET: Secret for signing refresh tokens
  * - SALT_ROUNDS: Number of rounds for bcrypt hashing
  */
+require("dotenv").config();
 const express = require("express");
 const prisma = require("./config/prisma");
 const mongoose = require("mongoose");
@@ -44,8 +45,6 @@ const createHabitRouter = require("./routes/habit.routes");
 const UserService = require("./services/UserService");
 const createUserController = require("./controllers/user.controller");
 const createUserRouter = require("./routes/user.routes");
-
-require("dotenv").config();
 
 //const habitRepo = new MongooseHabitRepo();
 const habitRepo = new PrismaHabitRepo();
