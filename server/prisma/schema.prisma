@@ -61,7 +61,8 @@ model HabitCompletion {
 
 model RefreshToken {
   id        String   @id @default(uuid())
-  value     String
+  value     String   @unique
+  expiresAt DateTime
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
