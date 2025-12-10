@@ -51,7 +51,7 @@ class MongooseTokenRepository extends ITokenRepo {
    * @param {string} TokenId - Token ID to delete
    * @returns {Promise<Object|null>} Deleted token document or null
    */
-  async deleteTokenById(TokenId) {
+  async deleteTokenById(tokenId) {
     const deletedToken = await TokenModel.findByIdAndDelete(TokenId);
     return deletedToken;
   }
