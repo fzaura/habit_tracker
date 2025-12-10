@@ -82,9 +82,13 @@ class AuthService {
 
     const { refreshToken, accessToken } = generateTokens(newUser);
 
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    const expiresAt = Date.now() + sevenDays;
+
     const newRefreshToken = await this.tokenRepo.createToken(
       newUser.id,
-      refreshToken
+      refreshToken,
+      expiresAt
     );
 
     return { newUser, accessToken, refreshToken };
@@ -125,9 +129,13 @@ class AuthService {
 
     const { refreshToken, accessToken } = generateTokens(user);
 
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    const expiresAt = Date.now() + sevenDays;
+
     const newRefreshToken = await this.tokenRepo.createToken(
-      user._id,
-      refreshToken
+      user.id,
+      refreshToken,
+      expiresAt
     );
 
     return { user, accessToken, refreshToken };
@@ -152,6 +160,11 @@ class AuthService {
     if (!storedToken) {
       throw new Error("Token has been revoked or previously used.");
     }
+
+    if (new Date() > storedToken.expiresAt) {
+      await this.tokenRepo.deleteTokenById(storedToken.id);
+      throw new Error("Token is expired.");
+    }
     try {
       const decoded = jwt.verify(
         oldRefreshToken,
@@ -164,9 +177,13 @@ class AuthService {
 
       const { refreshToken, accessToken } = generateTokens(user);
 
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      const expiresAt = Date.now() + sevenDays;
+
       const newRefreshToken = await this.tokenRepo.createToken(
         user.id,
-        refreshToken
+        refreshToken,
+        expiresAt
       );
 
       return { accessToken, refreshToken };

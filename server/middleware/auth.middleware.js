@@ -26,13 +26,13 @@ const authenticateJWT = (req, res, next) => {
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
     req.user = payload;
 
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Forbidde.: Invalid token." });
+    return res.status(403).json({ message: "Forbidden: Invalid token." });
   }
 };
 

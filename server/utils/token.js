@@ -20,7 +20,7 @@ const generateTokens = (user) => {
   try {
     const payload = { userId: user.id, username: user.username };
 
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "15m",
     });
 
