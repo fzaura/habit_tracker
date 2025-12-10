@@ -17,18 +17,26 @@
  * - SALT_ROUNDS: Number of rounds for bcrypt hashing
  */
 const express = require("express");
+const prisma = require("./config/prisma");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 
+//mongoose repo
 const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
 const MongooseUserRepo = require("./repositories/MongooseUserRepository");
+const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
+
+//prisma repo
+const PrismaTokenRepo = require("./repositories/PrismaTokenRepository");
+const PrismaUserRepo = require("./repositories/PrismaUserRepository");
+const PrismaHabitRepo = require("./repositories/PrismaHabitRepository");
+
 const AuthService = require("./services/AuthService");
 const createAuthController = require("./controllers/auth.controller");
 const createAuthRouter = require("./routes/auth.routes");
 
-const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
 const HabitService = require("./services/HabitService");
 const createHabitController = require("./controllers/habit.controller");
 const createHabitRouter = require("./routes/habit.routes");
@@ -39,13 +47,16 @@ const createUserRouter = require("./routes/user.routes");
 
 require("dotenv").config();
 
-const habitRepo = new MongooseHabitRepo();
+//const habitRepo = new MongooseHabitRepo();
+const habitRepo = new PrismaHabitRepo();
 const habitService = new HabitService(habitRepo);
 const habitController = createHabitController(habitService);
 const habitRouter = createHabitRouter(habitController);
 
-const userRepo = new MongooseUserRepo();
-const tokenRepo = new MongooseTokenRepo();
+//const userRepo = new MongooseUserRepo();
+//const tokenRepo = new MongooseTokenRepo();
+const userRepo = new PrismaUserRepo();
+const tokenRepo = new PrismaTokenRepo();
 const authService = new AuthService(userRepo, tokenRepo);
 const authController = createAuthController(authService);
 const authRouter = createAuthRouter(authController);
@@ -87,11 +98,31 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+/*
 if (require.main === module) {
   mongoose
     .connect(DATABASE_URL, { dbName: DB_NAME })
     .then(() => {
-      console.log("Successfully connected to the database.");
+      console.log("Successfully connected to the database via mongoose.");
+      app.listen(PORT, () => {
+        console.log(
+          `Server is running on https://habit-tracker-19q1.onrender.com/`
+        );
+      });
+    })
+    .catch((err) => {
+      console.error("Database connection error: ", err);
+      process.exit(1);
+    });
+}
+    */
+
+if (require.main === module) {
+  prisma
+    .$connect()
+    .then(() => {
+      console.log("Successfully connected to the database via prisma.");
       app.listen(PORT, () => {
         console.log(
           `Server is running on https://habit-tracker-19q1.onrender.com/`
