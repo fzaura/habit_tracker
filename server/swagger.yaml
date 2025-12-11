@@ -6,6 +6,8 @@ info:
 servers:
   - url: https://habit-tracker-19q1.onrender.com/api
     description: Local Development Server
+  - url: https://habit.limebyte.org/api
+    description: Local Development Server
 components:
   securitySchemes:
     bearerAuth:

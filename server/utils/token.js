@@ -25,7 +25,7 @@ const generateTokens = (user) => {
     });
 
     const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "1s",
     });
 
     return { refreshToken, accessToken };
@@ -36,3 +36,6 @@ const generateTokens = (user) => {
 };
 
 module.exports = { generateTokens };
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZWI4N2VhNi1iYTA2LTQyYzMtYjg2Mi1hOTA0YzRiNDc1YTUiLCJ1c2VybmFtZSI6InRlc3QxMiIsImlhdCI6MTc2NTQ3MTQ3MSwiZXhwIjoxNzY2MDc2MjcxfQ.vSrFsus_EXBDSmZBctsBtxI-QgYvoBJt0_spcXOMDSY
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZWI4N2VhNi1iYTA2LTQyYzMtYjg2Mi1hOTA0YzRiNDc1YTUiLCJ1c2VybmFtZSI6InRlc3QxMiIsImlhdCI6MTc2NTQ3MTQ3MSwiZXhwIjoxNzY1NDcyMzcxfQ.fAgzAdAZY7hM7Ki0tN6gNd0zEPVsV62a0LmL7UHflJM

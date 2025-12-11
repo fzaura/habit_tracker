@@ -193,7 +193,9 @@ class AuthService {
         error.name === "JsonWebTokenError"
       ) {
         await this.tokenRepo.deleteTokenById(storedToken.id);
-        throw new Error("Token has been revoked or expired.");
+        error.status = 403;
+        error.message = error.message;
+        throw error;
       }
     }
   }
