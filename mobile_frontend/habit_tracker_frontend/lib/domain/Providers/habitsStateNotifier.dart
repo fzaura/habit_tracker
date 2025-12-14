@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
@@ -119,8 +120,13 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   }
 }
 
+// final getHabitsUseCaseProvider = Provider<listHabitsFeature>((ref) {
+//   // Assuming GetHabitsUseCase is created by injecting the HabitRepository
+//   return listHabitsFeature(habitRepo: ref.watch(habitRepoProvider)); 
+// });
+
 final habitSampleProvider =
     StateNotifierProvider<HabitsStateNotifier, List<Habit>>(
-      (ref) => HabitsStateNotifier(),
+      (ref) => HabitsStateNotifier(habitToList: ),
     );
 //A Provider That Accesses the Notifier.

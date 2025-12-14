@@ -4,7 +4,7 @@ import 'package:habit_tracker/core/API/api.dart';
 import 'package:habit_tracker/core/utility/Format/formatNames.dart';
 import 'package:habit_tracker/data/DataModels/HabitModel.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
-import 'package:habit_tracker/domain/InterFaces/DataLayerInterfaces/habitRepoInterface.dart';
+import 'package:habit_tracker/domain/InterFaces/DataLayerInterfaces/RepoInterfaces/habitRepoInterface.dart';
 import 'package:http/http.dart' as http;
 
 Map<String, dynamic> _convertHabitsTojson(Habit habitToConvert) {
