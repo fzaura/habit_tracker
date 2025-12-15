@@ -3,11 +3,14 @@ const IHabitRepo = require("./IHabitRepository");
 /**
  * @type {import('@prisma/client').PrismaClient}
  */
-const prisma = require("../config/prisma");
 
 class PrismaHabitRepository extends IHabitRepo {
+  constructor({ db }) {
+    super();
+    this.db = db;
+  }
   async createHabit(habitData, userId) {
-    const newHabit = await prisma.habit.create({
+    const newHabit = await this.db.habit.create({
       data: {
         name: habitData.name,
         goal: habitData.goal,
@@ -21,7 +24,7 @@ class PrismaHabitRepository extends IHabitRepo {
   }
 
   async deleteHabit(habitId, userId) {
-    const result = await prisma.habit.deleteMany({
+    const result = await this.db.habit.deleteMany({
       where: { AND: [{ id: habitId }, { userId: userId }] },
     });
 
@@ -29,7 +32,7 @@ class PrismaHabitRepository extends IHabitRepo {
   }
 
   async updateHabit(habitId, habitData, userId) {
-    const updatedHabit = await prisma.habit.updateMany({
+    const updatedHabit = await this.db.habit.updateMany({
       where: { AND: [{ id: habitId }, { userId }] },
       data: {
         name: habitData.name || undefined,
@@ -40,7 +43,7 @@ class PrismaHabitRepository extends IHabitRepo {
     });
 
     if (updatedHabit.count > 0) {
-      const habit = await prisma.habit.findUnique({ where: { id: habitId } });
+      const habit = await this.db.habit.findUnique({ where: { id: habitId } });
       return habit;
     }
 
@@ -48,7 +51,7 @@ class PrismaHabitRepository extends IHabitRepo {
   }
 
   async getAllHabits(userId) {
-    const habits = await prisma.habit.findMany({ where: { userId } });
+    const habits = await this.db.habit.findMany({ where: { userId } });
 
     return habits;
   }
@@ -56,20 +59,20 @@ class PrismaHabitRepository extends IHabitRepo {
   async getHabits(page, limit, userId) {
     const skip = (page - 1) * limit;
 
-    const [habits, total] = await prisma.$transaction([
-      prisma.habit.findMany({
+    const [habits, total] = await this.db.$transaction([
+      this.db.habit.findMany({
         where: { userId },
         take: limit,
         skip,
       }),
-      prisma.habit.count({ where: { userId } }),
+      this.db.habit.count({ where: { userId } }),
     ]);
 
     return { habits, total };
   }
 
   async createCompletion(habitId, userId, date) {
-    const newHabitCompletion = await prisma.habitCompletion.create({
+    const newHabitCompletion = await this.db.habitCompletion.create({
       data: { userId, habitId, dateOfCompletion: new Date(date) },
     });
 
@@ -77,7 +80,7 @@ class PrismaHabitRepository extends IHabitRepo {
   }
 
   async getCompletedHabitsByDateRange(userId, startDate, endDate) {
-    const completions = await prisma.habitCompletion.findMany({
+    const completions = await this.db.habitCompletion.findMany({
       where: {
         AND: [
           { userId },

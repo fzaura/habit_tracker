@@ -1,12 +1,15 @@
 /**
  * @type {import('@prisma/client').PrismaClient}
  */
-const prisma = require("../config/prisma");
 const IUserRepo = require("./IUserRepository");
 
 class PrismaUserRepository extends IUserRepo {
+  constructor({ db }) {
+    super();
+    this.db = db;
+  }
   async createUser(userData) {
-    const newUser = await prisma.user.create({
+    const newUser = await this.db.user.create({
       data: {
         username: userData.username,
         email: userData.email,
@@ -18,18 +21,18 @@ class PrismaUserRepository extends IUserRepo {
   }
 
   async findUserById(userId) {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.db.user.findUnique({ where: { id: userId } });
 
     return user;
   }
 
   async findUserByEmail(email) {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await this.db.user.findUnique({ where: { email } });
     return user;
   }
 
   async findUserByUsernameOrEmail(username, email) {
-    const user = await prisma.user.findFirst({
+    const user = await this.db.user.findFirst({
       where: { OR: [{ username }, { email }] },
     });
 
@@ -37,7 +40,7 @@ class PrismaUserRepository extends IUserRepo {
   }
 
   async findUserConflicts(userId, username, email) {
-    const conflict = await prisma.user.findFirst({
+    const conflict = await this.db.user.findFirst({
       where: {
         AND: [{ OR: [{ username }, { email }] }, { NOT: { id: userId } }],
       },
@@ -46,7 +49,7 @@ class PrismaUserRepository extends IUserRepo {
   }
 
   async updateUser(userId, updateData) {
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await this.db.user.update({
       where: { id: userId },
       data: {
         email: updateData.email || undefined,
