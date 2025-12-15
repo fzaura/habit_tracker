@@ -23,45 +23,17 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const { scopePerRequest } = require("awilix-express");
+const container = require("./container");
 
-//mongoose repo
-const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
-const MongooseUserRepo = require("./repositories/MongooseUserRepository");
-const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
-
-//prisma repo
-const PrismaTokenRepo = require("./repositories/PrismaTokenRepository");
-const PrismaUserRepo = require("./repositories/PrismaUserRepository");
-const PrismaHabitRepo = require("./repositories/PrismaHabitRepository");
-
-const AuthService = require("./services/AuthService");
-const createAuthController = require("./controllers/auth.controller");
 const createAuthRouter = require("./routes/auth.routes");
-
-const HabitService = require("./services/HabitService");
-const createHabitController = require("./controllers/habit.controller");
 const createHabitRouter = require("./routes/habit.routes");
-
-const UserService = require("./services/UserService");
-const createUserController = require("./controllers/user.controller");
 const createUserRouter = require("./routes/user.routes");
 
-//const habitRepo = new MongooseHabitRepo();
-const habitRepo = new PrismaHabitRepo();
-const habitService = new HabitService(habitRepo);
-const habitController = createHabitController(habitService);
 const habitRouter = createHabitRouter(habitController);
 
-//const userRepo = new MongooseUserRepo();
-//const tokenRepo = new MongooseTokenRepo();
-const userRepo = new PrismaUserRepo();
-const tokenRepo = new PrismaTokenRepo();
-const authService = new AuthService(userRepo, tokenRepo);
-const authController = createAuthController(authService);
 const authRouter = createAuthRouter(authController);
 
-const userService = new UserService(userRepo);
-const userController = createUserController(userService);
 const userRouter = createUserRouter(userController);
 
 const app = express();
@@ -71,6 +43,7 @@ const DB_NAME = process.env.DB_NAME;
 
 app.use(helmet());
 app.use(express.json());
+app.use(scopePerRequest(container));
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
