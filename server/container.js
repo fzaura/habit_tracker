@@ -5,7 +5,10 @@ const {
   Lifetime,
   asFunction,
 } = require("awilix");
-const { scopePerRequest } = require("awilix-express");
+
+const MongooseTokenRepo = require("./repositories/MongooseTokenRepository");
+const MongooseUserRepo = require("./repositories/MongooseUserRepository");
+const MongooseHabitRepo = require("./repositories/MongooseHabitRepository");
 
 const PrismaTokenRepo = require("./repositories/PrismaTokenRepository");
 const PrismaUserRepo = require("./repositories/PrismaUserRepository");
@@ -26,8 +29,8 @@ container.register({
   authService: asClass(AuthService).scoped(),
   habitService: asClass(HabitService).scoped(),
 
-  createAuthController: asFunction(createAuthController).scoped(),
-  createHabitController: asFunction(createHabitController).scoped(),
+  authController: asFunction(createAuthController).scoped(),
+  habitController: asFunction(createHabitController).scoped(),
 });
 
 module.exports = container;
