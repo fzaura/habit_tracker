@@ -21,7 +21,7 @@ class UserService {
    * @constructor
    * @param {Object} userRepository - Repository for user data operations
    */
-  constructor(userRepository) {
+  constructor({ userRepository }) {
     this.userRepo = userRepository;
   }
 
