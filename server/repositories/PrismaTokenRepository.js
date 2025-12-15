@@ -1,12 +1,15 @@
 /**
  * @type {import('@prisma/client').PrismaClient}
  */
-const prisma = require("../config/prisma");
 const ITokenRepo = require("./ITokenRepository");
 
 class PrismaTokenRepository extends ITokenRepo {
+  constructor({ db }) {
+    super();
+    this.db = db;
+  }
   async createToken(userId, tokenValue, expiresAt) {
-    const token = await prisma.refreshToken.create({
+    const token = await this.db.refreshToken.create({
       data: {
         userId,
         value: tokenValue,
@@ -18,7 +21,7 @@ class PrismaTokenRepository extends ITokenRepo {
   }
 
   async findTokenByValue(tokenValue) {
-    const token = await prisma.refreshToken.findUnique({
+    const token = await this.db.refreshToken.findUnique({
       where: { value: tokenValue },
     });
 
@@ -26,7 +29,7 @@ class PrismaTokenRepository extends ITokenRepo {
   }
 
   async deleteTokenById(tokenId) {
-    const token = await prisma.refreshToken.deleteMany({
+    const token = await this.db.refreshToken.deleteMany({
       where: { id: tokenId },
     });
 
@@ -34,7 +37,7 @@ class PrismaTokenRepository extends ITokenRepo {
   }
 
   async deleteTokensByUserId(userId) {
-    const deletedCount = await prisma.refreshToken.deleteMany({
+    const deletedCount = await this.db.refreshToken.deleteMany({
       where: { userId },
     });
 
