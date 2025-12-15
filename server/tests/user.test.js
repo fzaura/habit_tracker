@@ -1,7 +1,26 @@
+/**
+ * @fileoverview User API integration tests.
+ * Tests user profile update operations, validation, and authentication.
+ *
+ * @module tests/user
+ * @requires supertest
+ * @requires ../server
+ */
 const request = require("supertest");
 const app = require("../server");
 
+/**
+ * User API test suite.
+ * Tests user profile update operations and validation.
+ *
+ * @function describe
+ * @name User API
+ */
 describe("User API", () => {
+  /**
+   * Authentication token for test user.
+   * @type {string}
+   */
   let token;
 
   // Before running tests, create a user and get a token

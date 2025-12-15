@@ -44,7 +44,7 @@
 
     <section>
         <article><h1>Habit Tracker Server</h1>
-<p>A secure RESTful API backend for the Habit Tracker app, built with Node.js, Express.js, and MongoDB. This server implements a clean architecture with repository pattern, dependency injection, and comprehensive input validation.</p>
+<p>A secure RESTful API backend for the Habit Tracker app, built with Node.js, Express.js, and PostgreSQL with Prisma ORM. This server implements a clean architecture with repository pattern, dependency injection via Awilix, and comprehensive input validation.</p>
 <h2>Features</h2>
 <ul>
 <li><strong>Authentication</strong>: User registration and login with JWT-based authentication (access &amp; refresh tokens)</li>
@@ -54,27 +54,34 @@
 <li><strong>Security</strong>: Password hashing with bcrypt, helmet middleware, JWT authentication</li>
 <li><strong>Validation</strong>: Comprehensive input validation using express-validator</li>
 <li><strong>Clean Architecture</strong>: Separation of concerns with controllers, services, repositories, and models</li>
-<li><strong>Dependency Injection</strong>: Flexible and testable code structure</li>
+<li><strong>Dependency Injection</strong>: Awilix container for flexible and testable code structure</li>
 <li><strong>Environment Configuration</strong>: Secure configuration management via dotenv</li>
+<li><strong>ORM</strong>: Prisma ORM for type-safe database operations with PostgreSQL</li>
+<li><strong>Testing</strong>: Jest integration tests for API endpoints</li>
 </ul>
 <h2>Architecture</h2>
-<p>The application follows a layered architecture:</p>
+<p>The application follows a layered architecture with dependency injection:</p>
 <ul>
+<li><strong>Container</strong> (<code>container.js</code>): Awilix DI container configuration</li>
 <li><strong>Controllers</strong> (<code>/controllers</code>): Handle HTTP requests, validate input, and send responses</li>
 <li><strong>Services</strong> (<code>/services</code>): Contain business logic and orchestrate repository operations</li>
-<li><strong>Repositories</strong> (<code>/repositories</code>): Abstract data access layer (interfaces + MongoDB implementations)</li>
-<li><strong>Models</strong> (<code>/models</code>): Mongoose schemas for MongoDB collections</li>
+<li><strong>Repositories</strong> (<code>/repositories</code>): Abstract data access layer (interfaces + Prisma/MongoDB implementations)</li>
+<li><strong>Models</strong> (<code>/models</code>): Mongoose schemas for MongoDB collections (legacy support)</li>
+<li><strong>Config</strong> (<code>/config</code>): Database configuration (Prisma client singleton)</li>
 <li><strong>Routes</strong> (<code>/routes</code>): Define API endpoints and apply middleware/validators</li>
 <li><strong>Middleware</strong> (<code>/middleware</code>): JWT authentication and error handling</li>
 <li><strong>Validators</strong> (<code>/validators</code>): Express-validator chains for request validation</li>
 <li><strong>Utils</strong> (<code>/utils</code>): Utility functions (token generation)</li>
 <li><strong>Types</strong> (<code>/types</code>): Common type definitions and JSDoc typedefs</li>
+<li><strong>Tests</strong> (<code>/tests</code>): Jest integration tests for API endpoints</li>
+<li><strong>Prisma</strong> (<code>/prisma</code>): Database schema and migrations</li>
 </ul>
 <h2>Prerequisites</h2>
 <ul>
 <li>Node.js (v14 or higher)</li>
-<li>MongoDB instance (local or cloud)</li>
+<li>PostgreSQL database (v12 or higher)</li>
 <li>npm or yarn package manager</li>
+<li>Prisma CLI (installed as dev dependency)</li>
 </ul>
 <h2>Setup</h2>
 <ol>
@@ -86,12 +93,31 @@
 <li>
 <p><strong>Configure environment variables</strong>:
 Create a <code>.env</code> file in the server root with the following variables:</p>
-<pre class="prettyprint source lang-env"><code>DATABASE_URL=mongodb://localhost:27017/your-database
-DB_NAME=habit_tracker
+<pre class="prettyprint source lang-env"><code># PostgreSQL Database
+PSQL_URL=postgresql://username:password@localhost:5432/habit_tracker
+
+# Server Configuration
 PORT=3000
+NODE_ENV=development
+
+# JWT Secrets
 JWT_SECRET=your-access-token-secret
 JWT_REFRESH_SECRET=your-refresh-token-secret
+
+# Password Hashing
 SALT_ROUNDS=10
+</code></pre>
+</li>
+<li>
+<p><strong>Setup Prisma and database</strong>:</p>
+<pre class="prettyprint source lang-bash"><code># Generate Prisma client
+npx prisma generate
+
+# Run database migrations
+npx prisma migrate deploy
+
+# (Optional) Seed database
+npx prisma db seed
 </code></pre>
 </li>
 <li>
@@ -149,30 +175,44 @@ npm start
 </ul>
 <h2>Project Structure</h2>
 <pre class="prettyprint source"><code>server/
-├── controllers/         # Request handlers
-├── services/           # Business logic
-├── repositories/       # Data access layer
-│   ├── I*Repository.js # Repository interfaces
-│   └── Mongoose*.js    # MongoDB implementations
-├── models/             # Mongoose schemas
-├── routes/             # API route definitions
-├── middleware/         # Custom middleware
-├── validators/         # Input validation
-├── utils/              # Utility functions
-├── types/              # Type definitions
-├── docs/               # Generated documentation
-├── server.js           # Application entry point
-├── package.json        # Dependencies and scripts
-└── jsdoc.json         # JSDoc configuration
+├── config/             # Configuration modules
+│   └── prisma.js      # Prisma client singleton
+├── container.js        # Awilix DI container
+├── controllers/        # Request handlers
+├── services/          # Business logic
+├── repositories/      # Data access layer
+│   ├── I*Repository.js        # Repository interfaces
+│   ├── Mongoose*.js           # MongoDB implementations (legacy)
+│   └── Prisma*.js             # Prisma PostgreSQL implementations
+├── models/            # Mongoose schemas (legacy)
+├── routes/            # API route definitions
+├── middleware/        # Custom middleware
+├── validators/        # Input validation
+├── utils/             # Utility functions
+├── types/             # Type definitions
+├── tests/             # Jest integration tests
+│   ├── setup.js      # Test environment configuration
+│   ├── auth.test.js  # Authentication tests
+│   ├── habit.test.js # Habit CRUD tests
+│   └── user.test.js  # User profile tests
+├── docs/              # Generated JSDoc documentation
+├── server.js          # Application entry point
+├── package.json       # Dependencies and scripts
+└── jsdoc.json        # JSDoc configuration
 </code></pre>
 <h2>Technologies</h2>
 <ul>
-<li><strong>Runtime</strong>: Node.js</li>
+<li><strong>Runtime</strong>: Node.js v14+</li>
 <li><strong>Framework</strong>: Express.js</li>
-<li><strong>Database</strong>: MongoDB with Mongoose ODM</li>
-<li><strong>Authentication</strong>: JSON Web Tokens (JWT)</li>
+<li><strong>Database</strong>: PostgreSQL v12+ with Prisma ORM</li>
+<li><strong>Database Adapter</strong>: @prisma/adapter-pg (PostgreSQL connection pooling)</li>
+<li><strong>Dependency Injection</strong>: Awilix container</li>
+<li><strong>Authentication</strong>: JSON Web Tokens (JWT) with access &amp; refresh tokens</li>
 <li><strong>Security</strong>: bcrypt (password hashing), helmet (HTTP headers)</li>
 <li><strong>Validation</strong>: express-validator</li>
+<li><strong>Testing</strong>: Jest (integration tests)</li>
+<li><strong>Documentation</strong>: JSDoc 4.0.4</li>
+<li><strong>Legacy Support</strong>: MongoDB/Mongoose (optional, co-exists with Prisma)</li>
 <li><strong>Date Handling</strong>: date-fns</li>
 <li><strong>Documentation</strong>: JSDoc</li>
 <li><strong>Development</strong>: nodemon (auto-reload)</li>
@@ -188,14 +228,9 @@ npm start
 </thead>
 <tbody>
 <tr>
-<td><code>DATABASE_URL</code></td>
-<td>MongoDB connection string</td>
-<td><code>mongodb://localhost:27017/</code></td>
-</tr>
-<tr>
-<td><code>DB_NAME</code></td>
-<td>Database name</td>
-<td><code>habit_tracker</code></td>
+<td><code>PSQL_URL</code></td>
+<td>PostgreSQL connection string</td>
+<td><code>postgresql://user:pass@localhost:5432/habit_tracker</code></td>
 </tr>
 <tr>
 <td><code>PORT</code></td>
@@ -203,18 +238,23 @@ npm start
 <td><code>3000</code></td>
 </tr>
 <tr>
+<td><code>NODE_ENV</code></td>
+<td>Environment mode</td>
+<td><code>development</code> or <code>production</code></td>
+</tr>
+<tr>
 <td><code>JWT_SECRET</code></td>
-<td>Secret for access tokens</td>
-<td><code>your-secret-key</code></td>
+<td>Secret for access tokens (15min)</td>
+<td><code>your-access-token-secret</code></td>
 </tr>
 <tr>
 <td><code>JWT_REFRESH_SECRET</code></td>
-<td>Secret for refresh tokens</td>
-<td><code>your-refresh-secret</code></td>
+<td>Secret for refresh tokens (7days)</td>
+<td><code>your-refresh-token-secret</code></td>
 </tr>
 <tr>
 <td><code>SALT_ROUNDS</code></td>
-<td>Bcrypt hashing rounds</td>
+<td>Bcrypt password hashing rounds</td>
 <td><code>10</code></td>
 </tr>
 </tbody>
@@ -231,13 +271,13 @@ npm start
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_prisma.html">config/prisma</a></li><li><a href="module-container.html">container</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-repositories_PrismaHabitRepository.html">repositories/PrismaHabitRepository</a></li><li><a href="module-repositories_PrismaTokenRepository.html">repositories/PrismaTokenRepository</a></li><li><a href="module-repositories_PrismaUserRepository.html">repositories/PrismaUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-tests_auth.html">tests/auth</a></li><li><a href="module-tests_habit.html">tests/habit</a></li><li><a href="module-tests_setup.html">tests/setup</a></li><li><a href="module-tests_user.html">tests/user</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-repositories_PrismaHabitRepository-PrismaHabitRepository.html">PrismaHabitRepository</a></li><li><a href="module-repositories_PrismaTokenRepository-PrismaTokenRepository.html">PrismaTokenRepository</a></li><li><a href="module-repositories_PrismaUserRepository-PrismaUserRepository.html">PrismaUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 14:23:58 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 16 2025 02:06:38 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,8 +1,32 @@
+/**
+ * @fileoverview Habit API integration tests.
+ * Tests habit CRUD operations, authentication requirements, and data validation.
+ *
+ * @module tests/habit
+ * @requires supertest
+ * @requires ../server
+ */
 const request = require("supertest");
 const app = require("../server");
 
+/**
+ * Habit API test suite.
+ * Tests create, read, update, and delete operations for habits.
+ *
+ * @function describe
+ * @name Habit API
+ */
 describe("Habit API", () => {
+  /**
+   * Authentication token for test user.
+   * @type {string}
+   */
   let token;
+
+  /**
+   * ID of created habit for testing.
+   * @type {string}
+   */
   let habitId;
 
   beforeAll(async () => {

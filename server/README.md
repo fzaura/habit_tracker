@@ -1,6 +1,6 @@
 # Habit Tracker Server
 
-A secure RESTful API backend for the Habit Tracker app, built with Node.js, Express.js, and MongoDB. This server implements a clean architecture with repository pattern, dependency injection, and comprehensive input validation.
+A secure RESTful API backend for the Habit Tracker app, built with Node.js, Express.js, and PostgreSQL with Prisma ORM. This server implements a clean architecture with repository pattern, dependency injection via Awilix, and comprehensive input validation.
 
 ## Features
 
@@ -11,28 +11,35 @@ A secure RESTful API backend for the Habit Tracker app, built with Node.js, Expr
 - **Security**: Password hashing with bcrypt, helmet middleware, JWT authentication
 - **Validation**: Comprehensive input validation using express-validator
 - **Clean Architecture**: Separation of concerns with controllers, services, repositories, and models
-- **Dependency Injection**: Flexible and testable code structure
+- **Dependency Injection**: Awilix container for flexible and testable code structure
 - **Environment Configuration**: Secure configuration management via dotenv
+- **ORM**: Prisma ORM for type-safe database operations with PostgreSQL
+- **Testing**: Jest integration tests for API endpoints
 
 ## Architecture
 
-The application follows a layered architecture:
+The application follows a layered architecture with dependency injection:
 
+- **Container** (`container.js`): Awilix DI container configuration
 - **Controllers** (`/controllers`): Handle HTTP requests, validate input, and send responses
 - **Services** (`/services`): Contain business logic and orchestrate repository operations
-- **Repositories** (`/repositories`): Abstract data access layer (interfaces + MongoDB implementations)
-- **Models** (`/models`): Mongoose schemas for MongoDB collections
+- **Repositories** (`/repositories`): Abstract data access layer (interfaces + Prisma/MongoDB implementations)
+- **Models** (`/models`): Mongoose schemas for MongoDB collections (legacy support)
+- **Config** (`/config`): Database configuration (Prisma client singleton)
 - **Routes** (`/routes`): Define API endpoints and apply middleware/validators
 - **Middleware** (`/middleware`): JWT authentication and error handling
 - **Validators** (`/validators`): Express-validator chains for request validation
 - **Utils** (`/utils`): Utility functions (token generation)
 - **Types** (`/types`): Common type definitions and JSDoc typedefs
+- **Tests** (`/tests`): Jest integration tests for API endpoints
+- **Prisma** (`/prisma`): Database schema and migrations
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
-- MongoDB instance (local or cloud)
+- PostgreSQL database (v12 or higher)
 - npm or yarn package manager
+- Prisma CLI (installed as dev dependency)
 
 ## Setup
 
@@ -46,15 +53,35 @@ The application follows a layered architecture:
    Create a `.env` file in the server root with the following variables:
 
    ```env
-   DATABASE_URL=mongodb://localhost:27017/your-database
-   DB_NAME=habit_tracker
+   # PostgreSQL Database
+   PSQL_URL=postgresql://username:password@localhost:5432/habit_tracker
+
+   # Server Configuration
    PORT=3000
+   NODE_ENV=development
+
+   # JWT Secrets
    JWT_SECRET=your-access-token-secret
    JWT_REFRESH_SECRET=your-refresh-token-secret
+
+   # Password Hashing
    SALT_ROUNDS=10
    ```
 
-3. **Start the server**:
+3. **Setup Prisma and database**:
+
+   ```bash
+   # Generate Prisma client
+   npx prisma generate
+
+   # Run database migrations
+   npx prisma migrate deploy
+
+   # (Optional) Seed database
+   npx prisma db seed
+   ```
+
+4. **Start the server**:
 
    ```bash
    # Development mode with auto-reload
@@ -64,7 +91,7 @@ The application follows a layered architecture:
    npm start
    ```
 
-4. **Generate documentation**:
+5. **Generate documentation**:
    ```bash
    npm run docs
    ```
@@ -122,45 +149,59 @@ The documentation includes:
 
 ```
 server/
-├── controllers/         # Request handlers
-├── services/           # Business logic
-├── repositories/       # Data access layer
-│   ├── I*Repository.js # Repository interfaces
-│   └── Mongoose*.js    # MongoDB implementations
-├── models/             # Mongoose schemas
-├── routes/             # API route definitions
-├── middleware/         # Custom middleware
-├── validators/         # Input validation
-├── utils/              # Utility functions
-├── types/              # Type definitions
-├── docs/               # Generated documentation
-├── server.js           # Application entry point
-├── package.json        # Dependencies and scripts
-└── jsdoc.json         # JSDoc configuration
+├── config/             # Configuration modules
+│   └── prisma.js      # Prisma client singleton
+├── container.js        # Awilix DI container
+├── controllers/        # Request handlers
+├── services/          # Business logic
+├── repositories/      # Data access layer
+│   ├── I*Repository.js        # Repository interfaces
+│   ├── Mongoose*.js           # MongoDB implementations (legacy)
+│   └── Prisma*.js             # Prisma PostgreSQL implementations
+├── models/            # Mongoose schemas (legacy)
+├── routes/            # API route definitions
+├── middleware/        # Custom middleware
+├── validators/        # Input validation
+├── utils/             # Utility functions
+├── types/             # Type definitions
+├── tests/             # Jest integration tests
+│   ├── setup.js      # Test environment configuration
+│   ├── auth.test.js  # Authentication tests
+│   ├── habit.test.js # Habit CRUD tests
+│   └── user.test.js  # User profile tests
+├── docs/              # Generated JSDoc documentation
+├── server.js          # Application entry point
+├── package.json       # Dependencies and scripts
+└── jsdoc.json        # JSDoc configuration
 ```
 
 ## Technologies
 
-- **Runtime**: Node.js
+- **Runtime**: Node.js v14+
 - **Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JSON Web Tokens (JWT)
+- **Database**: PostgreSQL v12+ with Prisma ORM
+- **Database Adapter**: @prisma/adapter-pg (PostgreSQL connection pooling)
+- **Dependency Injection**: Awilix container
+- **Authentication**: JSON Web Tokens (JWT) with access & refresh tokens
 - **Security**: bcrypt (password hashing), helmet (HTTP headers)
 - **Validation**: express-validator
+- **Testing**: Jest (integration tests)
+- **Documentation**: JSDoc 4.0.4
+- **Legacy Support**: MongoDB/Mongoose (optional, co-exists with Prisma)
 - **Date Handling**: date-fns
 - **Documentation**: JSDoc
 - **Development**: nodemon (auto-reload)
 
 ## Environment Variables
 
-| Variable             | Description               | Example                      |
-| -------------------- | ------------------------- | ---------------------------- |
-| `DATABASE_URL`       | MongoDB connection string | `mongodb://localhost:27017/` |
-| `DB_NAME`            | Database name             | `habit_tracker`              |
-| `PORT`               | Server port               | `3000`                       |
-| `JWT_SECRET`         | Secret for access tokens  | `your-secret-key`            |
-| `JWT_REFRESH_SECRET` | Secret for refresh tokens | `your-refresh-secret`        |
-| `SALT_ROUNDS`        | Bcrypt hashing rounds     | `10`                         |
+| Variable             | Description                       | Example                                               |
+| -------------------- | --------------------------------- | ----------------------------------------------------- |
+| `PSQL_URL`           | PostgreSQL connection string      | `postgresql://user:pass@localhost:5432/habit_tracker` |
+| `PORT`               | Server port                       | `3000`                                                |
+| `NODE_ENV`           | Environment mode                  | `development` or `production`                         |
+| `JWT_SECRET`         | Secret for access tokens (15min)  | `your-access-token-secret`                            |
+| `JWT_REFRESH_SECRET` | Secret for refresh tokens (7days) | `your-refresh-token-secret`                           |
+| `SALT_ROUNDS`        | Bcrypt password hashing rounds    | `10`                                                  |
 
 ## License
 
