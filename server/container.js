@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Dependency injection container configuration using Awilix.
+ * Configures and registers all application dependencies including repositories,
+ * services, controllers, and database connections.
+ *
+ * @module container
+ * @requires awilix
+ * @requires ./config/prisma
+ * @requires ./repositories/PrismaTokenRepository
+ * @requires ./repositories/PrismaUserRepository
+ * @requires ./repositories/PrismaHabitRepository
+ * @requires ./services/AuthService
+ * @requires ./services/HabitService
+ * @requires ./services/UserService
+ * @requires ./controllers/auth.controller
+ * @requires ./controllers/habit.controller
+ * @requires ./controllers/user.controller
+ */
 const {
   createContainer,
   asClass,
@@ -25,6 +43,24 @@ const createAuthController = require("./controllers/auth.controller");
 const createHabitController = require("./controllers/habit.controller");
 const createUserController = require("./controllers/user.controller");
 
+/**
+ * Awilix dependency injection container.
+ * Registers all application dependencies with scoped lifetime.
+ *
+ * Registered dependencies:
+ * - db: Prisma database client
+ * - tokenRepo: Token repository (Prisma implementation)
+ * - userRepo: User repository (Prisma implementation)
+ * - habitRepo: Habit repository (Prisma implementation)
+ * - authService: Authentication service
+ * - habitService: Habit management service
+ * - userService: User management service
+ * - authController: Authentication controller factory
+ * - habitController: Habit controller factory
+ * - userController: User controller factory
+ *
+ * @constant {Object} container - Awilix DI container instance
+ */
 const container = createContainer();
 container.register({
   db: asValue(prisma),
@@ -42,4 +78,9 @@ container.register({
   userController: asFunction(createUserController).scoped(),
 });
 
+/**
+ * Awilix dependency injection container.
+ * Configured with all application dependencies.
+ * @constant {Object} container - Awilix DI container instance
+ */
 module.exports = container;

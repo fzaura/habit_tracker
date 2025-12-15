@@ -41,272 +41,101 @@ const {
   validateIdParam,
 } = require("../validators/habit.validator");
 
-/**
- * @swagger
- * tags:
- * name: Habits
- * description: Habit management operations
- */
+const { makeInvoker } = require("awilix-express");
 
-const createHabitRouter = (habitController) => {
-  const router = express.Router();
-  router.use(authenticateJWT);
+const router = express.Router();
+router.use(authenticateJWT);
+
+const api = makeInvoker((container) => {
+  return { controller: container.resolve("habitController") };
+});
 
 /**
- * @swagger
- * /habits:
- * post:
- * summary: Create a new habit
- * tags: [Habits]
- * security:
- * - bearerAuth: []
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * required:
- * - name
- * - goal
- * - frequency
- * - endDate
- * properties:
- * name:
- * type: string
- * goal:
- * type: string
- * endDate:
- * type: string
- * format: date
- * example: 2025-12-31
- * frequency:
- * type: object
- * properties:
- * type:
- * type: string
- * enum: [daily, weekly]
- * daysOfWeek:
- * type: array
- * items:
- * type: integer
- * responses:
- * 201:
- * description: Habit created successfully
- * 400:
- * description: Validation errors
- * 401:
- * description: Authentication required
- * get:
- * summary: Get paginated list of user's habits
- * tags: [Habits]
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: query
- * name: page
- * schema:
- * type: integer
- * default: 1
- * - in: query
- * name: limit
- * schema:
- * type: integer
- * default: 10
- * responses:
- * 200:
- * description: Paginated habits list with metadata
- * 401:
- * description: Authentication required
+ * @name POST /
+ * @description Create a new habit
+ * @memberof module:routes/habit
+ * @param {string} Authorization - Bearer token in header
+ * @param {Object} req.body - Habit data
+ * @param {string} req.body.name - Habit name
+ * @param {string} req.body.goal - Habit description/goal
+ * @param {Object} req.body.frequency - Frequency configuration
+ * @param {string} req.body.frequency.type - 'daily' or 'weekly'
+ * @param {number[]} [req.body.frequency.daysOfWeek] - Days of week (0-6) for weekly habits
+ * @param {string} [req.body.endDate] - Optional end date (ISO format)
+ * @returns {Object} 201 - Habit created successfully
+ * @returns {Object} 400 - Validation errors
+ * @returns {Object} 401 - Authentication required
  */
-  /**
-   * @name POST /
-   * @description Create a new habit
-   * @memberof module:routes/habit
-   * @param {string} Authorization - Bearer token in header
-   * @param {Object} req.body - Habit data
-   * @param {string} req.body.name - Habit name
-   * @param {string} req.body.goal - Habit description/goal
-   * @param {Object} req.body.frequency - Frequency configuration
-   * @param {string} req.body.frequency.type - 'daily' or 'weekly'
-   * @param {number[]} [req.body.frequency.daysOfWeek] - Days of week (0-6) for weekly habits
-   * @param {string} [req.body.endDate] - Optional end date (ISO format)
-   * @returns {Object} 201 - Habit created successfully
-   * @returns {Object} 400 - Validation errors
-   * @returns {Object} 401 - Authentication required
-   */
-  /**
-   * @name GET /
-   * @description Get paginated list of user's habits
-   * @memberof module:routes/habit
-   * @param {string} Authorization - Bearer token in header
-   * @param {number} [page=1] - Page number for pagination
-   * @param {number} [limit=10] - Items per page
-   * @returns {Object} 200 - Paginated habits list with metadata
-   * @returns {Object} 401 - Authentication required
-   */
-  router
-    .route("/")
-    .post(addHabitValidator, habitController.createHabit)
-    .get(habitController.getHabits);
+/**
+ * @name GET /
+ * @description Get paginated list of user's habits
+ * @memberof module:routes/habit
+ * @param {string} Authorization - Bearer token in header
+ * @param {number} [page=1] - Page number for pagination
+ * @param {number} [limit=10] - Items per page
+ * @returns {Object} 200 - Paginated habits list with metadata
+ * @returns {Object} 401 - Authentication required
+ */
+router
+  .route("/")
+  .post(addHabitValidator, api("controller", "createHabit"))
+  .get(api("controller", "getHabits"));
 
 /**
- * @swagger
- * /habits/{id}:
- * delete:
- * summary: Delete a specific habit
- * tags: [Habits]
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * description: Habit ID
- * responses:
- * 200:
- * description: Habit deleted successfully
- * 400:
- * description: Invalid habit ID format
- * 401:
- * description: Authentication required
- * 404:
- * description: Habit not found or unauthorized
- * put:
- * summary: Update a specific habit
- * tags: [Habits]
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * name:
- * type: string
- * goal:
- * type: string
- * endDate:
- * type: string
- * format: date
- * frequency:
- * type: object
- * responses:
- * 200:
- * description: Habit updated successfully
- * 400:
- * description: Validation errors
- * 401:
- * description: Authentication required
- * 404:
- * description: Habit not found
+ * @name DELETE /:id
+ * @description Delete a specific habit
+ * @memberof module:routes/habit
+ * @param {string} Authorization - Bearer token in header
+ * @param {string} id - Habit ID (ObjectId format)
+ * @returns {Object} 200 - Habit deleted successfully
+ * @returns {Object} 400 - Invalid habit ID format
+ * @returns {Object} 401 - Authentication required
+ * @returns {Object} 404 - Habit not found or unauthorized
  */
-  /**
-   * @name DELETE /:id
-   * @description Delete a specific habit
-   * @memberof module:routes/habit
-   * @param {string} Authorization - Bearer token in header
-   * @param {string} id - Habit ID (ObjectId format)
-   * @returns {Object} 200 - Habit deleted successfully
-   * @returns {Object} 400 - Invalid habit ID format
-   * @returns {Object} 401 - Authentication required
-   * @returns {Object} 404 - Habit not found or unauthorized
-   */
-  /**
-   * @name PUT /:id
-   * @description Update a specific habit
-   * @memberof module:routes/habit
-   * @param {string} Authorization - Bearer token in header
-   * @param {string} id - Habit ID (ObjectId format)
-   * @param {Object} req.body - Updated habit data (all optional)
-   * @param {string} [req.body.name] - Updated habit name
-   * @param {string} [req.body.goal] - Updated habit goal
-   * @param {Object} [req.body.frequency] - Updated frequency configuration
-   * @param {string} [req.body.endDate] - Updated end date
-   * @returns {Object} 200 - Habit updated successfully
-   * @returns {Object} 400 - Validation errors or invalid ID format
-   * @returns {Object} 401 - Authentication required
-   * @returns {Object} 404 - Habit not found or unauthorized
-   */
-  router
-    .route("/:id")
-    .delete(validateIdParam, habitController.deleteHabit)
-    .put(validateIdParam, updateHabitValidator, habitController.updateHabit);
+/**
+ * @name PUT /:id
+ * @description Update a specific habit
+ * @memberof module:routes/habit
+ * @param {string} Authorization - Bearer token in header
+ * @param {string} id - Habit ID (ObjectId format)
+ * @param {Object} req.body - Updated habit data (all optional)
+ * @param {string} [req.body.name] - Updated habit name
+ * @param {string} [req.body.goal] - Updated habit goal
+ * @param {Object} [req.body.frequency] - Updated frequency configuration
+ * @param {string} [req.body.endDate] - Updated end date
+ * @returns {Object} 200 - Habit updated successfully
+ * @returns {Object} 400 - Validation errors or invalid ID format
+ * @returns {Object} 401 - Authentication required
+ * @returns {Object} 404 - Habit not found or unauthorized
+ */
+router
+  .route("/:id")
+  .delete(validateIdParam, api("controller", "deleteHabit"))
+  .put(validateIdParam, updateHabitValidator, api("controller", "updateHabit"));
 
 /**
- * @swagger
- * /habits/{id}/completions:
- * post:
- * summary: Mark a habit as completed
- * tags: [Habits]
- * security:
- * - bearerAuth: []
- * parameters:
- * - in: path
- * name: id
- * required: true
- * schema:
- * type: string
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * required:
- * - dateString
- * properties:
- * dateString:
- * type: string
- * format: date
- * example: 2025-01-01
- * responses:
- * 201:
- * description: Habit marked as completed
- * 400:
- * description: Validation errors
- * 401:
- * description: Authentication required
- * 404:
- * description: Habit not found
- * 409:
- * description: Habit already completed for this date
+ * @name POST /:id/completions
+ * @description Mark a habit as completed on a specific date
+ * @memberof module:routes/habit
+ * @param {string} Authorization - Bearer token in header
+ * @param {string} id - Habit ID (ObjectId format)
+ * @param {Object} req.body - Completion data
+ * @param {string} req.body.date - Completion date in YYYY-MM-DD format
+ * @returns {Object} 201 - Habit marked as completed
+ * @returns {Object} 400 - Validation errors or invalid ID format
+ * @returns {Object} 401 - Authentication required
+ * @returns {Object} 404 - Habit not found or unauthorized
+ * @returns {Object} 409 - Habit already completed for this date
  */
-  /**
-   * @name POST /:id/completions
-   * @description Mark a habit as completed on a specific date
-   * @memberof module:routes/habit
-   * @param {string} Authorization - Bearer token in header
-   * @param {string} id - Habit ID (ObjectId format)
-   * @param {Object} req.body - Completion data
-   * @param {string} req.body.date - Completion date in YYYY-MM-DD format
-   * @returns {Object} 201 - Habit marked as completed
-   * @returns {Object} 400 - Validation errors or invalid ID format
-   * @returns {Object} 401 - Authentication required
-   * @returns {Object} 404 - Habit not found or unauthorized
-   * @returns {Object} 409 - Habit already completed for this date
-   */
-  router.post(
-    "/:id/completions",
-    validateIdParam,
-    markCompleteValidator,
-    habitController.markAsCompleted
-  );
+router.post(
+  "/:id/completions",
+  validateIdParam,
+  markCompleteValidator,
+  api("controller", "markAsCompleted")
+);
 
-  return router;
-};
-
-module.exports = createHabitRouter;</code></pre>
+module.exports = router;
+</code></pre>
         </article>
     </section>
 
@@ -316,13 +145,13 @@ module.exports = createHabitRouter;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-config_prisma.html">config/prisma</a></li><li><a href="module-container.html">container</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_habit.html">controllers/habit</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-middleware_auth.html">middleware/auth</a></li><li><a href="module-models_habit.html">models/habit</a></li><li><a href="module-models_habitCompletion.html">models/habitCompletion</a></li><li><a href="module-models_refreshToken.html">models/refreshToken</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-repositories_IHabitRepository.html">repositories/IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository.html">repositories/ITokenRepository</a></li><li><a href="module-repositories_IUserRepository.html">repositories/IUserRepository</a></li><li><a href="module-repositories_MongooseHabitRepository.html">repositories/MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository.html">repositories/MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository.html">repositories/MongooseUserRepository</a></li><li><a href="module-repositories_PrismaHabitRepository.html">repositories/PrismaHabitRepository</a></li><li><a href="module-repositories_PrismaTokenRepository.html">repositories/PrismaTokenRepository</a></li><li><a href="module-repositories_PrismaUserRepository.html">repositories/PrismaUserRepository</a></li><li><a href="module-routes_auth.html">routes/auth</a></li><li><a href="module-routes_habit.html">routes/habit</a></li><li><a href="module-routes_user.html">routes/user</a></li><li><a href="module-server.html">server</a></li><li><a href="module-services_AuthService.html">services/AuthService</a></li><li><a href="module-services_HabitService.html">services/HabitService</a></li><li><a href="module-services_UserService.html">services/UserService</a></li><li><a href="module-tests_auth.html">tests/auth</a></li><li><a href="module-tests_habit.html">tests/habit</a></li><li><a href="module-tests_setup.html">tests/setup</a></li><li><a href="module-tests_user.html">tests/user</a></li><li><a href="module-types_common.html">types/common</a></li><li><a href="module-utils_token.html">utils/token</a></li><li><a href="module-validators_auth.html">validators/auth</a></li><li><a href="module-validators_habit.html">validators/habit</a></li><li><a href="module-validators_user.html">validators/user</a></li></ul><h3>Classes</h3><ul><li><a href="module-repositories_MongooseHabitRepository-MongooseHabitRepository.html">MongooseHabitRepository</a></li><li><a href="module-repositories_MongooseTokenRepository-MongooseTokenRepository.html">MongooseTokenRepository</a></li><li><a href="module-repositories_MongooseUserRepository-MongooseUserRepository.html">MongooseUserRepository</a></li><li><a href="module-repositories_PrismaHabitRepository-PrismaHabitRepository.html">PrismaHabitRepository</a></li><li><a href="module-repositories_PrismaTokenRepository-PrismaTokenRepository.html">PrismaTokenRepository</a></li><li><a href="module-repositories_PrismaUserRepository-PrismaUserRepository.html">PrismaUserRepository</a></li><li><a href="module-services_AuthService-AuthService.html">AuthService</a></li><li><a href="module-services_HabitService-HabitService.html">HabitService</a></li><li><a href="module-services_UserService-UserService.html">UserService</a></li></ul><h3>Interfaces</h3><ul><li><a href="module-repositories_IHabitRepository-IHabitRepository.html">IHabitRepository</a></li><li><a href="module-repositories_ITokenRepository-ITokenRepository.html">ITokenRepository</a></li><li><a href="module-repositories_IUserRepository-IUserRepository.html">IUserRepository</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Dec 07 2025 14:23:58 GMT+0300 (GMT+03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Dec 16 2025 02:06:38 GMT+0300 (GMT+03:00)
 </footer>
 
 <script> prettyPrint(); </script>
