@@ -16,9 +16,11 @@ const PrismaHabitRepo = require("./repositories/PrismaHabitRepository");
 
 const AuthService = require("./services/AuthService");
 const HabitService = require("./services/HabitService");
+const UserService = require("./services/UserService");
 
 const createAuthController = require("./controllers/auth.controller");
 const createHabitController = require("./controllers/habit.controller");
+const createUserController = require("./controllers/user.controller");
 
 const container = createContainer();
 container.register({
@@ -28,9 +30,11 @@ container.register({
 
   authService: asClass(AuthService).scoped(),
   habitService: asClass(HabitService).scoped(),
+  userService: asClass(UserService).scoped(),
 
   authController: asFunction(createAuthController).scoped(),
   habitController: asFunction(createHabitController).scoped(),
+  userController: asFunction(createUserController).scoped(),
 });
 
 module.exports = container;
