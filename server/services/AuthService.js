@@ -27,7 +27,7 @@ class AuthService {
    * @param {Object} userRepository - Repository for user data operations
    * @param {Object} tokenRepository - Repository for token data operations
    */
-  constructor(userRepository, tokenRepository) {
+  constructor({ userRepository }, { tokenRepository }) {
     this.userRepo = userRepository;
     this.tokenRepo = tokenRepository;
   }
