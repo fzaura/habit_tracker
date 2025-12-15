@@ -26,15 +26,9 @@ const YAML = require("yamljs");
 const { scopePerRequest } = require("awilix-express");
 const container = require("./container");
 
-const createAuthRouter = require("./routes/auth.routes");
-const createHabitRouter = require("./routes/habit.routes");
-const createUserRouter = require("./routes/user.routes");
-
-const habitRouter = createHabitRouter(habitController);
-
-const authRouter = createAuthRouter(authController);
-
-const userRouter = createUserRouter(userController);
+const habitRouter = require("./routes/habit.routes");
+const authRouter = require("./routes/auth.routes");
+const userRouter = require("./routes/user.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
