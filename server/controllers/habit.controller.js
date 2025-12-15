@@ -16,7 +16,7 @@ const { validationResult } = require("express-validator");
  * @param {Object} habitService - Instance of HabitService for handling habit operations
  * @returns {Object} Object containing controller methods: createHabit, deleteHabit, updateHabit, getHabits, markAsCompleted
  */
-const createHabitController = (habitService) => {
+const createHabitController = ({ habitService }) => {
   /**
    * Create a new habit for the authenticated user.
    * Validates input and creates habit with user association.

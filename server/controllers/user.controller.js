@@ -16,7 +16,7 @@ const { validationResult } = require("express-validator");
  * @param {Object} userService - Instance of UserService for handling user operations
  * @returns {Object} Object containing controller methods: updateUser
  */
-const createUserController = (userService) => {
+const createUserController = ({ userService }) => {
   /**
    * Update the authenticated user's profile information.
    * Validates input and ensures username/email uniqueness.

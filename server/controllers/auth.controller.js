@@ -16,7 +16,7 @@ const { validationResult } = require("../validators/auth.validator");
  * @param {Object} authService - Instance of AuthService for handling auth operations
  * @returns {Object} Object containing controller methods: registerUser, loginUser, getNewAccessToken
  */
-const createAuthController = (authService) => {
+const createAuthController = ({ authService }) => {
   /**
    * Register a new user account.
    * Validates input, creates user, generates tokens.
