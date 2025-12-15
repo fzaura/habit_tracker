@@ -19,7 +19,7 @@ class HabitService {
    * @constructor
    * @param {Object} habitRepository - Repository for habit data operations
    */
-  constructor({ habitRepository }) {
+  constructor({ habitRepo }) {
     this.habitRepository = habitRepository;
   }
 
