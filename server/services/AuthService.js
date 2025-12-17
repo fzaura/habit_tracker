@@ -27,9 +27,13 @@ class AuthService {
    * @param {Object} userRepository - Repository for user data operations
    * @param {Object} tokenRepository - Repository for token data operations
    */
-  constructor({ userRepo, tokenRepo }) {
+  constructor({ userRepo, tokenRepo, config }) {
     this.userRepo = userRepository;
     this.tokenRepo = tokenRepository;
+
+    this.saltRounds = config.saltRounds;
+    this.jwtAccessSecret = config.jwtAccessSecret;
+    this.jwtRefreshSecret = config.jwtRefreshSecret;
   }
 
   /**
@@ -72,10 +76,7 @@ class AuthService {
       }
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      parseInt(process.env.SALT_ROUNDS)
-    );
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
     const userData = { username, email, password: hashedPassword };
     const newUser = await this.userRepo.createUser(userData);
@@ -166,10 +167,7 @@ class AuthService {
       throw new Error("Token is expired.");
     }
     try {
-      const decoded = jwt.verify(
-        oldRefreshToken,
-        process.env.JWT_REFRESH_SECRET
-      );
+      const decoded = jwt.verify(oldRefreshToken, this.jwtRefreshSecret);
 
       await this.tokenRepo.deleteTokenById(storedToken.id);
 
