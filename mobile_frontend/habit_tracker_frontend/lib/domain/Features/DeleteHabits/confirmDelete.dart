@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
 
 class ConfirmDelete extends ConsumerWidget {
   const ConfirmDelete({super.key, required this.toDeleteHabitId});

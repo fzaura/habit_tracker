@@ -12,9 +12,21 @@ class HomeScreenWelcomeCard extends StatelessWidget {
   final int habitsCheckedToday; 
   final int allTheHabits;
 
+
+
+
   @override
   Widget build(BuildContext context) {
+
+//For Debug Purposes : 
+print('All the Habits checked todsy Number  : ${habitsCheckedToday}');
+print('All the Habits Number : ${allTheHabits}');
+
+
            final  double mainPecetnage = habitsCheckedToday / allTheHabits * 100;
+
+      print('All the Main Percentage  Number : ${mainPecetnage}');
+     
 
    return  Container(
       width: double.infinity,

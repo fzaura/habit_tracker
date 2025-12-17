@@ -6,7 +6,7 @@ import 'package:habit_tracker/presentation/Widgets/Title/HomeScreenWelcomeMessag
 import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/habitsLister.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/goalsCardLister.dart';
-import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:intl/intl.dart';
 

@@ -9,8 +9,13 @@ class RemoteServerDataSource extends DataSourceInterface {
   @override
   Future<List<HabitModel>> getHabits() async {
     //We Are going to Make the Response
+    print("🚀 [DEBUG] loadNewHabits started");
     try {
+      print("🚀 [DEBUG] Calling getHabitsList...");
       final response = await dio.get('/habits');
+      //Let's See the Results of the DIO.
+      print('The response Status Code : ${response.statusCode}');
+
       if (response.statusCode == 200 && response.data is List) {
         return (response.data as List)
             .map((jsonData) => HabitModel.fromJson(jsonData))

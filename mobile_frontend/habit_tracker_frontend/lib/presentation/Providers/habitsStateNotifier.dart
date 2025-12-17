@@ -21,12 +21,15 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
     // Call the feature, which returns Either<ErrorInterface, List<Habit>>
     final result = await _listHabitsFeature.getHabitsList();
 
+
+
+
     // Handle the Either result
     result.fold(
       // Left (Failure): Handle the error (e.g., log it, or set an error state if using a complex state object)
       (failure) {
         // For now, we'll log the error and keep the state empty or previous
-        print('Failed to load habits: ${failure.toString()}');
+        print('Failed to load habits: ${failure.errorMessage}');
       },
       // Right (Success): Update the state with the list of habits
       (habits) {
@@ -134,29 +137,9 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   }
 }
 
-// final getHabitsUseCaseProvider = Provider<listHabitsFeature>((ref) {
-//   // Assuming GetHabitsUseCase is created by injecting the HabitRepository
-//   return listHabitsFeature(habitRepo: ref.watch(habitRepoProvider));
-// });
-
-// final habitSampleProvider =
-//     StateNotifierProvider<HabitsStateNotifier, List<Habit>>(
-//       (ref) =>
-//           HabitsStateNotifier(: ref.watch(habitFeatureProvider)),
-//     );
-// //A Provider That A// Assumes habitFeatureProvider is defined as:
-// // final habitFeatureProvider = Provider<ListHabitsFeature> ((ref) {
-// //   return ListHabits(repo: ref.watch(habitsRepoProvider));
-// // },);
-
 final habitSampleProvider =
-    StateNotifierProvider<HabitsStateNotifier, List<Habit>>(
-      (ref) {
-        // 1. Get the feature implementation
-        final listHabitsFeature = ref.watch(habitFeatureProvider);
-        
-        // 2. Instantiate the Notifier, passing the dependency
-        return HabitsStateNotifier(listHabitsFeature);
-      },
-    );
+    StateNotifierProvider<HabitsStateNotifier, List<Habit>>((ref) {
+//Use it from the Providers inside of Core 
+      return HabitsStateNotifier(ref.watch(listFeatureProvider));
+    });
 //A Provider That Accesses the Notifier.ccesses the Notifier.

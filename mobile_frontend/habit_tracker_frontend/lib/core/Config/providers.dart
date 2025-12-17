@@ -8,7 +8,6 @@ import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
 import 'package:habit_tracker/data/DataSources/remoteServerDataSource.dart';
 import 'package:habit_tracker/data/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Features/ListOutHabits/listHabits.dart';
-import 'package:habit_tracker/domain/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/InterFaces/TokenStorage/tokenStorage.dart';
 
@@ -48,15 +47,17 @@ final mainDioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
       baseUrl: Api.baseUrl,
-      connectTimeout: Duration(seconds: 60),
-      receiveTimeout: Duration(seconds: 60),
-      sendTimeout: Duration(seconds: 60),
+      connectTimeout: Duration(seconds: 10),
+      receiveTimeout: Duration(seconds: 10),
+      sendTimeout: Duration(seconds: 10),
       headers: _headers,
     ),
   );
-  dio.interceptors.add(ref.read(authInterceptorProvider));
+  //dio.interceptors.add(ref.read(authInterceptorProvider));
   return dio;
 });
+
+
 
 final remoteDataSourceProvider = Provider<RemoteServerDataSource>((ref) {
   return RemoteServerDataSource(dio: ref.watch(mainDioProvider));
@@ -67,6 +68,6 @@ final habitsRepoProvider = Provider<HabitRepo>((ref) {
 
 },);
 
-final habitFeatureProvider =Provider<ListHabitsFeature> ((ref) {
+final listFeatureProvider =Provider<ListHabitsFeature> ((ref) {
   return ListHabits(repo: ref.watch(habitsRepoProvider));
 },);
