@@ -23,6 +23,7 @@ const {
   Lifetime,
   asFunction,
 } = require("awilix");
+const config = require("./config/env");
 
 const prisma = require("./config/prisma");
 const mongoose = require("mongoose");
@@ -64,6 +65,7 @@ const createUserController = require("./controllers/user.controller");
 const container = createContainer();
 container.register({
   db: asValue(prisma),
+  config: asValue(config),
 
   tokenRepo: asClass(PrismaTokenRepo).scoped(),
   userRepo: asClass(PrismaUserRepo).scoped(),
