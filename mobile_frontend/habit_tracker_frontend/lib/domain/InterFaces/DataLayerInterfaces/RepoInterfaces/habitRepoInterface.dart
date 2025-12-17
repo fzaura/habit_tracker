@@ -1,8 +1,9 @@
+import 'package:dartz/dartz.dart';
 import 'package:habit_tracker/data/DataModels/HabitModel.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/InterFaces/ErrorInterface/errorInterface.dart';
 
 abstract class HabitRepoInterface {
-
-  Future<List<HabitModel>> listHabits();
-  
+const HabitRepoInterface();
+//Either Will Return a Failure Object or a Succces Object
+Future<Either<ErrorInterface, List<HabitModel>>> getHabits();  
 }

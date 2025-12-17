@@ -2,6 +2,7 @@
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+
 abstract class TokenStorage {
   const TokenStorage({required this.safeStorage});
   final FlutterSecureStorage safeStorage;

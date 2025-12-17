@@ -2,59 +2,67 @@ import 'package:dio/dio.dart';
 import 'package:habit_tracker/domain/InterFaces/TokenStorage/tokenStorage.dart';
 
 class AuthInterceptor extends Interceptor {
-  //Step 0 : Safety Lock : Prevents Multiple refresh Calls
-  static bool isRefreshing = false;
+  bool isRefreshingToken = false;
   final TokenStorage tokenStorage;
-  final Dio dioClient;
-  AuthInterceptor({required this.dioClient, required this.tokenStorage});
+  final Dio dioClient; //Used to get new token from the server
+  AuthInterceptor({required this.tokenStorage, required this.dioClient});
+  @override
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    //1- Get the Actual Token from the Token Storage
+    final String? token = await tokenStorage.getAccessToken();
+    if (token != null && token.isNotEmpty) {
+      //2-Check if null , if Not inject the header with an Auth Token
+      options.headers['Authorization'] = 'Bearer $token';
+    }
 
-  // --- Implementation inside AuthInterceptor class ---
+    handler.next(options);
+  }
 
-  Future<bool> _refreshTokenAndSave() async {
-    // 1. Get the Refresh Token (the key to getting new tokens)
-    final refreshToken = await tokenStorage.getRefreshToken();
-    if (refreshToken == null) return false;
+  @override
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    //We Might do Caching on Response
+    handler.next(response);
+  }
 
+  //Helper Methods That Actually do the Work :
+  Future<bool> _refreshToken() async {
+    final String? refreshToken = await tokenStorage.getRefreshToken();
+    if (refreshToken == null) {
+      return false;
+    }
     try {
-      // 2. Use the UN-INTERCEPTED Dio client for the refresh request
-      final response = await dioClient.post(
-        '/auth/refresh', // Your server's endpoint for refreshing tokens
-        data: {
-          // This is the JSON key the SERVER expects
-          'refreshToken': refreshToken,
-        },
+      final reponse = await dioClient.post(
+        'auth/refresh',
+        data: {'refreshToken': refreshToken},
       );
-
-      if (response.statusCode == 200) {
-        // 3. Parse the new tokens from the server's response body
-        final newAccessToken = response.data['accessToken'];
-        final newRefreshToken = response.data['refreshToken'];
-
-        // 4. Save the new tokens securely (overwriting the old ones)
-        await tokenStorage.saveTokens(
+      if (reponse.statusCode == '200') {
+        final newAccessToken = reponse.data['accessToken'];
+        final newRefreshToken = reponse.data['refreshToken'];
+        tokenStorage.saveTokens(
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
         );
-        return true; // Success!
+        return true;
       }
     } on DioException catch (e) {
-      // Log or handle any error specifically from the refresh call.
-      // print('Refresh token failed: ${e.response?.statusCode}');
-      //Anything that's Above 299 It will throw as an exception.
+      print(e);
     }
-    return false; // Transaction failed
+
+    return false;
   }
-  // --- Implementation inside AuthInterceptor class ---
 
   Future<Response<dynamic>> _retryRequest(RequestOptions requestOptions) async {
-    // 1. Get the new, valid Access Token that was just saved
+    //This Happens After The refresh token Process
     final newAccessToken = await tokenStorage.getAccessToken();
-
-    // 2. Clone the original request headers and update the Authorization header
+    //Inject the Token to the old Header
     requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
 
-    // 3. Re-send the request using the UN-INTERCEPTED client
-    // We use the full dioClient.request() method to execute the original request again.
     return dioClient.request(
       requestOptions.path,
       options: Options(
@@ -67,78 +75,38 @@ class AuthInterceptor extends Interceptor {
     );
   }
 
-  @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-   //We can do caching Here 
-    handler.next(response);
-  }
-
-  @override
-  @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    // 1. Retrieve the Access Token (Must be async because reading from storage is async)
-    final token = await tokenStorage.getAccessToken();
-
-    // 2. Add the Authorization Header (The ID Badge)
-    if (token != null && token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-
-    // 3. Continue the request chain
-    handler.next(options);
-  }
-
+  //The Server Calls The On Error Method to handel stuff
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    final responseStatusCode = err.response?.statusCode;
-    final requestOptions = err.requestOptions;
-    // A. Check for 401 Unauthorized Trigger.
-    //If the Access Token is Expired make it 401
-    //If the Refresh token is Expired 403 
-    //If Auth Is Added Will Add More 
-    if (responseStatusCode == 401) {
-      // Safety measure: If the failing request was the refresh request itself, we must stop.
+    //1- We Should Know the Status code.
+    final errorStatus = err.response?.statusCode; //Status Code (401)
+    final requestOptions = err.requestOptions; // All the Info that Comes From the response (Header , Methods , body).
+
+    if (errorStatus == 401) {
+      //We Need to check the failing request , if it has a refresh request that will cause an infinite Loop.
       if (requestOptions.path.contains('/auth/refresh')) {
-        await tokenStorage.clearTokens();
-        // Redirect to login (or reject the error)
-        return handler.reject(err);
+        await tokenStorage.clearTokens(); //Rebuild the Token From Scratch
+        return handler.reject(err); //Trigger an eventy in ur app
       }
 
-      // B. Safety Lock Check: If a refresh is running, reject this error for now.
-      if (isRefreshing) {
+      //Engage Saftey Lock(If it was Already Refreshing trigger an Error)
+      if (isRefreshingToken) {
         return handler.reject(err);
       }
-
-      isRefreshing = true; // Engage Safety Lock
-
+      isRefreshingToken = true; // We Are Refreshing the Token
       try {
-        // C. Perform Token Refresh and Save New Tokens
-        final success = await _refreshTokenAndSave();
-
-        if (success) {
-          // D. Retry the Original Failed Request
-          final response = await _retryRequest(requestOptions);
-
-          // E. Resolve: Send the successful retry response back to the caller
-          return handler.resolve(response);
+        final sucess = await _refreshToken();
+        if (sucess) {
+          final reponse = await _retryRequest(requestOptions);
+          return handler.resolve(reponse);
         }
       } catch (e) {
-        // F. Fallback: Refresh failed (e.g., refresh token expired). Clear and reject.
         await tokenStorage.clearTokens();
-        // Here you would typically navigate the user to the Login screen.
       } finally {
-        isRefreshing = false; // Release Safety Lock
+        isRefreshingToken = false; // So We don't get stuck in a Loop
       }
     }
-
-    // G. Default Fallback: Pass any other error (404, 500, network loss) to the caller
-    handler.reject(err);
+    return handler.reject(err);
   }
 }
 
