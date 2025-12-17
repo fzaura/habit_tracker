@@ -352,6 +352,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - GitHub: [@fzaura](https://github.com/fzaura)
 
+**AserCodez**
+
+- GitHub: [@AserCodez](https://github.com/AserCodez)
+
 ## 🙏 Acknowledgments
 
 - Flutter team for the amazing cross-platform framework
