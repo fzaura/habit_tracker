@@ -46,6 +46,8 @@ const createHabitController = require("./controllers/habit.controller");
 const createUserController = require("./controllers/user.controller");
 
 const createAuthRoutes = require("./routes/auth.routes");
+const createHabitRoutes = require("./routes/habit.routes");
+const createUserRoutes = require("./routes/user.routes");
 
 const createAuthMiddleware = require("./middleware/auth.middleware");
 
@@ -88,6 +90,8 @@ container.register({
   authMiddleware: asFunction(createAuthMiddleware).singleton(),
 
   authRoutes: asFunction(createAuthRoutes).singleton(),
+  habitRoutes: asFunction(createHabitRoutes).singleton(),
+  userRoutes: asFunction(createUserRoutes).singleton(),
 });
 
 /**
