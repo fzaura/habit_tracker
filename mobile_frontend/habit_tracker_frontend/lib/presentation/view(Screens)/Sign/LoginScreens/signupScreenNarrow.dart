@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
-import 'package:habit_tracker/data/Dummy%20Data/dummyDataSignedUser.dart';
+import 'package:habit_tracker/data/HabitsData/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/domain/Entities/user.dart';
 import 'package:habit_tracker/presentation/view(Screens)/Sign/LoginScreens/loginScreenNarrow.dart';
 

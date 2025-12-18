@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:habit_tracker/data/DataModels/HabitModel.dart';
+import 'package:habit_tracker/data/HabitsData/DataModels/HabitModel.dart';
 import 'package:habit_tracker/domain/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 
 class RemoteServerDataSource extends DataSourceInterface {
