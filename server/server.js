@@ -26,9 +26,6 @@ const YAML = require("yamljs");
 const { scopePerRequest } = require("awilix-express");
 const container = require("./container");
 
-const habitRouter = require("./routes/habit.routes");
-const userRouter = require("./routes/user.routes");
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -41,10 +38,12 @@ app.use(scopePerRequest(container));
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+const habitRoutes = container.resolve("habitRoutes");
+const userRoutes = container.resolve("userRoutes");
 const authRoutes = container.resolve("authRoutes");
 app.use("/api/auth", authRoutes);
-app.use("/api/habits", habitRouter);
-app.use("/api/users", userRouter);
+app.use("/api/habits", habitRoutes);
+app.use("/api/users", userRoutes);
 
 /**
  * Global error handler middleware.
