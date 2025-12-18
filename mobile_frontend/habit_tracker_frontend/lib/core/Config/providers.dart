@@ -7,7 +7,7 @@ import 'package:habit_tracker/core/Service/auth_interceptor.dart';
 import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
 import 'package:habit_tracker/data/DataSources/remoteServerDataSource.dart';
 import 'package:habit_tracker/data/Repository/habitRepo.dart';
-import 'package:habit_tracker/domain/Features/ListOutHabits/listHabits.dart';
+import 'package:habit_tracker/domain/Features/Habits/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/InterFaces/TokenStorage/tokenStorage.dart';
 
@@ -53,7 +53,7 @@ final mainDioProvider = Provider<Dio>((ref) {
       headers: _headers,
     ),
   );
-  //dio.interceptors.add(ref.read(authInterceptorProvider));
+  dio.interceptors.add(ref.read(authInterceptorProvider));
   return dio;
 });
 

@@ -12,6 +12,8 @@ enum SortGoalsBYs { all, achieved, notAchieved }
 
 class HabitsStateNotifier extends StateNotifier<List<Habit>> {
   final ListHabitsFeature _listHabitsFeature;
+
+
   HabitsStateNotifier(this._listHabitsFeature) : super([]) {
     loadNewHabits();
   }
@@ -20,9 +22,6 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
 
     // Call the feature, which returns Either<ErrorInterface, List<Habit>>
     final result = await _listHabitsFeature.getHabitsList();
-
-
-
 
     // Handle the Either result
     result.fold(
@@ -139,7 +138,7 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
 
 final habitSampleProvider =
     StateNotifierProvider<HabitsStateNotifier, List<Habit>>((ref) {
-//Use it from the Providers inside of Core 
+      //Use it from the Providers inside of Core
       return HabitsStateNotifier(ref.watch(listFeatureProvider));
     });
 //A Provider That Accesses the Notifier.ccesses the Notifier.
