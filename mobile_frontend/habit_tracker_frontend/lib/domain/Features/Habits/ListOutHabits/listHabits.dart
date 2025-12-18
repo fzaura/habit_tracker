@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:habit_tracker/data/DataModels/HabitModel.dart';
-import 'package:habit_tracker/data/Repository/habitRepo.dart';
+import 'package:habit_tracker/data/HabitsData/DataModels/HabitModel.dart';
+import 'package:habit_tracker/data/HabitsData/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/InterFaces/ErrorInterface/errorInterface.dart';
