@@ -7,7 +7,7 @@ import 'package:habit_tracker/core/Service/auth_interceptor.dart';
 import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
 import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dart';
 import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
-import 'package:habit_tracker/domain/Habits/Features/Habits/ListOutHabits/listHabits.dart';
+import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/TokenStorage/tokenStorage.dart';
 

@@ -1,4 +1,4 @@
-import 'package:habit_tracker/domain/Habits/Entities/user.dart';
+import 'package:habit_tracker/domain/Auth/Entities/user.dart';
 
 final List<User> dummyUsers = [
   User(
