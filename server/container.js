@@ -72,18 +72,18 @@ container.register({
   db: asValue(prisma),
   config: asValue(config),
 
-  tokenRepo: asClass(PrismaTokenRepo).scoped(),
-  userRepo: asClass(PrismaUserRepo).scoped(),
-  habitRepo: asClass(PrismaHabitRepo).scoped(),
+  tokenRepo: asClass(PrismaTokenRepo).singleton(),
+  userRepo: asClass(PrismaUserRepo).singleton(),
+  habitRepo: asClass(PrismaHabitRepo).singleton(),
 
-  authService: asClass(AuthService).scoped(),
-  habitService: asClass(HabitService).scoped(),
-  userService: asClass(UserService).scoped(),
+  authService: asClass(AuthService).singleton(),
+  habitService: asClass(HabitService).singleton(),
+  userService: asClass(UserService).singleton(),
   tokenService: asClass(TokenService).singleton(),
 
-  authController: asFunction(createAuthController).scoped(),
-  habitController: asFunction(createHabitController).scoped(),
-  userController: asFunction(createUserController).scoped(),
+  authController: asFunction(createAuthController).singleton(),
+  habitController: asFunction(createHabitController).singleton(),
+  userController: asFunction(createUserController).singleton(),
 
   authMiddleware: asFunction(createAuthMiddleware).singleton(),
 
