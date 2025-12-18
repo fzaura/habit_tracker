@@ -27,7 +27,6 @@ const { scopePerRequest } = require("awilix-express");
 const container = require("./container");
 
 const habitRouter = require("./routes/habit.routes");
-const authRouter = require("./routes/auth.routes");
 const userRouter = require("./routes/user.routes");
 
 const app = express();
@@ -42,7 +41,8 @@ app.use(scopePerRequest(container));
 const swaggerDocument = YAML.load("./swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api/auth", authRouter);
+const authRoutes = container.resolve("authRoutes");
+app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRouter);
 app.use("/api/users", userRouter);
 
