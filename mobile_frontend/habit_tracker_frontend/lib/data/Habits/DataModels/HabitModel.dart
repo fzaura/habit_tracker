@@ -5,7 +5,7 @@
 // 1. Helper to map Mongoose String to Frontend Enum
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utility/Format/formatNames.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 
 

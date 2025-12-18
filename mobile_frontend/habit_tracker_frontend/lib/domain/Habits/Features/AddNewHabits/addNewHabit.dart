@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 import 'package:habit_tracker/presentation/Widgets/Forms/addANewHabitForm.dart';
 import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/sucessScreenUtil.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/core/Config/providers.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
-import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }

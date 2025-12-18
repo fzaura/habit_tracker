@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/domain/Features/AddNewHabits/addNewHabit.dart';
+import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabit.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/HomeScreenCards/HomeScreenWelcomeCard.dart';
 import 'package:habit_tracker/presentation/Widgets/Title/HomeScreenWelcomeMessage.dart';
 import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';

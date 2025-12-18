@@ -1,4 +1,4 @@
-import 'package:habit_tracker/domain/Entities/user.dart';
+import 'package:habit_tracker/domain/Habits/Entities/user.dart';
 
 class GlobalData {
   static User _currentUser = User(

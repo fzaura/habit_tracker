@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Widgets/DropDownButton/dropDownButtonTemp.dart';
-import 'package:habit_tracker/domain/Features/Habits/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Features/Habits/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';

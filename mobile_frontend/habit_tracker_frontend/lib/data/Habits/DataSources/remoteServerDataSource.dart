@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:habit_tracker/data/HabitsData/DataModels/HabitModel.dart';
-import 'package:habit_tracker/domain/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
+import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 
 class RemoteServerDataSource extends DataSourceInterface {
   final Dio dio; //Because we need to use it
