@@ -4,8 +4,8 @@ import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/domain/Auth/Entities/user.dart';
-import 'package:habit_tracker/presentation/Habits/view(Screens)/HomeScreens/mainTabScreen.dart';
-import 'package:habit_tracker/presentation/Auth/Sign/LoginScreens/signupScreenNarrow.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
+import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
 import 'package:habit_tracker/app/globalData.dart';
 
 class LoginScreen extends StatefulWidget {
