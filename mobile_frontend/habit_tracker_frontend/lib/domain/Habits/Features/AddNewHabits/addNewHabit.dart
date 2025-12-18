@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 import 'package:habit_tracker/presentation/Widgets/Forms/addANewHabitForm.dart';
-import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/sucessScreenUtil.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Habits/view(Screens)/HomeScreens/sucessScreenUtil.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 
 class Addnewhabit extends ConsumerStatefulWidget {
   const Addnewhabit({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/Buttons/showMoreButton.dart';
 
 class Habitscheckcard extends ConsumerStatefulWidget {

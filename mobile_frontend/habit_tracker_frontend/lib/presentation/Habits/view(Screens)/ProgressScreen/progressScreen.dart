@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Headers/homeScreenProgressReport.dart';
 import 'package:habit_tracker/presentation/Widgets/Container/ProgressScreen/YourGoalsConatiner.dart';
 

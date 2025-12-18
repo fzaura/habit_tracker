@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:habit_tracker/domain/Habits/InterFaces/TokenStorage/tokenStorage.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 
 const String _accessTokenKey = 'AUTH_ACCESS_TOKEN'; // Use a unique identifier
 const String _refreshTokenKey = 'AUTH_REFRESH_TOKEN';

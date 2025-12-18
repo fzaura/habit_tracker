@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/homeScreen.dart';
-import 'package:habit_tracker/presentation/view(Screens)/ProgressScreen/progressScreen.dart';
-import 'package:habit_tracker/presentation/view(Screens)/SettingsScreen/settingsScreen.dart';
+import 'package:habit_tracker/presentation/Habits/view(Screens)/HomeScreens/homeScreen.dart';
+import 'package:habit_tracker/presentation/Habits/view(Screens)/ProgressScreen/progressScreen.dart';
+import 'package:habit_tracker/presentation/Auth/SettingsScreen/settingsScreen.dart';
 import 'package:intl/intl.dart';
 
 class MainTabScreen extends StatefulWidget {
