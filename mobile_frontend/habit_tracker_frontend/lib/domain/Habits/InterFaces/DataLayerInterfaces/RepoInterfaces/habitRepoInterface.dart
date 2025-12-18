@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:habit_tracker/data/HabitsData/DataModels/HabitModel.dart';
-import 'package:habit_tracker/domain/InterFaces/ErrorInterface/errorInterface.dart';
+import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 abstract class HabitRepoInterface {
 const HabitRepoInterface();

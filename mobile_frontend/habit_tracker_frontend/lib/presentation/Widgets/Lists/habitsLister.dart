@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/domain/Features/Habits/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/domain/Habits/Features/Habits/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
 

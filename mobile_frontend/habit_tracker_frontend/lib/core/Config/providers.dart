@@ -5,11 +5,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:habit_tracker/core/API/api.dart';
 import 'package:habit_tracker/core/Service/auth_interceptor.dart';
 import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
-import 'package:habit_tracker/data/HabitsData/DataSources/remoteServerDataSource.dart';
-import 'package:habit_tracker/data/HabitsData/Repository/habitRepo.dart';
-import 'package:habit_tracker/domain/Features/Habits/ListOutHabits/listHabits.dart';
-import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
-import 'package:habit_tracker/domain/InterFaces/TokenStorage/tokenStorage.dart';
+import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dart';
+import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
+import 'package:habit_tracker/domain/Habits/Features/Habits/ListOutHabits/listHabits.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/TokenStorage/tokenStorage.dart';
 
 const _headers = {'Content-Type': 'application/json'};
 
