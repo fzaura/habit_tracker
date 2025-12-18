@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
-import 'package:habit_tracker/domain/Habits/Entities/user.dart';
+import 'package:habit_tracker/domain/Auth/Entities/user.dart';
 import 'package:habit_tracker/presentation/view(Screens)/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/view(Screens)/Sign/LoginScreens/signupScreenNarrow.dart';
 import 'package:habit_tracker/app/globalData.dart';
