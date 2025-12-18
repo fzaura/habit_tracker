@@ -2,7 +2,6 @@
  * @module middleware/auth
  * @description JWT authentication middleware for protecting routes.
  */
-const jwt = require("jsonwebtoken");
 
 /**
  * JWT authentication middleware.
@@ -15,25 +14,25 @@ const jwt = require("jsonwebtoken");
  * @param {Function} next - Express next middleware function
  * @returns {void} Calls next() on success or sends 401/403 response on failure
  */
-const authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
+module.exports = ({ tokenService }) => {
+  return (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access token is missing or invalid." });
-  }
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Access token is missing or invalid." });
+    }
 
-  try {
-    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    try {
+      const payload = tokenService.verifyAccessToken(token);
 
-    req.user = payload;
+      req.user = payload;
 
-    next();
-  } catch (error) {
-    return res.status(403).json({ message: "Forbidden: Invalid token." });
-  }
+      next();
+    } catch (error) {
+      return res.status(403).json({ message: "Forbidden: Invalid token." });
+    }
+  };
 };
-
-module.exports = { authenticateJWT };
