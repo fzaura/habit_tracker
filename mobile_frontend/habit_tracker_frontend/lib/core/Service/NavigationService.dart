@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/presentation/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
+import 'package:habit_tracker/presentation/Habits/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
 
 takeToSeeAllPage({
   required BuildContext ctxt,

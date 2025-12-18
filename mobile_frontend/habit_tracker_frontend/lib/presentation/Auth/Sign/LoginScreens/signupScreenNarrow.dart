@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/domain/Auth/Entities/user.dart';
-import 'package:habit_tracker/presentation/view(Screens)/Sign/LoginScreens/loginScreenNarrow.dart';
+import 'package:habit_tracker/presentation/Auth/Sign/LoginScreens/loginScreenNarrow.dart';
 
 class Signupscreen extends StatelessWidget {
   Signupscreen({super.key});
