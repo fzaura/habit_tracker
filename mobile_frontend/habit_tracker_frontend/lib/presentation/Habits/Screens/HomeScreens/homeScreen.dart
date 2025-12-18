@@ -7,7 +7,7 @@ import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTem
 import 'package:habit_tracker/presentation/Widgets/Lists/habitsLister.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/goalsCardLister.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
-import 'package:habit_tracker/presentation/Habits/view(Screens)/SeeAllTemp/seeAllTodayHabits.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/SeeAllTemp/seeAllTodayHabits.dart';
 import 'package:intl/intl.dart';
 
 class Homescreen extends ConsumerStatefulWidget {
