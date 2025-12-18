@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/HomeScreen/habitsDoneTodayChart.dart';
 
- 
-
 class HomeScreenWelcomeCard extends StatelessWidget {
+  const HomeScreenWelcomeCard({
+    super.key,
+    required this.habitsCheckedToday,
+    required this.allTheHabits,
+  });
 
-
-  const HomeScreenWelcomeCard({super.key,required this.habitsCheckedToday,required this.allTheHabits});
-
-  final int habitsCheckedToday; 
+  final int habitsCheckedToday;
   final int allTheHabits;
 
   @override
   Widget build(BuildContext context) {
-           final  double mainPecetnage = habitsCheckedToday / allTheHabits * 100;
+    //For Debug Purposes :
+    print('All the Habits checked todsy Number  : ${habitsCheckedToday}');
+    print('All the Habits Number : ${allTheHabits}');
 
-   return  Container(
+    final double mainPecetnage = habitsCheckedToday / allTheHabits * 100;
+
+    print('All the Main Percentage  Number : ${mainPecetnage}');
+
+    return Container(
       width: double.infinity,
       height: 199,
       decoration: BoxDecoration(
@@ -35,7 +41,10 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             bottom: 34,
             top: 34,
             left: 26,
-            child: HabitsDoneTodayChart(habitsCheckedToday:habitsCheckedToday , allTheHabits:allTheHabits ,),
+            child: HabitsDoneTodayChart(
+              habitsCheckedToday: habitsCheckedToday,
+              allTheHabits: allTheHabits,
+            ),
           ),
           Positioned(
             top: 85,

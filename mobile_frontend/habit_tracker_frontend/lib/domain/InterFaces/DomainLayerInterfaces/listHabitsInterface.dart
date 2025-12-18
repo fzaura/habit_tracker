@@ -1,9 +1,9 @@
-import 'package:habit_tracker/data/Repository/habitRepo.dart';
+import 'package:dartz/dartz.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/InterFaces/ErrorInterface/errorInterface.dart';
 
-abstract class  listHabitsFeature
+abstract class  ListHabitsFeature
 {
-  const listHabitsFeature({required this.habitRepo});
-  final HabitRepo habitRepo;
-  Future<List<Habit>> getHabitsList();
+  const ListHabitsFeature();
+  Future<Either<ErrorInterface,List<Habit>>> getHabitsList();
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
-import 'package:habit_tracker/domain/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/domain/Features/EditHabits/editDeleteHabits.dart';
+import 'package:habit_tracker/domain/Features/Habits/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/domain/Features/Habits/EditHabits/editDeleteHabits.dart';
 
 class Showmorebutton extends StatelessWidget {
   

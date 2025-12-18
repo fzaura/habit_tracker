@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goalsCard.dart';
-import 'package:habit_tracker/domain/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
 
 class GoalsCardLister extends ConsumerWidget {
   const GoalsCardLister({

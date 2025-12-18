@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:habit_tracker/core/Config/providers.dart';
 import 'package:habit_tracker/domain/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -10,14 +11,30 @@ enum PeriodUnit { daily, weekly, monthly }
 enum SortGoalsBYs { all, achieved, notAchieved }
 
 class HabitsStateNotifier extends StateNotifier<List<Habit>> {
-  HabitsStateNotifier({required this.habitToList}) : super([]) {
+  final ListHabitsFeature _listHabitsFeature;
+
+
+  HabitsStateNotifier(this._listHabitsFeature) : super([]) {
     loadNewHabits();
-  } //A-Initial DataGive
-  //Making Dependency Injection Methods :
-  final listHabitsFeature habitToList;
-  Future<void> loadNewHabits()async {
-    List<Habit> habits = await habitToList.getHabitsList();
-    state=habits;
+  }
+  Future<void> loadNewHabits() async {
+    // Optionally: emit a loading state if you had one (e.g., state = const <Habit>[];)
+
+    // Call the feature, which returns Either<ErrorInterface, List<Habit>>
+    final result = await _listHabitsFeature.getHabitsList();
+
+    // Handle the Either result
+    result.fold(
+      // Left (Failure): Handle the error (e.g., log it, or set an error state if using a complex state object)
+      (failure) {
+        // For now, we'll log the error and keep the state empty or previous
+        print('Failed to load habits: ${failure.errorMessage}');
+      },
+      // Right (Success): Update the state with the list of habits
+      (habits) {
+        state = habits;
+      },
+    );
   }
 
   //B- Variables that Change that Data in a non immutable way
@@ -120,7 +137,8 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
 }
 
 final habitSampleProvider =
-    StateNotifierProvider<HabitsStateNotifier, List<Habit>>(
-      (ref) => HabitsStateNotifier(),
-    );
-//A Provider That Accesses the Notifier.
+    StateNotifierProvider<HabitsStateNotifier, List<Habit>>((ref) {
+      //Use it from the Providers inside of Core
+      return HabitsStateNotifier(ref.watch(listFeatureProvider));
+    });
+//A Provider That Accesses the Notifier.ccesses the Notifier.

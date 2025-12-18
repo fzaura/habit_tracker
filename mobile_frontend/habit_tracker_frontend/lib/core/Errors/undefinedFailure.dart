@@ -1,6 +1,6 @@
 import 'package:habit_tracker/domain/InterFaces/ErrorInterface/errorInterface.dart';
 
-class ServerFailure implements ErrorInterface {
+class UnDefinedfailure implements ErrorInterface {
   @override
   String? debugInfo;
   @override
@@ -11,7 +11,7 @@ class ServerFailure implements ErrorInterface {
 
   final String? statusCode;
 
-  ServerFailure({
+  UnDefinedfailure({
      this.statusCode,
     required this.errorMessage,
     this.debugInfo,
