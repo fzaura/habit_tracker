@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
+import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModel.dart';
@@ -20,12 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   // initialized NOW
   final TextEditingController _passwordController = TextEditingController();
   // initialized NOW
-
-
- 
-
- 
-
 
   bool _givenValue = false;
 
@@ -62,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         mainText: 'Log in',
         buttonText: 'Sign up',
-        onIconPressed: onSignUpPress,
+        onIconPressed: NavigationService.onSignUpPress,
       ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -74,14 +69,17 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Form(
             child: Column(
               children: [
-                SignLoginField(text: 'Email',controller:  _emailController),
-            
-                SignLoginField(text: 'Password',controller:  _passwordController, ),
+                SignLoginField(text: 'Email', controller: _emailController),
+
+                SignLoginField(
+                  text: 'Password',
+                  controller: _passwordController,
+                ),
                 const SizedBox(height: 36),
-            
+
                 defaultSignLogInButton(
                   text: 'Log in',
-                  onPressed: onLoginPress,
+                  onPressed: NavigationService.navToLogScreen,
                   ctxt: context,
                 ),
                 rememberMeForgetPassword(),
