@@ -20,7 +20,7 @@ class HabitService {
    * @param {Object} habitRepository - Repository for habit data operations
    */
   constructor({ habitRepo }) {
-    this.habitRepository = habitRepository;
+    this.habitRepo = habitRepo;
   }
 
   /**
@@ -59,7 +59,7 @@ class HabitService {
       };
     }
 
-    const newHabit = await this.habitRepository.createHabit(habitData, userId);
+    const newHabit = await this.habitRepo.createHabit(habitData, userId);
     return newHabit;
   }
 
@@ -75,7 +75,7 @@ class HabitService {
    * @throws {Error} If habit not found or user unauthorized
    */
   async deleteHabit(habitId, userId) {
-    const result = await this.habitRepository.deleteHabit(habitId, userId);
+    const result = await this.habitRepo.deleteHabit(habitId, userId);
 
     if (!result || result.deletedCount === 0) {
       const error = new Error("Habit not found or user unauthorized.");
@@ -119,7 +119,7 @@ class HabitService {
         daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
       };
     }
-    const updatedHabit = await this.habitRepository.updateHabit(
+    const updatedHabit = await this.habitRepo.updateHabit(
       habitId,
       habitData,
       userId
@@ -144,7 +144,7 @@ class HabitService {
    * @returns {Promise<Object>} Object with data array and pagination info
    */
   async getHabits(page, limit, userId) {
-    const { habits, total } = await this.habitRepository.getHabits(
+    const { habits, total } = await this.habitRepo.getHabits(
       page,
       limit,
       userId
@@ -197,12 +197,11 @@ class HabitService {
     const endOfDay = new Date(dateString);
     endOfDay.setUTCHours(23, 59, 59, 999);
 
-    const completionsToday =
-      await this.habitRepository.getCompletedHabitsByDateRange(
-        userId,
-        startOfDay,
-        endOfDay
-      );
+    const completionsToday = await this.habitRepo.getCompletedHabitsByDateRange(
+      userId,
+      startOfDay,
+      endOfDay
+    );
 
     const isCompleted = completionsToday.some(
       (c) => c.habitId.toString() === habitId
@@ -211,7 +210,7 @@ class HabitService {
       throw new Error("Habit is already completed.");
     }
 
-    return await this.habitRepository.createCompletion(habitId, userId, date);
+    return await this.habitRepo.createCompletion(habitId, userId, date);
   }
 }
 

@@ -21,8 +21,9 @@ class UserService {
    * @constructor
    * @param {Object} userRepository - Repository for user data operations
    */
-  constructor({ userRepo }) {
-    this.userRepo = userRepository;
+  constructor({ userRepo, config }) {
+    this.userRepo = userRepo;
+    this.saltRounds = config.saltRounds;
   }
 
   /**
@@ -73,7 +74,7 @@ class UserService {
     if (updateData.password) {
       const hashedPassword = await bcrypt.hash(
         safeUpdates.password,
-        parseInt(process.env.SALT_ROUNDS)
+        parseInt(this.saltRounds)
       );
       safeUpdates.password = hashedPassword;
     }

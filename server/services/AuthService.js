@@ -10,8 +10,6 @@
  * @requires ../repositories/ITokenRepository
  */
 const bcrypt = require("bcrypt");
-const { generateTokens } = require("../utils/token");
-const jwt = require("jsonwebtoken");
 
 /**
  * Service class for authentication operations.
@@ -27,9 +25,12 @@ class AuthService {
    * @param {Object} userRepository - Repository for user data operations
    * @param {Object} tokenRepository - Repository for token data operations
    */
-  constructor({ userRepo, tokenRepo }) {
-    this.userRepo = userRepository;
-    this.tokenRepo = tokenRepository;
+  constructor({ userRepo, tokenRepo, tokenService, config }) {
+    this.userRepo = userRepo;
+    this.tokenRepo = tokenRepo;
+    this.tokenService = tokenService;
+
+    this.saltRounds = config.saltRounds;
   }
 
   /**
@@ -72,15 +73,20 @@ class AuthService {
       }
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      parseInt(process.env.SALT_ROUNDS)
-    );
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
     const userData = { username, email, password: hashedPassword };
     const newUser = await this.userRepo.createUser(userData);
 
-    const { refreshToken, accessToken } = generateTokens(newUser);
+    const accessToken = this.tokenService.generateAccessToken({
+      userId: newUser.id,
+      username: newUser.username,
+    });
+
+    const refreshToken = this.tokenService.generateRefreshToken({
+      userId: newUser.id,
+      username: newUser.username,
+    });
 
     const sevenDays = 7 * 24 * 60 * 60 * 1000;
     const expiresAt = Date.now() + sevenDays;
@@ -127,7 +133,15 @@ class AuthService {
       throw error;
     }
 
-    const { refreshToken, accessToken } = generateTokens(user);
+    const accessToken = this.tokenService.generateAccessToken({
+      userId: user.id,
+      username: user.username,
+    });
+
+    const refreshToken = this.tokenService.generateRefreshToken({
+      userId: user.id,
+      username: user.username,
+    });
 
     const sevenDays = 7 * 24 * 60 * 60 * 1000;
     const expiresAt = Date.now() + sevenDays;
@@ -166,16 +180,21 @@ class AuthService {
       throw new Error("Token is expired.");
     }
     try {
-      const decoded = jwt.verify(
-        oldRefreshToken,
-        process.env.JWT_REFRESH_SECRET
-      );
+      const decoded = this.tokenService.verifyRefreshToken(oldRefreshToken);
 
       await this.tokenRepo.deleteTokenById(storedToken.id);
 
       const user = { id: decoded.userId, username: decoded.username };
 
-      const { refreshToken, accessToken } = generateTokens(user);
+      const accessToken = this.tokenService.generateAccessToken({
+        userId: user.id,
+        username: user.username,
+      });
+
+      const refreshToken = this.tokenService.generateRefreshToken({
+        userId: user.id,
+        username: user.username,
+      });
 
       const sevenDays = 7 * 24 * 60 * 60 * 1000;
       const expiresAt = Date.now() + sevenDays;

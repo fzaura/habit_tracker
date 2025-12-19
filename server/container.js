@@ -23,6 +23,7 @@ const {
   Lifetime,
   asFunction,
 } = require("awilix");
+const config = require("./config/env");
 
 const prisma = require("./config/prisma");
 const mongoose = require("mongoose");
@@ -38,10 +39,17 @@ const PrismaHabitRepo = require("./repositories/PrismaHabitRepository");
 const AuthService = require("./services/AuthService");
 const HabitService = require("./services/HabitService");
 const UserService = require("./services/UserService");
+const TokenService = require("./services/TokenService");
 
 const createAuthController = require("./controllers/auth.controller");
 const createHabitController = require("./controllers/habit.controller");
 const createUserController = require("./controllers/user.controller");
+
+const createAuthRoutes = require("./routes/auth.routes");
+const createHabitRoutes = require("./routes/habit.routes");
+const createUserRoutes = require("./routes/user.routes");
+
+const createAuthMiddleware = require("./middleware/auth.middleware");
 
 /**
  * Awilix dependency injection container.
@@ -64,18 +72,26 @@ const createUserController = require("./controllers/user.controller");
 const container = createContainer();
 container.register({
   db: asValue(prisma),
+  config: asValue(config),
 
-  tokenRepo: asClass(PrismaTokenRepo).scoped(),
-  userRepo: asClass(PrismaUserRepo).scoped(),
-  habitRepo: asClass(PrismaHabitRepo).scoped(),
+  tokenRepo: asClass(PrismaTokenRepo).singleton(),
+  userRepo: asClass(PrismaUserRepo).singleton(),
+  habitRepo: asClass(PrismaHabitRepo).singleton(),
 
-  authService: asClass(AuthService).scoped(),
-  habitService: asClass(HabitService).scoped(),
-  userService: asClass(UserService).scoped(),
+  authService: asClass(AuthService).singleton(),
+  habitService: asClass(HabitService).singleton(),
+  userService: asClass(UserService).singleton(),
+  tokenService: asClass(TokenService).singleton(),
 
-  authController: asFunction(createAuthController).scoped(),
-  habitController: asFunction(createHabitController).scoped(),
-  userController: asFunction(createUserController).scoped(),
+  authController: asFunction(createAuthController).singleton(),
+  habitController: asFunction(createHabitController).singleton(),
+  userController: asFunction(createUserController).singleton(),
+
+  authMiddleware: asFunction(createAuthMiddleware).singleton(),
+
+  authRoutes: asFunction(createAuthRoutes).singleton(),
+  habitRoutes: asFunction(createHabitRoutes).singleton(),
+  userRoutes: asFunction(createUserRoutes).singleton(),
 });
 
 /**
