@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
-import 'package:habit_tracker/domain/Auth/Entities/user.dart';
+import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
 
 class Signupscreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class Signupscreen extends StatelessWidget {
 
   void onPressSignUp(BuildContext ctxt) {
     dummyUsers.add(
-      User(
+      AuthUser(
         id: 4,
         email: _emailController.text,
         password: _passwordController.text,

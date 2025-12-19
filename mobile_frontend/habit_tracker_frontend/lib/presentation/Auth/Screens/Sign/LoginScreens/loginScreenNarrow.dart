@@ -3,10 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
-import 'package:habit_tracker/domain/Auth/Entities/user.dart';
+import 'package:habit_tracker/data/Auth/DataModels/userModel.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
-import 'package:habit_tracker/app/globalData.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -112,26 +111,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? 400
                 : double.infinity,
           ),
-          child: Column(
-            children: [
-              SigninInputField('Email', _emailController, context),
-
-              SigninInputField('Password', _passwordController, context),
-              const SizedBox(height: 36),
-
-              defaultSignLogInButton(
-                text: 'Log in',
-                onPressed: onLoginPress,
-                ctxt: context,
-              ),
-              rememberMeForgetPassword(),
-              const SizedBox(height: 36),
-              defaultSignLogInGoogleButton(
-                aboveText: 'Or Log in with : ',
-                onPressed: (context) {},
-                ctxt: context,
-              ),
-            ],
+          child: Form(
+            child: Column(
+              children: [
+                SigninInputField('Email', _emailController, context),
+            
+                SigninInputField('Password', _passwordController, context),
+                const SizedBox(height: 36),
+            
+                defaultSignLogInButton(
+                  text: 'Log in',
+                  onPressed: onLoginPress,
+                  ctxt: context,
+                ),
+                rememberMeForgetPassword(),
+                const SizedBox(height: 36),
+                defaultSignLogInGoogleButton(
+                  aboveText: 'Or Log in with : ',
+                  onPressed: (context) {},
+                  ctxt: context,
+                ),
+              ],
+            ),
           ),
         ),
       ),
