@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class SignLoginField extends StatelessWidget {
   final String text;
   final TextEditingController controller;
-  final String Function(String? value) onValidate;
+  final String? Function(String? value)? onValidate;
   const SignLoginField({
     super.key,
     required this.text,
     required this.controller,
-    required this.onValidate,
+    this.onValidate,
   });
 
   @override
@@ -39,7 +39,7 @@ class SignLoginField extends StatelessWidget {
               ),
               contentPadding: EdgeInsets.all(12),
             ),
-            validator: (value) {onValidate(value);},
+            validator: onValidate,
           ),
         ],
       ),

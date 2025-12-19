@@ -1,27 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
-import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
-import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
-import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
+
+import 'package:habit_tracker/presentation/Widgets/Forms/signUpForm.dart';
 
 class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
+  const SignupScreen({super.key});
 
-  
-
-  void onPressSignUp(BuildContext ctxt) {
-    dummyUsers.add(
-      AuthUser(
-        id: 4,
-        email: _emailController.text,
-        password: _passwordController.text,
-        name: _nameController.text,
-        isUserSignedIn: true,
-      ),
-    );
-    navToLogScreen(ctxt);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +18,7 @@ class SignupScreen extends StatelessWidget {
         onIconPressed: NavigationService.navToLogScreen,
       ),
       body: SingleChildScrollView(
-        child: 
+        child: SignUpForm()
       ),
     );
   }
