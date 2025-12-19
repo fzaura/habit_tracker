@@ -6,6 +6,7 @@ import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart'
 import 'package:habit_tracker/data/Auth/DataModels/userModel.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
+import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,53 +20,12 @@ class _LoginScreenState extends State<LoginScreen> {
   // initialized NOW
   final TextEditingController _passwordController = TextEditingController();
   // initialized NOW
-  bool checkLoginInfo() {
-    if (dummyUsers.any((user) => user.email == _emailController.text) &&
-        (dummyUsers.any((user) => user.password == _passwordController.text))) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
-  void findUserbyEmailandPass(String password, String email) {
-    GlobalData.currentUser = User(
-      id: 0,
-      email: '',
-      password: '',
-      name: '',
-      isUserSignedIn: false,
-    );
-    for (User user in dummyUsers) {
-      if (user.password == password && user.email == email) {
-        GlobalData.currentUser = user;
-      }
-    }
-  }
 
-  void onLoginPress(BuildContext context) {
-    if (checkLoginInfo()) {
-      findUserbyEmailandPass(_passwordController.text, _emailController.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainTabScreen()),
-      );
-    } else {
-      showErrorDialog(
-        ctxt: context,
-        mainTitile: 'Wrong Inputs',
-        contentOfTitle:
-            'The password or the email that you entered wasn\'t valid ',
-      );
-    }
-  }
+ 
 
-  void onSignUpPress(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignupScreen()),
-    );
-  }
+ 
+
 
   bool _givenValue = false;
 
@@ -114,9 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Form(
             child: Column(
               children: [
-                SigninInputField('Email', _emailController, context),
+                SignLoginField(text: 'Email',controller:  _emailController),
             
-                SigninInputField('Password', _passwordController, context),
+                SignLoginField(text: 'Password',controller:  _passwordController, ),
                 const SizedBox(height: 36),
             
                 defaultSignLogInButton(
