@@ -1,25 +1,22 @@
-import 'package:habit_tracker/domain/Auth/Entities/user.dart';
+import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 
-final List<User> dummyUsers = [
-  User(
-    id: 1,
-    name: 'John Doe',
+final List<AuthUser> dummyUsers = [
+  AuthUser(
+    id: 'jhgfdghuiop',
+    username: 'John Doe',
     email: 'john.doe@example.com',
-    password: 'password123',
-    isUserSignedIn: true,
+   
   ),
-  User(
-    id: 2,
-    name: 'Jane Smith',
+  AuthUser(
+    id: 'kjhj',
+    username: 'Jane Smith',
     email: 'jane.smith@example.com',
-    password: 'secure456',
-    isUserSignedIn: true,
+    
   ),
-  User(
-    id: 3,
-    name: 'CR7',
+  AuthUser(
+    id: 'kjhgfc',
+    username: 'CR7',
     email: 'CR7@gmail.com',
-    password: 'goat7',
-    isUserSignedIn: true,
+   
   ),
 ];
