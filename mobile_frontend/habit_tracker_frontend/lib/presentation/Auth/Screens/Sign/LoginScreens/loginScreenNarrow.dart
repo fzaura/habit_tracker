@@ -4,7 +4,7 @@ import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataSignedUser.dart';
-import 'package:habit_tracker/data/Auth/DataModels/userModel.dart';
+import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';

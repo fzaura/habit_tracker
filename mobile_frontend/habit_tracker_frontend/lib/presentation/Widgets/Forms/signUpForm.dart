@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
+import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
+import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
-class SignUpForm extends StatefulWidget {
+class SignUpForm extends ConsumerStatefulWidget {
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  ConsumerState<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpFormState extends ConsumerState<SignUpForm> {
   @override
   void initState() {
     super.initState();
@@ -87,6 +91,18 @@ class _SignUpFormState extends State<SignUpForm> {
   // initialized NOW
   @override
   Widget build(BuildContext context) {
+
+ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next is AuthSuccess) {
+        // SUCCESS: The user is in memory. Take them home!
+        print('Sucess') ;
+        NavigationService.onSignUpPressButton(context);
+      } else if (next is AuthFailure) {
+        // ERROR: Show the backend error message (e.g., "Email already exists")
+       print('Fail Huge LLLLLLLLLLLLLLLLLL');
+      }
+    });
+
     return Form(
       key: _formKey,
       child: Column(
@@ -147,11 +163,19 @@ class _SignUpFormState extends State<SignUpForm> {
             onPressed: (context) {
               if (_formKey.currentState!.validate()) {
                 print(
-                  "Email is: ${_emailController.text.trim().toLowerCase()}",
+                  "Email is: ${_emailController.text.trim().toLowerCase()} , ",
                 );
-                AuthUser(email: _emailController.text , username: _nameController.text,id: '00');
-                
-
+               
+                ref
+                    .read(authProvider.notifier)
+                    .register(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      confirmPassword: _passwordConfirmationController.text,
+                      
+                    );
+                  
               } else {
                 // ❌ FAIL: Flutter will automatically show the red error text
                 print("Form has errors");
