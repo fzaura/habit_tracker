@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabit.dart';
+import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
+import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/HomeScreenCards/HomeScreenWelcomeCard.dart';
 import 'package:habit_tracker/presentation/Widgets/Title/HomeScreenWelcomeMessage.dart';
 import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';
@@ -68,6 +70,10 @@ class _HomescreenState extends ConsumerState<Homescreen>
   @override
   Widget build(BuildContext context) {
     final habitsList = ref.watch(habitSampleProvider);
+    final authState=ref.watch(authProvider);
+    final String displayUsername = (authState is AuthSuccess) 
+        ? authState.user.username 
+        : "Guest";
     final int checkedHabits = habitsList
         .where((habit) => habit.isCompleted)
         .length;
@@ -103,7 +109,7 @@ class _HomescreenState extends ConsumerState<Homescreen>
         toolbarHeight: 100,
         title: HomeScreenWelcomeMessage(
           formattedDate: formattedDate,
-
+          username:displayUsername ,
           formattedDateAfterAWeek: formattedDateAfterAWeek,
         ),
       ),

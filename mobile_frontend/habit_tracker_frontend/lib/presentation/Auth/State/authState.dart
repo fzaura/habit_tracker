@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/state/auth_state.dart
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -19,6 +20,6 @@ class AuthSuccess extends AuthState {
 }
 
 class AuthFailure extends AuthState {
-  final String message;
-  const AuthFailure(this.message);
+  final ErrorInterface error;
+  const AuthFailure(this.error);
 }
