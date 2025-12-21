@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
+import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/SeeAllTemp/seeAllTodayHabits.dart';
 
@@ -53,5 +54,12 @@ static void onLoginInPressButton(BuildContext context) {
     );
   }
 
-
+// Inside your NavigationService class
+static void handleAuthState(BuildContext context, AuthState state) {
+  if (state is AuthSuccess) {
+    onSignUpPressButton(context);
+  } else if (state is AuthFailure) {
+    print('Failed AT UI');
+  }
+}
 }

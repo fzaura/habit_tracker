@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/core/utility/Validations/validations.dart';
+import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
+import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends ConsumerStatefulWidget {
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  ConsumerState<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  final  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _LoginFormState extends ConsumerState<LoginForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController = TextEditingController();
+  late TextEditingController _emailController;
   // initialized NOW
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _passwordController;
   // initialized NOW
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   bool _givenValue = false;
 
@@ -48,29 +59,76 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    //Listen to The Button's Result
+    ref.listen<AuthState>(
+      authProvider,
+      (prev, next) => NavigationService.handleAuthState(context, next),
+    );
+
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          SignLoginField(text: 'Email', controller: _emailController),
+          SignLoginField(
+            text: 'Email',
+            controller: _emailController,
+            onValidate: (value) {
+              String finalValue = Validations.validateEmail(value!);
+              if (finalValue == '') {
+                return null;
+              } else {
+                return finalValue;
+              }
+            },
+          ),
 
-          SignLoginField(text: 'Password', controller: _passwordController),
+          SignLoginField(
+            text: 'Password',
+            controller: _passwordController,
+            onValidate: (value) {
+              String finalValue = Validations.validatePassword(value);
+              if (finalValue == '') {
+                return null;
+              } else {
+                return finalValue;
+              }
+            },
+          ),
           const SizedBox(height: 36),
 
           defaultSignLogInButton(
             text: 'Log in',
-            onPressed: NavigationService.navToLogScreen,
+            onPressed: (context) {
+              print('Key is Pressed');
+              if (_formKey.currentState!.validate()) {
+                ref
+                    .watch(authProvider.notifier)
+                    .login(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+              } else {
+                print("Form has errors");
+            }
+            },
             ctxt: context,
           ),
           _rememberMeForgetPassword(),
           const SizedBox(height: 36),
           defaultSignLogInGoogleButton(
             aboveText: 'Or Log in with : ',
-            onPressed: (context) {},
+            onPressed: (context){},
             ctxt: context,
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

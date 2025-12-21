@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/core/utility/Validations/validations.dart';
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
 import 'package:habit_tracker/presentation/Auth/State/authState.dart';
@@ -22,63 +23,6 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
     _passwordConfirmationController = TextEditingController();
   }
 
-  String _onValidateName(String? value) {
-    if (value == null ||
-        value.isEmpty ||
-        value.trim().length == 1 ||
-        value.trim().length > 50) {
-      return 'The Name Should be between 2 to 50 characters'; //An Error In Input Has occured
-    } else {
-      return ''; //No Error Has Occured
-    }
-  }
-
-  String _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-
-    // Trusted Measures:
-    // Min 8 characters, at least 1 Uppercase, 1 Lowercase, 1 Number and 1 Special Character
-    final passwordRegex = RegExp(
-      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
-    );
-
-    if (!passwordRegex.hasMatch(value)) {
-      return 'Password must be 8+ characters with upper, lower, number & special char';
-    }
-
-    return ''; // Success
-  }
-
-  String _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-
-    // The "Standard" Email Regex
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-    if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-
-    return ''; // Logic passed
-  }
-
-  String _validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-
-    // Cross-check with the main password controller
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
-
-    return ''; // Success
-  }
-
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameController;
@@ -91,15 +35,14 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
   // initialized NOW
   @override
   Widget build(BuildContext context) {
-
-ref.listen<AuthState>(authProvider, (previous, next) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
       if (next is AuthSuccess) {
         // SUCCESS: The user is in memory. Take them home!
-        print('Sucess') ;
+        print('Sucess');
         NavigationService.onSignUpPressButton(context);
       } else if (next is AuthFailure) {
         // ERROR: Show the backend error message (e.g., "Email already exists")
-       print('Fail Huge LLLLLLLLLLLLLLLLLL');
+        print('Fail Huge LLLLLLLLLLLLLLLLLL');
       }
     });
 
@@ -111,7 +54,7 @@ ref.listen<AuthState>(authProvider, (previous, next) {
             text: 'Name',
             controller: _nameController,
             onValidate: (value) {
-              String finalValue = _onValidateName(value!);
+              String finalValue = Validations.onValidateName(value!);
               if (finalValue == '') {
                 return null;
               } else {
@@ -123,7 +66,7 @@ ref.listen<AuthState>(authProvider, (previous, next) {
             text: 'Email',
             controller: _emailController,
             onValidate: (value) {
-              String finalValue = _validateEmail(value!);
+              String finalValue = Validations.validateEmail(value!);
               if (finalValue == '') {
                 return null;
               } else {
@@ -136,7 +79,7 @@ ref.listen<AuthState>(authProvider, (previous, next) {
             text: 'Password',
             controller: _passwordController,
             onValidate: (value) {
-              String finalValue = _validatePassword(value);
+              String finalValue = Validations.validatePassword(value);
               if (finalValue == '') {
                 return null;
               } else {
@@ -149,7 +92,10 @@ ref.listen<AuthState>(authProvider, (previous, next) {
             text: 'Password Confirmation',
             controller: _passwordConfirmationController,
             onValidate: (value) {
-              String finalValue = _validateConfirmPassword(value);
+              String finalValue = Validations.validateConfirmPassword(
+                value,
+                _passwordConfirmationController.text,
+              );
               if (finalValue == '') {
                 return null;
               } else {
@@ -165,7 +111,7 @@ ref.listen<AuthState>(authProvider, (previous, next) {
                 print(
                   "Email is: ${_emailController.text.trim().toLowerCase()} , ",
                 );
-               
+
                 ref
                     .read(authProvider.notifier)
                     .register(
@@ -173,9 +119,7 @@ ref.listen<AuthState>(authProvider, (previous, next) {
                       email: _emailController.text,
                       password: _passwordController.text,
                       confirmPassword: _passwordConfirmationController.text,
-                      
                     );
-                  
               } else {
                 // ❌ FAIL: Flutter will automatically show the red error text
                 print("Form has errors");
