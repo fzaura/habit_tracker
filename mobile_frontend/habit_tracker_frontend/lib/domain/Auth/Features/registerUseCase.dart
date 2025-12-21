@@ -2,11 +2,15 @@ import 'package:dartz/dartz.dart';
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/DomainLayerInterfaces/registerInterface.dart';
 
-class RegisterUseCase {
+class RegisterUseCase implements RegisterInterFace
+{
+  @override
   final AuthRepositoryInterFace repository;
 
   RegisterUseCase(this.repository);
+  @override
 Future<Either<ErrorInterface, AuthUser>> execute({
     required String username,
     required String email,

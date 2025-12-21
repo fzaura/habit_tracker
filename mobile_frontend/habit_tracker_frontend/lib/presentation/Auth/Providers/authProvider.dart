@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/core/Config/providers.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/DomainLayerInterfaces/registerUseCase.dart';
+import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
