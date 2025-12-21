@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 class TodayTempContainer extends StatelessWidget {
   TodayTempContainer({

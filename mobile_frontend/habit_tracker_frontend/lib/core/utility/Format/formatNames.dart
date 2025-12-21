@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 class FormatNames {
   // For EnhabitGoal
 

@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/core/utility/NullOrEmptyMessages/emptyLists.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goalsCard.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 
 class GoalsCardLister extends ConsumerWidget {
   const GoalsCardLister({
@@ -13,9 +15,19 @@ class GoalsCardLister extends ConsumerWidget {
   final bool seeAll;
   final bool shrinkWrap;
   final bool canUserScroll;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitLister = ref.watch(habitSampleProvider);
+
+    if (habitLister.isEmpty) {
+      return Emptylists.emptyGoalsList(
+        mainMessage: 'Your Goals List Is Looking a Bit Lonely!',
+        secondMessage:
+            'Add your First Goal or Habit to Start Building Your Routine Together',
+      );
+    }
+
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 500),
       child: ListView.builder(

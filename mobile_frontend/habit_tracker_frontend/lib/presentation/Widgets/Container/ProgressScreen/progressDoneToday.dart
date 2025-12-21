@@ -30,7 +30,7 @@ class ProgressDoneToday extends StatelessWidget {
               ),
 
               Text(
-                '${currentPercentage.toInt().toString()}%',
+               currentPercentage>0 ? '  ${currentPercentage.toInt().toString()}%' :'0%' ,
                 style: mainAppTheme.textTheme.labelMedium?.copyWith(
                   fontSize: 25,
                   fontWeight: FontWeight.w800,

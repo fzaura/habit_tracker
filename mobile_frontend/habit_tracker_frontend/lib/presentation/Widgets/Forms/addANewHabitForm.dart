@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
-import 'package:habit_tracker/presentation/Widgets/Buttons/addNewHabit.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/presentation/Widgets/Buttons/Habits/addNewHabit.dart';
 import 'package:habit_tracker/presentation/Widgets/DropDownButton/dropDownButtonTemp.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/editTextField.dart';
 

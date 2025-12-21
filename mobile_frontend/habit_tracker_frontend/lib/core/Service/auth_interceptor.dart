@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:habit_tracker/domain/InterFaces/TokenStorage/tokenStorage.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 
 class AuthInterceptor extends Interceptor {
   bool isRefreshingToken = false;

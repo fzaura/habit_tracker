@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/domain/Entities/habitUI.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 // Change to ConsumerStatefulWidget

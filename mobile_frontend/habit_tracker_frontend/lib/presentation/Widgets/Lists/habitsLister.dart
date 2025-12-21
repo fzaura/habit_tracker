@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/domain/Features/Habits/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/core/utility/NullOrEmptyMessages/emptyLists.dart';
+import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
-import 'package:habit_tracker/presentation/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 
 class Habitslister extends ConsumerWidget {
   const Habitslister({
@@ -19,6 +21,14 @@ class Habitslister extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitsToList = ref.watch(habitSampleProvider);
+    if (habitsToList.isEmpty) {
+      return Emptylists.emptyGoalsList(
+        mainMessage: 'Your Habit List Is Looking a Bit Lonely!',
+        secondMessage:
+            'Add Your First Habit so we can start building your routine',
+      );
+    }
+
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
       child: ListView.builder(
