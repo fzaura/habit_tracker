@@ -11,9 +11,11 @@ import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dar
 import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
+
+import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
+
 
 const _headers = {
   'Content-Type': 'application/json',//We Are sending json
