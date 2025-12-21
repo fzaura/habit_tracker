@@ -18,8 +18,9 @@ class HomeScreenWelcomeCard extends StatelessWidget {
     print('All the Habits checked todsy Number  : ${habitsCheckedToday}');
     print('All the Habits Number : ${allTheHabits}');
 
-    final double mainPecetnage = habitsCheckedToday / allTheHabits * 100;
-
+    final double mainPecetnage = (allTheHabits > 0)
+        ? (habitsCheckedToday / allTheHabits * 100)
+        : 0.0;
     print('All the Main Percentage  Number : ${mainPecetnage}');
 
     return Container(
@@ -54,7 +55,7 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             right: 234,
 
             child: Text(
-              '${mainPecetnage.toInt()}%',
+              '${mainPecetnage.isNaN ? mainPecetnage.toInt() : 0}%',
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 fontSize: 21,
                 fontWeight: FontWeight.bold,
@@ -70,7 +71,9 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             right: 10.24,
 
             child: Text(
-              '$habitsCheckedToday of $allTheHabits \nCompleted Today!',
+              (allTheHabits > 0)
+                  ? '$habitsCheckedToday of $allTheHabits \nCompleted Today!'
+                  : "No habits yet? \n Let's build a better routine together!",
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 shadows: [
                   Shadow(

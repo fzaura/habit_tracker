@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:habit_tracker/core/Errors/accessDeniedFailure.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataSource/AuthRemoteDataSource.dart';
