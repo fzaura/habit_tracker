@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/authRemoteDataSourceInterFace.dart';
 class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
-  final Dio dioClient;
-  AuthRemoteDataSource({required this.dioClient});
+  final Dio _dioClient;
+  AuthRemoteDataSource({required Dio dioClient}) : _dioClient = dioClient;
   @override
   Future<UserModel> register({
     required String username,
@@ -14,7 +14,7 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
     //1-Call the Dio Client knowing that our data is configured into json.
 
     try {
-      final response = await dioClient.post(
+      final response = await _dioClient.post(
         'auth/register', //2-Place the whole path here
         data: {
           'username': username,
@@ -56,7 +56,7 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
   }) async {
     print('These are the things : $email and $password');
     try {
-      final request = await dioClient.post(
+      final request = await _dioClient.post(
         'auth/login',
         data: {"email": email, "password": password},
       );

@@ -44,4 +44,30 @@ class AuthRepo extends AuthRepositoryInterFace {
       );
     }
   }
+
+  @override
+  Future<Either<ErrorInterface, UserModel>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final userModel = await remoteDataSource.login(
+        email: email,
+        password: password,
+      );
+      tokenStorage.saveTokens(
+        accessToken: userModel.accessToken,
+        refreshToken: userModel.accessToken,
+      );
+      return Right(userModel);
+    } on DioException catch (e) {
+      print(e.error);
+      return Left(
+        AccessDeniedfailure(
+          errorMessage: 'The Error is  ${e.message}',
+          statusCode: 'Status Code is : ${e.response?.statusCode} ',
+        ),
+      );
+    }
+  }
 }

@@ -7,7 +7,11 @@ abstract class AuthRepositoryInterFace {
     required String username,
     required String email,
     required String password,
-        required String confirmPassword,
+    required String confirmPassword,
+  });
 
+  Future<Either<ErrorInterface, UserModel>> login({
+    required String password,
+    required String email,
   });
 }
