@@ -3,17 +3,17 @@
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 
 
-class UserModelOnRegister {
+class UserModel {
   final String accessToken;
   final String refreshToken;
-  final bool sucessFlag;
-  final String message;
+  final bool? sucessFlag;
+  final String? message;
   // If your backend returns the ID or username in the register response:
   final String? id; 
   final String? username;
   final String? email;
 
-  const UserModelOnRegister({
+  const UserModel({
     required this.message,
     required this.sucessFlag,
     required this.accessToken,
@@ -23,8 +23,8 @@ class UserModelOnRegister {
     this.email,
   });
 
-  factory UserModelOnRegister.fromJson(Map<String, dynamic> json) {
-    return UserModelOnRegister(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       message: json['message'] ?? '',
       sucessFlag: json['success'] ?? false,
       accessToken: json['accessToken'] ?? '',

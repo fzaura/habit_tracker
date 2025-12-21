@@ -13,7 +13,7 @@ class AuthRepo extends AuthRepositoryInterFace {
   //local data source
   AuthRepo({required this.remoteDataSource, required this.tokenStorage});
   @override
-  Future<Either<ErrorInterface, UserModelOnRegister>> register({
+  Future<Either<ErrorInterface, UserModel>> register({
     required String username,
     required String email,
     required String password,
