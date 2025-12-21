@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
-import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/homeScreen.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/SeeAllTemp/seeAllTodayHabits.dart';
 
 class NavigationService {
@@ -31,7 +31,6 @@ class NavigationService {
       MaterialPageRoute(builder: (ctxt) => LoginScreen()),
     );
   }
-
   
  static void onSignUpPress(BuildContext context) {
     Navigator.pushReplacement(
@@ -43,7 +42,16 @@ class NavigationService {
   static void onSignUpPressButton(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Homescreen()),
+      MaterialPageRoute(builder: (context) => MainTabScreen()),
     );
   }
+
+static void onLoginInPressButton(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MainTabScreen()),
+    );
+  }
+
+
 }

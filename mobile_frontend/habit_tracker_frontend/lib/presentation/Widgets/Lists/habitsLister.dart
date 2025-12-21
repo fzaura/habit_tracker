@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker/core/utility/NullOrEmptyMessages/emptyLists.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
@@ -17,42 +18,16 @@ class Habitslister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  Widget emptyHabitList()
-  {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Don't take up the whole screen
-          children: [
-            Icon(Icons.auto_awesome, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            const Text(
-              "Your habit list is looking a bit lonely!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              "Add your first goal or habit to start building your routine together.",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final habitsToList = ref.watch(habitSampleProvider);
-    if(habitsToList.isEmpty)
-    {
-      return emptyHabitList();
+    if (habitsToList.isEmpty) {
+      return Emptylists.emptyGoalsList(
+        mainMessage: 'Your Habit List Is Looking a Bit Lonely!',
+        secondMessage:
+            'Add Your First Habit so we can start building your routine',
+      );
     }
-
 
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
