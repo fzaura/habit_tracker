@@ -1,14 +1,19 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/core/Config/providers.dart';
+import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   // We assume you have a repository passed in
   final RegisterUseCase _authUseCase;
-  String tempErrorMessage1='';
-  String tempErrorMessage2='';
-  AuthNotifier(this._authUseCase) : super(const AuthInitial());
+  final LoginUseCase _loginUseCase;
+
+  String tempErrorMessage1 = '';
+  String tempErrorMessage2 = '';
+  AuthNotifier(this._authUseCase, this._loginUseCase)
+    : super(const AuthInitial());
 
   Future<void> register({
     required String name,
@@ -32,10 +37,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       user.fold(
         (wrongObject) {
           state = AuthFailure(wrongObject);
-          print('Error from auth provider : ${wrongObject.errorMessage} and ${wrongObject.stackTrace} ');
-          tempErrorMessage1=wrongObject.errorMessage;
-          tempErrorMessage2=wrongObject.stackTrace.toString();
-
+          print(
+            'Error from auth provider : ${wrongObject.errorMessage} and ${wrongObject.stackTrace} ',
+          );
+          tempErrorMessage1 = wrongObject.errorMessage;
+          tempErrorMessage2 = wrongObject.stackTrace.toString();
         },
         (trueObject) {
           state = AuthSuccess(trueObject);
@@ -43,7 +49,36 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
     } catch (e) {
       // 4. If it fails, update state with the error message
-      print('Wrong huge FAIILL Suth Provider btw speaking ${tempErrorMessage1} and btw we have this $tempErrorMessage2 okay $e');
+      print(
+        'Wrong huge FAIILL Suth Provider btw speaking ${tempErrorMessage1} and btw we have this $tempErrorMessage2 okay $e',
+      );
+    }
+  }
+
+  Future<void> login({required String email, required String password}) async {
+    state = const AuthLoading();
+    try {
+      final loginUser = await _loginUseCase.execute(
+        email: email,
+        password: password,
+      );
+      loginUser.fold(
+        (wrongObject) {
+          state = AuthFailure(wrongObject);
+          print(
+            'Error from auth provider : ${wrongObject.errorMessage} and ${wrongObject.stackTrace} ',
+          );
+          tempErrorMessage1 = wrongObject.errorMessage;
+          tempErrorMessage2 = wrongObject.stackTrace.toString();
+        },
+        (rightObject) {
+          state = AuthSuccess(rightObject);
+        },
+      );
+    } catch (e) {
+      print(
+        'Wrong huge FAIILL Suth Provider btw speaking ${tempErrorMessage1} and btw we have this $tempErrorMessage2 okay $e',
+      );
     }
   }
 }
@@ -52,8 +87,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 // 2. Second type: The State (AuthState - the Sealed Class)
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   // Get your repository/usecase from your core providers
-  final usecase = ref.watch(registerFeatureProvider);
-
+  final regUsecase = ref.watch(registerFeatureProvider);
+  final logUsecase = ref.watch(loginFeatureProvider);
   // Return the initialized Notifier
-  return AuthNotifier(usecase);
+  return AuthNotifier(regUsecase, logUsecase);
 });

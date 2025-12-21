@@ -9,6 +9,7 @@ import 'package:habit_tracker/data/Auth/DataRepo/AuthRepo.dart';
 import 'package:habit_tracker/data/Auth/DataSource/AuthRemoteDataSource.dart';
 import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dart';
 import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
+import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
 
@@ -105,6 +106,11 @@ final authRepositoryProvider = Provider<AuthRepositoryInterFace>((ref) {
 // This is the "Commander" that the Notifier will talk to.
 final registerFeatureProvider = Provider<RegisterUseCase>((ref) {
   return RegisterUseCase(
+    ref.watch(authRepositoryProvider),
+  );
+});
+final loginFeatureProvider = Provider<LoginUseCase>((ref) {
+  return LoginUseCase(
     ref.watch(authRepositoryProvider),
   );
 });
