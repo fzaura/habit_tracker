@@ -1,7 +1,4 @@
-// lib/features/auth/data/DataModels/userModelOnRegister.dart
-
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
-
 
 class UserModel {
   final String accessToken;
@@ -9,7 +6,7 @@ class UserModel {
   final bool? sucessFlag;
   final String? message;
   // If your backend returns the ID or username in the register response:
-  final String? id; 
+  final String? id;
   final String? username;
   final String? email;
 
@@ -30,7 +27,7 @@ class UserModel {
       accessToken: json['accessToken'] ?? '',
       refreshToken: json['refreshToken'] ?? '',
       // Map these from your backend response keys
-      id: json['user']?['_id'] ?? '', 
+      id: json['user']?['_id'] ?? '',
       username: json['user']?['username'] ?? '',
       email: json['user']?['email'] ?? '',
     );
@@ -39,10 +36,6 @@ class UserModel {
   // LEGO PIECE: The Mapper
   // This converts the "Data" brick into a "Domain" brick.
   AuthUser toEntity() {
-    return AuthUser(
-      id: id ?? '',
-      username: username ?? '',
-      email: email ?? '',
-    );
+    return AuthUser(id: id ?? '', username: username ?? '', email: email ?? '');
   }
 }
