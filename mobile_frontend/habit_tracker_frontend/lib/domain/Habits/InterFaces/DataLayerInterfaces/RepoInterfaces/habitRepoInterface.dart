@@ -6,4 +6,7 @@ abstract class HabitRepoInterface {
 const HabitRepoInterface();
 //Either Will Return a Failure Object or a Succces Object
 Future<Either<ErrorInterface, List<HabitModel>>> getHabits();  
+
+Future<Either<ErrorInterface,HabitModel>> addNewHabit(HabitModel newHabit);
+
 }
