@@ -8,6 +8,6 @@ abstract class DataSourceInterface {
     //The Add habit Feature Return Type is 
     //A Habit Why ? So we can Update the HAbit in the UI
 
-    Future<String> addNewHabit(HabitModel newHabit);
+    Future<HabitModel> addNewHabit(HabitModel newHabit);
 
 }

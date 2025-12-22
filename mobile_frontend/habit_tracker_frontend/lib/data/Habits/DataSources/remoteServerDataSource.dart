@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
@@ -35,11 +37,11 @@ class RemoteServerDataSource extends DataSourceInterface {
   }
 
   @override
-  Future<String> addNewHabit(HabitModel newHabit) async {
+  Future<HabitModel> addNewHabit(HabitModel newHabit) async {
     try {
-      final response = await dio.post('habits');
+      final response = await dio.post('habits', data: json.encode(newHabit));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return newHabit.id;
+        return (HabitModel.fromJson(response.data));
         //Return the New Habit ID to the Front So We can update it with the NEW
         //ID and have our habits in sync.
       } else {
@@ -51,8 +53,8 @@ class RemoteServerDataSource extends DataSourceInterface {
         );
       }
     } on DioException catch (e) {
-      print(e);
+      print('Habit Add Failed: ${e.response?.data}');
+      rethrow;
     }
-    return '';
   }
 }
