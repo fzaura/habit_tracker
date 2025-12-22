@@ -12,7 +12,7 @@ class RemoteServerDataSource extends DataSourceInterface {
     print("🚀 [DEBUG] loadNewHabits started");
     try {
       print("🚀 [DEBUG] Calling getHabitsList...");
-      final response = await dio.get('/habits');
+      final response = await dio.get('habits');
       //Let's See the Results of the DIO.
       print('The response Status Code : ${response.statusCode}');
 
@@ -32,5 +32,27 @@ class RemoteServerDataSource extends DataSourceInterface {
       print('The Error is ${e.error}');
       throw e;
     }
+  }
+
+  @override
+  Future<String> addNewHabit(HabitModel newHabit) async {
+    try {
+      final response = await dio.post('habits');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return newHabit.id;
+        //Return the New Habit ID to the Front So We can update it with the NEW
+        //ID and have our habits in sync.
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Error Occured At the Remote Data Server',
+        );
+      }
+    } on DioException catch (e) {
+      print(e);
+    }
+    return '';
   }
 }
