@@ -63,7 +63,7 @@ class _HabitscheckcardState extends ConsumerState<Habitscheckcard> {
                       onChanged: (bool? newValue) {
                         if (newValue != null) {
                           ref
-                              .read(habitSampleProvider.notifier)
+                              .read(habitsProvider.notifier)
                               .toggleHabit(widget.habitToDisplay.id);
                         }
                       },

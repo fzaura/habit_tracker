@@ -6,7 +6,7 @@ import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
-import 'package:habit_tracker/presentation/Widgets/TextFields/editTextField.dart';
+import 'package:habit_tracker/presentation/Widgets/TextFields/editTextFieldAddHabits.dart';
 
 class EditDeleteHabits extends ConsumerStatefulWidget {
   const EditDeleteHabits({super.key, required this.habitToEdit});
@@ -44,7 +44,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
 
     );
     ref
-        .watch(habitSampleProvider.notifier)
+        .watch(habitsProvider.notifier)
         .updateHabits(widget.habitToEdit.id, newHabit);
   }
 
@@ -178,7 +178,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
                 ),
               ),
               SizedBox(height: 5),
-              EditTextFormField(
+              EditTextFormFieldAddHabits(
                 errorMessage: 'Goal Name Should be between 1 and 50 characters',
                 mainHintText: '',
                 controller: yourGoalController,
@@ -194,7 +194,7 @@ class _EditDeleteHabitsState extends ConsumerState<EditDeleteHabits> {
                 ),
               ),
               SizedBox(height: 5),
-              EditTextFormField(
+              EditTextFormFieldAddHabits(
                 errorMessage: 'Habit Name Should be between 1 and 50 characters',
                 mainHintText: '',
                 controller: yourHabitController,

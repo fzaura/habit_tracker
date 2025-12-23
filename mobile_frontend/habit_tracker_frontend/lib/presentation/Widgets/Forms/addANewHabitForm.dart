@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/Buttons/Habits/addNewHabit.dart';
 import 'package:habit_tracker/presentation/Widgets/DropDownButton/dropDownButtonTemp.dart';
-import 'package:habit_tracker/presentation/Widgets/TextFields/editTextField.dart';
+import 'package:habit_tracker/presentation/Widgets/TextFields/editTextFieldAddHabits.dart';
 
-class AddANewHabitForm extends StatefulWidget {
-  const AddANewHabitForm({super.key, required this.addNewHabitLogic});
-  final Function(
-    String habitName,
-    String golaName,
-    EnhabitGoal habitGoal,
-    EnperiodUnit periodUnit,
-  )
-  addNewHabitLogic;
-
+class AddANewHabitForm extends ConsumerStatefulWidget {
+  const AddANewHabitForm({super.key});
   @override
-  State<AddANewHabitForm> createState() => _AddANewHabitFormState();
+  ConsumerState<AddANewHabitForm> createState() => _AddANewHabitFormState();
 }
 
-class _AddANewHabitFormState extends State<AddANewHabitForm> {
+class _AddANewHabitFormState extends ConsumerState<AddANewHabitForm> {
   late TextEditingController habitController;
   late TextEditingController goalController;
   final _formKey = GlobalKey<FormState>();
@@ -67,7 +61,7 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
 
             SizedBox(height: 5),
             Expanded(
-              child: EditTextFormField(
+              child: EditTextFormFieldAddHabits(
                 controller: goalController,
                 mainHintText: '',
                 errorMessage: 'Please Enter a Correct Goal Name',
@@ -85,7 +79,7 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
               ),
             ),
             Expanded(
-              child: EditTextFormField(
+              child: EditTextFormFieldAddHabits(
                 controller: habitController,
                 mainHintText: '',
                 errorMessage: 'Please Enter a Correct Habit Name',
@@ -125,14 +119,21 @@ class _AddANewHabitFormState extends State<AddANewHabitForm> {
             AddnewhabitButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  widget.addNewHabitLogic(
-                    goalController.text,
-                    habitController.text,
-                    habitGoal,
-                    periodUnit,
-                  );
+                  ref
+                      .watch(habitsProvider.notifier)
+                      .addNewHabit(
+                        Habit(
+                          id: 'nullToBeReturned',
+                          habitName: habitController.text,
+                          goalName: goalController.text,
+                          habitType: habitGoal,
+                          periodUnit: periodUnit,
+                          createdAt: DateTime.now(),
+                          endedAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                        ),
+                      );
                 }
-                
               },
             ),
           ],

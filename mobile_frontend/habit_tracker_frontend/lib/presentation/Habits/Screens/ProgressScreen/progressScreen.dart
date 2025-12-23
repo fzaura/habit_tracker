@@ -15,7 +15,7 @@ class ProgressScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitsList = ref.watch(habitSampleProvider);
+    final habitsList = ref.watch(habitsProvider.notifier).habitsList;
 
     return Scaffold(
       backgroundColor: Color(0xFFEDEDED),

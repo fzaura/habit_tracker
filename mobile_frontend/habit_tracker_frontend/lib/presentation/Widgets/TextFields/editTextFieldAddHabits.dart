@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class EditTextFormField extends StatelessWidget {
-  const EditTextFormField({
+class EditTextFormFieldAddHabits extends StatelessWidget {
+  const EditTextFormFieldAddHabits({
     super.key,
     required this.mainHintText,
     required this.errorMessage,

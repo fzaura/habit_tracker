@@ -28,7 +28,7 @@ class Detailedgoalslister extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habits = ref.watch(habitSampleProvider.notifier).habitsList;
+    final habits = ref.watch(habitsProvider.notifier).habitsList;
     if (habits.isEmpty) {
       return Emptylists.emptyGoalsList(
         mainMessage: 'Your Goal List Is Looking a bit lonely',

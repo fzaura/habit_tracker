@@ -16,14 +16,14 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
   final ListHabitsFeature _listHabitsFeature;
   final AddNewHabitFeature _addNewHabitFeature;
   List<Habit> habitsList = [];
-  
+
   HabitsStateNotifier(this._listHabitsFeature, this._addNewHabitFeature)
     : super(HabitInitial()) {
     loadNewHabits();
   }
   Future<void> loadNewHabits() async {
     // Optionally: emit a loading state if you had one (e.g., state = const <Habit>[];)
-
+    state = HabitLoading();
     // Call the feature, which returns Either<ErrorInterface, List<Habit>>
     final result = await _listHabitsFeature.getHabitsList();
 
@@ -31,14 +31,14 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     result.fold(
       // Left (Failure): Handle the error (e.g., log it, or set an error state if using a complex state object)
       (failure) {
-        // For now, we'll log the error and keep the state empty or previous
+        HabitFailure(failure);
         print('Failed to load habits: ${failure.errorMessage}');
       },
       // Right (Success): Update the state with the list of habits
       (habits) {
         habits = habits;
 
-        state = HabitSuccess(habits,null);
+        state = HabitSuccess(habits, null);
       },
     );
   }
@@ -53,7 +53,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
         state = HabitFailure(wrongObject);
       },
       (rightObject) {
-        state = HabitSuccess(null,rightObject);
+        state = HabitSuccess(null, rightObject);
       },
     );
   }
@@ -112,41 +112,39 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
 
   // In your StateNotifier
   void toggleHabit(String habitID) {
-  //   state = state.map((habit) {
-  //     if (habit.id == habitID) {
-  //       final newhabitIsCompleted = !habit.isCompleted;
-  //       final newCurrentStreak = newhabitIsCompleted
-  //           ? habit.currentStreak + 1
-  //           : habit.currentStreak - 1;
-  //       final newIsGoalachieved = newCurrentStreak >= habit.targettedPeriod
-  //           ? true
-  //           : false;
-  //       final newBestStreak = newCurrentStreak >= habit.bestStreak
-  //           ? newCurrentStreak
-  //           : habit.bestStreak;
-  //       //I Used Variables to get the latest updates on
-  //       //all the other variables too
+    //   state = state.map((habit) {
+    //     if (habit.id == habitID) {
+    //       final newhabitIsCompleted = !habit.isCompleted;
+    //       final newCurrentStreak = newhabitIsCompleted
+    //           ? habit.currentStreak + 1
+    //           : habit.currentStreak - 1;
+    //       final newIsGoalachieved = newCurrentStreak >= habit.targettedPeriod
+    //           ? true
+    //           : false;
+    //       final newBestStreak = newCurrentStreak >= habit.bestStreak
+    //           ? newCurrentStreak
+    //           : habit.bestStreak;
+    //       //I Used Variables to get the latest updates on
+    //       //all the other variables too
 
-  //       return habit.copyWith(
-  //         isCompleted: newhabitIsCompleted,
-  //         currentStreak: newCurrentStreak,
-  //         isGoalAchieved: newIsGoalachieved,
-  //         bestStreak: newBestStreak,
-  //         completedDates: _updateCompletedDates(
-  //           habit.completedDates,
-  //           newhabitIsCompleted,
-  //         ),
-  //       );
-  //     }
-  //     return habit;
-  //   }).toList();
-  // }
+    //       return habit.copyWith(
+    //         isCompleted: newhabitIsCompleted,
+    //         currentStreak: newCurrentStreak,
+    //         isGoalAchieved: newIsGoalachieved,
+    //         bestStreak: newBestStreak,
+    //         completedDates: _updateCompletedDates(
+    //           habit.completedDates,
+    //           newhabitIsCompleted,
+    //         ),
+    //       );
+    //     }
+    //     return habit;
+    //   }).toList();
+    // }
+  }
 }
 
-
-}
-
-final habitSampleProvider =
+final habitsProvider =
     StateNotifierProvider<HabitsStateNotifier, HabitState>((ref) {
       //Use it from the Providers inside of Core
       return HabitsStateNotifier(
@@ -155,4 +153,3 @@ final habitSampleProvider =
       );
     });
 //A Provider That Accesses the Notifier.ccesses the Notifier.
-

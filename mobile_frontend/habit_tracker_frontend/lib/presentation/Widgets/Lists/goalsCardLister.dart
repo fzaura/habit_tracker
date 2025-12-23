@@ -18,7 +18,7 @@ class GoalsCardLister extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitLister = ref.watch(habitSampleProvider.notifier).habitsList;
+    final habitLister = ref.watch(habitsProvider.notifier).habitsList;
 
     if (habitLister.isEmpty) {
       return Emptylists.emptyGoalsList(

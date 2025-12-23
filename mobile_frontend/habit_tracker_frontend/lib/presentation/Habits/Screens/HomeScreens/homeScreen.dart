@@ -70,7 +70,7 @@ class _HomescreenState extends ConsumerState<Homescreen>
 
   @override
   Widget build(BuildContext context) {
-    final habitsState = ref.watch(habitSampleProvider.notifier).habitsList;
+    final habitsState = ref.watch(habitsProvider.notifier).habitsList;
     final authState=ref.watch(authProvider);
     final String displayUsername = (authState is AuthSuccess) 
         ? authState.user.username 

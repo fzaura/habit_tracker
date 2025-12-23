@@ -11,23 +11,6 @@ class AddnewhabitDialog extends ConsumerStatefulWidget {
 }
 
 class _AddnewhabitState extends ConsumerState<AddnewhabitDialog> {
-  void _addNewHabitLogic(
-    String habitName,
-    String golaName,
-    EnhabitGoal habitGoal,
-    EnperiodUnit periodUnit,
-  ) {
-    //We Need to Return the Values of the Form to this Method Right Here
-    //And I think Such thing Will Be done Through Async and Await
-    print(habitName);
-    print(golaName);
-    print(habitGoal.name);
-    print(periodUnit.name);
-
-
-    
-  }
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +18,7 @@ class _AddnewhabitState extends ConsumerState<AddnewhabitDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(child: AddANewHabitForm(addNewHabitLogic: _addNewHabitLogic));
+    return Dialog(child: AddANewHabitForm());
   }
 
   @override
