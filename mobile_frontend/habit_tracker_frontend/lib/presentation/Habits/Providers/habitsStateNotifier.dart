@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/core/Config/providers.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
+import 'package:habit_tracker/presentation/Auth/State/habitsState.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }
@@ -10,11 +12,13 @@ enum PeriodUnit { daily, weekly, monthly }
 
 enum SortGoalsBYs { all, achieved, notAchieved }
 
-class HabitsStateNotifier extends StateNotifier<List<Habit>> {
+class HabitsStateNotifier extends StateNotifier<HabitState> {
   final ListHabitsFeature _listHabitsFeature;
-
-
-  HabitsStateNotifier(this._listHabitsFeature) : super([]) {
+  final AddNewHabitFeature _addNewHabitFeature;
+  List<Habit> habitsList = [];
+  
+  HabitsStateNotifier(this._listHabitsFeature, this._addNewHabitFeature)
+    : super(HabitInitial()) {
     loadNewHabits();
   }
   Future<void> loadNewHabits() async {
@@ -32,29 +36,32 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
       },
       // Right (Success): Update the state with the list of habits
       (habits) {
-        state = habits;
+        habits = habits;
+
+        state = HabitSuccess(habits,null);
       },
     );
   }
 
   //B- Variables that Change that Data in a non immutable way
-  void addNewHabit(Habit newHabit) {
-    state = [...state, newHabit];
+  Future<void> addNewHabit(Habit newHabit) async {
+    state = HabitLoading();
+
+    final addedHabit = await _addNewHabitFeature.addNewHabit(newHabit);
+    addedHabit.fold(
+      (wrongObject) {
+        state = HabitFailure(wrongObject);
+      },
+      (rightObject) {
+        state = HabitSuccess(null,rightObject);
+      },
+    );
   }
 
   //Immutabe State So we make the whole List Again without the habit we want to delete.
-  void deleteHabits(String id) {
-    state = state.where((habit) => habit.id != id).toList();
-  }
+  void deleteHabits(String id) {}
 
-  void updateHabits(String oldHabitId, Habit newEdittedHabit) {
-    state = state
-        .map(
-          (oldhabit) =>
-              oldhabit.id == newEdittedHabit.id ? newEdittedHabit : oldhabit,
-        )
-        .toList();
-  }
+  void updateHabits(String oldHabitId, Habit newEdittedHabit) {}
 
   List<DateTime> _updateCurrentDatesList(
     List<DateTime> currentDates,
@@ -105,40 +112,47 @@ class HabitsStateNotifier extends StateNotifier<List<Habit>> {
 
   // In your StateNotifier
   void toggleHabit(String habitID) {
-    state = state.map((habit) {
-      if (habit.id == habitID) {
-        final newhabitIsCompleted = !habit.isCompleted;
-        final newCurrentStreak = newhabitIsCompleted
-            ? habit.currentStreak + 1
-            : habit.currentStreak - 1;
-        final newIsGoalachieved = newCurrentStreak >= habit.targettedPeriod
-            ? true
-            : false;
-        final newBestStreak = newCurrentStreak >= habit.bestStreak
-            ? newCurrentStreak
-            : habit.bestStreak;
-        //I Used Variables to get the latest updates on
-        //all the other variables too
+  //   state = state.map((habit) {
+  //     if (habit.id == habitID) {
+  //       final newhabitIsCompleted = !habit.isCompleted;
+  //       final newCurrentStreak = newhabitIsCompleted
+  //           ? habit.currentStreak + 1
+  //           : habit.currentStreak - 1;
+  //       final newIsGoalachieved = newCurrentStreak >= habit.targettedPeriod
+  //           ? true
+  //           : false;
+  //       final newBestStreak = newCurrentStreak >= habit.bestStreak
+  //           ? newCurrentStreak
+  //           : habit.bestStreak;
+  //       //I Used Variables to get the latest updates on
+  //       //all the other variables too
 
-        return habit.copyWith(
-          isCompleted: newhabitIsCompleted,
-          currentStreak: newCurrentStreak,
-          isGoalAchieved: newIsGoalachieved,
-          bestStreak: newBestStreak,
-          completedDates: _updateCompletedDates(
-            habit.completedDates,
-            newhabitIsCompleted,
-          ),
-        );
-      }
-      return habit;
-    }).toList();
-  }
+  //       return habit.copyWith(
+  //         isCompleted: newhabitIsCompleted,
+  //         currentStreak: newCurrentStreak,
+  //         isGoalAchieved: newIsGoalachieved,
+  //         bestStreak: newBestStreak,
+  //         completedDates: _updateCompletedDates(
+  //           habit.completedDates,
+  //           newhabitIsCompleted,
+  //         ),
+  //       );
+  //     }
+  //     return habit;
+  //   }).toList();
+  // }
+}
+
+
 }
 
 final habitSampleProvider =
-    StateNotifierProvider<HabitsStateNotifier, List<Habit>>((ref) {
+    StateNotifierProvider<HabitsStateNotifier, HabitState>((ref) {
       //Use it from the Providers inside of Core
-      return HabitsStateNotifier(ref.watch(listFeatureProvider));
+      return HabitsStateNotifier(
+        ref.watch(listFeatureProvider),
+        ref.watch(addNewHabitFeatureProvider),
+      );
     });
 //A Provider That Accesses the Notifier.ccesses the Notifier.
+

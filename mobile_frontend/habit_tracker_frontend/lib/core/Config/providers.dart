@@ -14,6 +14,7 @@ import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
 
 import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
+import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
 import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 
@@ -79,6 +80,11 @@ final habitsRepoProvider = Provider<HabitRepo>((ref) {
 
 final listFeatureProvider =Provider<ListHabitsFeature> ((ref) {
   return ListHabits(repo: ref.watch(habitsRepoProvider));
+},);
+//Habit Provider
+
+final addNewHabitFeatureProvider =Provider<AddNewHabitFeature> ((ref) {
+  return AddNewHabitFeature(repo: ref.watch(habitsRepoProvider));
 },);
 //Habit Provider
 

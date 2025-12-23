@@ -21,7 +21,7 @@ class SeeAllList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitsList = ref.watch(habitSampleProvider);
+    final habitsList = ref.watch(habitSampleProvider.notifier).habitsList;
 
     return Scaffold(
       appBar: AppBar(

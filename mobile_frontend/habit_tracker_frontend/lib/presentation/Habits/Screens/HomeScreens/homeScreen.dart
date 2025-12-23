@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabit.dart';
 import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
 import 'package:habit_tracker/presentation/Auth/State/authState.dart';
+import 'package:habit_tracker/presentation/Auth/State/habitsState.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/HomeScreenCards/HomeScreenWelcomeCard.dart';
+import 'package:habit_tracker/presentation/Widgets/Dialogs/addNewHabitDialog.dart';
 import 'package:habit_tracker/presentation/Widgets/Title/HomeScreenWelcomeMessage.dart';
 import 'package:habit_tracker/presentation/Widgets/Container/HomeScreen/todayTempContainer.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/habitsLister.dart';
@@ -49,7 +50,7 @@ class _HomescreenState extends ConsumerState<Homescreen>
   ).format(DateTime.now().add(Duration(days: 7)));
 
   void onAddNewHabit() {
-    showDialog(context: context, builder: (context) => Addnewhabit());
+    showDialog(context: context, builder: (context) => AddnewhabitDialog());
   }
 
   late AnimationController _animationcontroller;
@@ -69,15 +70,16 @@ class _HomescreenState extends ConsumerState<Homescreen>
 
   @override
   Widget build(BuildContext context) {
-    final habitsList = ref.watch(habitSampleProvider);
+    final habitsState = ref.watch(habitSampleProvider.notifier).habitsList;
     final authState=ref.watch(authProvider);
     final String displayUsername = (authState is AuthSuccess) 
         ? authState.user.username 
         : "Guest";
-    final int checkedHabits = habitsList
+        
+    final int checkedHabits = habitsState
         .where((habit) => habit.isCompleted)
         .length;
-    final int unCheckedHabits = habitsList.length;
+    final int unCheckedHabits = habitsState.length;
 
     return Scaffold(
       backgroundColor: Color(0xFFEDEDED),
@@ -133,7 +135,7 @@ class _HomescreenState extends ConsumerState<Homescreen>
 
               TodayTempContainer(
                 seeAllButton: true,
-                habits: habitsList,
+                habits: habitsState,
                 listToView: Habitslister(
                   seeAll: false,
                   shrinkWrap: true,
@@ -157,7 +159,7 @@ class _HomescreenState extends ConsumerState<Homescreen>
               ),
               const SizedBox(height: 29),
               TodayTempContainer(
-                habits: habitsList,
+                habits: habitsState,
                 seeAllButton: true,
                 requiredHeight: 0,
                 listToView: GoalsCardLister(

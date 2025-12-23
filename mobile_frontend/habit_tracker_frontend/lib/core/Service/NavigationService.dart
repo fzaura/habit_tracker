@@ -3,6 +3,7 @@ import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginS
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
 import 'package:habit_tracker/presentation/Auth/State/authState.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/sucessScreenUtil.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/SeeAllTemp/seeAllTodayHabits.dart';
 
 class NavigationService {
@@ -62,4 +63,13 @@ static void handleAuthState(BuildContext context, AuthState state) {
     print('Failed AT UI');
   }
 }
+
+static void navToSucessScreen(BuildContext context, AuthState state) {
+ Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SucessScreenUtil()),
+    );
+}
+
+
 }

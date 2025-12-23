@@ -147,4 +147,23 @@ class HabitModel {
       'endDate': entity.endedAt?.toIso8601String(),
     };
   }
+
+// 🏭 CONVERTER: Habit (Entity) -> HabitModel (Data)
+  static HabitModel fromEntity(Habit habit) {
+    return HabitModel(
+      id: habit.id,
+      name: habit.habitName,
+      goal: habit.goalName,
+      // We reconstruct the frequency Map for the model
+      frequency: {
+        'type': FormatNames.mapPeriodUnitToString(habit.periodUnit),
+        'daysOfWeek': habit.certainDaysOfWeek,
+      },
+      endDate: habit.endedAt?.toIso8601String(),
+      createdAt: habit.createdAt.toIso8601String(),
+      updatedAt: habit.updatedAt.toIso8601String(),
+      status: habit.isGoalAchieved ? 'completed' : 'active',
+    );
+  }
+
 }

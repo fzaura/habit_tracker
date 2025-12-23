@@ -24,7 +24,7 @@ class _ProgressCalendarWidgetState
   @override
   Widget build(BuildContext context) {
     // Read current habits from provider and pick the one we display.
-    final habits = ref.watch(habitSampleProvider);
+    final habits = ref.watch(habitSampleProvider.notifier).habitsList;
     final habit = habits.firstWhere(
       (h) => h.id == widget.habitToDisplayInfo.id,
     );
