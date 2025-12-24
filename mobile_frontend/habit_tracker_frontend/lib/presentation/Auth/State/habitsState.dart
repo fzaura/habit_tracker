@@ -15,10 +15,13 @@ class HabitLoading extends HabitState {
 }
 
 class HabitSuccess extends HabitState {
+  //1- Made the Habit Sucess alway return a 
+  //New Updated List
   final Habit? habity;
-  final List<Habit>? habitsList;
+  final List<Habit> requiredhabitsList;//The List Should Always Exist
+  //Becauase Ur Always Updating the habits.
 
-  const HabitSuccess(this.habitsList,this.habity);
+  const HabitSuccess(this.requiredhabitsList,this.habity);
 }
 
 

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/utility/NullOrEmptyMessages/emptyLists.dart';
+import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/presentation/SnackBars/HabitsSnackBar.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
+import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/loadingIndicator.dart';
+import 'package:habit_tracker/presentation/Widgets/GlobalStateBuilder/habitStateBuilder.dart';
 
 class Habitslister extends ConsumerWidget {
   const Habitslister({
@@ -18,16 +20,10 @@ class Habitslister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final habitsToList = ref.watch(habitsProvider.notifier).habitsList;
-    if (habitsToList.isEmpty) {
-      return Emptylists.emptyGoalsList(
-        mainMessage: 'Your Habit List Is Looking a Bit Lonely!',
-        secondMessage:
-            'Add Your First Habit so we can start building your routine',
-      );
-    }
+  Widget onSuccessWidget(List<Habit> habitsToList, Habit? habit) {
+    print(
+      habitsToList.map((h) => 'ID: ${h.id} | Name: ${h.habitName}').toList(),
+    );
 
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
@@ -70,6 +66,36 @@ class Habitslister extends ConsumerWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget onLoadingWidget() {
+    return Center(child: HabitLoadingIndicator());
+  }
+
+  Widget onFailureObject() {
+    return HabitaSnackBar(message: 'Failed to Add New Habit',icon: Icons.wrong_location_outlined,);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(habitsProvider);
+    // 2. Use Pattern Matching to find the list
+
+    // final habitsToList = ref.watch(habitsProvider.notifier).habitsList;
+    // if (habitsToList.isEmpty) {
+    //   return Emptylists.emptyGoalsList(
+    //     mainMessage: 'Your Habit List Is Looking a Bit Lonely!',
+    //     secondMessage:
+    //         'Add Your First Habit so we can start building your routine',
+    //   );
+    // }
+    return HabitStateBuilder(
+      state: state,
+      successWidget: onSuccessWidget,
+      failureWidget: onFailureObject(),
+      loadingWidget: onLoadingWidget(),
+      providedError: ServerFailure(errorMessage: 'nega'),
     );
   }
 }

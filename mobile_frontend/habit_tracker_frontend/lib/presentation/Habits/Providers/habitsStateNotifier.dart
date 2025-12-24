@@ -21,6 +21,13 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     : super(HabitInitial()) {
     loadNewHabits();
   }
+  void _updateState(List<Habit> updateHabits)
+  {
+    habitsList = updateHabits; // Sync the Vault
+    state = HabitSuccess( habitsList,null); // Notify the Screen
+    //This Method Is used to update the RAM List after each method 
+  }
+
   Future<void> loadNewHabits() async {
     // Optionally: emit a loading state if you had one (e.g., state = const <Habit>[];)
     state = HabitLoading();
@@ -31,14 +38,14 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     result.fold(
       // Left (Failure): Handle the error (e.g., log it, or set an error state if using a complex state object)
       (failure) {
-        HabitFailure(failure);
+      state=  HabitFailure(failure);
         print('Failed to load habits: ${failure.errorMessage}');
       },
       // Right (Success): Update the state with the list of habits
-      (habits) {
-        habits = habits;
+      (rightObject) {
+        habitsList = rightObject;
 
-        state = HabitSuccess(habits, null);
+        state = HabitSuccess(rightObject, null);
       },
     );
   }
@@ -53,9 +60,12 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
         state = HabitFailure(wrongObject);
       },
       (rightObject) {
-        state = HabitSuccess(null, rightObject);
+        final newList=[...habitsList,rightObject];
+        _updateState(newList);        
+//Here We Returned a Success Object and Updated the Habits
       },
     );
+
   }
 
   //Immutabe State So we make the whole List Again without the habit we want to delete.

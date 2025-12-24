@@ -15,7 +15,7 @@ class HabitRepo implements HabitRepoInterface {
   Future<Either<ErrorInterface, List<HabitModel>>> getHabits() async {
     try {
       final habits = await dataSource.getHabits();
-      print(habits);
+      print('The Habit From the REPO ARE $habits');
       return right(habits); //A Lits of Habit Models
     } on DioException catch (e) {
       // 3. FAILURE: Catch the technical exception and map it

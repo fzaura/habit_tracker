@@ -9,6 +9,9 @@ class AddNewHabitFeature implements AddNewHabitInterface {
   @override
   final HabitRepo repo;
   const AddNewHabitFeature({required this.repo});
+
+
+
   @override
   Future<Either<ErrorInterface, Habit>> addNewHabit(Habit newHabit) async {
     //Change the new Habit into a model
