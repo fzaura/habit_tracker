@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class HabitaSnackBar extends StatelessWidget {
+class HabitASnackBar extends StatelessWidget {
   final String message;
   final IconData icon;
   final Color backgroundColor;
 
-  const HabitaSnackBar({
+  const HabitASnackBar({
     super.key,
     required this.message,
     this.icon = Icons.check_circle_outline_rounded,
@@ -22,7 +22,7 @@ class HabitaSnackBar extends StatelessWidget {
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
         duration: const Duration(seconds: 3),
-        content: HabitaSnackBar(
+        content: HabitASnackBar(
           message: message,
           icon: icon ?? Icons.check_circle_outline_rounded,
           backgroundColor: color ?? const Color(0xFF1A1A1A),

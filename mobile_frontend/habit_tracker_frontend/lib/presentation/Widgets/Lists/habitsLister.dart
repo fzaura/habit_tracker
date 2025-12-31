@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/presentation/SnackBars/HabitsSnackBar.dart';
+import 'package:habit_tracker/presentation/Widgets/SnackBars/HabitsSnackBar.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/loadingIndicator.dart';
@@ -74,7 +74,7 @@ class Habitslister extends ConsumerWidget {
   }
 
   Widget onFailureObject() {
-    return HabitaSnackBar(message: 'Failed to Add New Habit',icon: Icons.wrong_location_outlined,);
+    return HabitASnackBar(message: 'Failed to Add New Habit',icon: Icons.wrong_location_outlined,);
   }
 
   @override
