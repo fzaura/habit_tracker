@@ -1,9 +1,40 @@
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
+import 'package:habit_tracker/data/Habits/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/authRemoteDataSourceInterFace.dart';
 class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
   final Dio _dioClient;
   AuthRemoteDataSource({required Dio dioClient}) : _dioClient = dioClient;
+
+
+  @override
+  Future<TokenModel> refreshTokens(String oldRefreshToken) async {
+    try {
+      final response = await _dioClient.post(
+        'access-token',
+        data: {'refreshToken': oldRefreshToken},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+        return (TokenModel.fromJson(response.data));
+        //Return the New Tokens That were added after verifying the request
+        //Is Right
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Error Occured At the Remote Data Server',
+        );
+      }
+    } on DioException catch (e) {
+      print(
+        'refresh tokens Failed: From RemoteServerDataSource ${e.response?.data}',
+      );
+      rethrow;
+    }
+  }
+
   @override
   Future<UserModel> register({
     required String username,
@@ -85,4 +116,6 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
       throw Exception(e.response?.data['message'] ?? 'Connection Failed');
     }
   }
+
+  
 }

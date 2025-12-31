@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
-import 'package:habit_tracker/data/Habits/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 
 class RemoteServerDataSource extends DataSourceInterface {
@@ -40,6 +39,7 @@ class RemoteServerDataSource extends DataSourceInterface {
   Future<HabitModel> addNewHabit(HabitModel newHabit) async {
     try {
       final response = await dio.post('habits', data: newHabit);
+      //The Habit dio Calls the To json methods automatically
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
         return (HabitModel.fromJson(response.data, false));
@@ -59,30 +59,6 @@ class RemoteServerDataSource extends DataSourceInterface {
     }
   }
 
-  @override
-  Future<TokenModel> refreshTokens(String oldRefreshToken) async {
-    try {
-      final response = await dio.post('access-token', data: oldRefreshToken);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data);
-        return (TokenModel.fromJson(response.data));
-        //Return the New Tokens That were added after verifying the request 
-        //Is Right 
-      } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          type: DioExceptionType.badResponse,
-          message: 'Error Occured At the Remote Data Server',
-        );
-      }
-    } on DioException catch (e) {
-      print(
-        'refresh tokens Failed: From RemoteServerDataSource ${e.response?.data}',
-      );
-      rethrow;
-    }
-  }
 
   @override
   Future<HabitModel> editHabit(HabitModel oldHabit) {

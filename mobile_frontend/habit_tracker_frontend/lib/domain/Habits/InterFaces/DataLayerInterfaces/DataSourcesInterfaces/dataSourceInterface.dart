@@ -11,5 +11,4 @@ abstract class DataSourceInterface {
 
   Future<HabitModel> editHabit(HabitModel oldHabit);
 
-  Future<TokenModel> refreshTokens(String oldRefreshToken);
 }

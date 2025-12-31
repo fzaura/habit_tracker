@@ -55,9 +55,10 @@ class HabitRepo implements HabitRepoInterface {
     }
   }
 
-
-@override
-  Future<Either<ErrorInterface, HabitModel>> addNewHabit(HabitModel newHabit) async{
+  @override
+  Future<Either<ErrorInterface, HabitModel>> addNewHabit(
+    HabitModel newHabit,
+  ) async {
     try {
       final habits = await dataSource.addNewHabit(newHabit);
       print(newHabit);
@@ -99,5 +100,6 @@ class HabitRepo implements HabitRepoInterface {
       }
     }
   }
+
 
 }
