@@ -4,7 +4,7 @@
  * Provides validation for registration, login, user updates, and token refresh.
  * Also re-exports validationResult from express-validator for convenience.
  */
-const { body } = require("express-validator");
+import { body } from "express-validator";
 
 /**
  * Validation chain for user registration.
