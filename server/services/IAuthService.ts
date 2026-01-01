@@ -3,15 +3,16 @@ import { ITokenRepository } from "../repositories/ITokenRepository";
 import TokenService from "./TokenService";
 import { AuthConfig } from "../types/Config";
 import { AuthResponse } from "../dtos/auth.dto";
+import { CreateUserRequest } from "../dtos/user.dto";
+import { LoginRequest } from "../dtos/auth.dto";
+import { RefreshTokenRequest } from "../dtos/auth.dto";
 
 export interface IAuthService {
-  registerUser(
-    username: string,
-    email: string,
-    password: string
+  registerUser(data: CreateUserRequest): Promise<AuthResponse>;
+  loginUser(data: LoginRequest): Promise<AuthResponse>;
+  refreshUserSession(
+    oldRefreshToken: RefreshTokenRequest
   ): Promise<AuthResponse>;
-  loginUser(email: string, password: string): Promise<AuthResponse>;
-  refreshUserSession(oldRefreshToken: string): Promise<AuthResponse>;
 }
 
 export type IAuthServiceDeps = {
