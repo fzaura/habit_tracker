@@ -1,8 +1,8 @@
-import { User } from "../models/user.models";
+import { User } from "../models/User";
 import { CreateUserRequest } from "../dtos/user.dto";
 
 export interface IUserRepository {
-  createUser(createUserRequest: CreateUserRequest): Promise<User>;
+  createUser(data: CreateUserRequest): Promise<User>;
   findUserById(userId: string): Promise<User | null>;
   findUserByEmail(email: string): Promise<User | null>;
   findUserByUsernameOrEmail(

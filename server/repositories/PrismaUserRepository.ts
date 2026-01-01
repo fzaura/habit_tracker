@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { IUserRepository } from "./IUserRepository";
-import { User } from "../models/user.models";
+import { User } from "../models/User";
 import { CreateUserRequest } from "../dtos/user.dto";
 
 type PrismaRepoDeps = {
