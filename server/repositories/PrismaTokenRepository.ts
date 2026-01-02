@@ -27,6 +27,10 @@ export default class PrismaTokenRepository implements ITokenRepository {
     return await this.db.refreshToken.findUnique({ where: { value: token } });
   }
 
+  async deleteTokenById(tokenId: string): Promise<RefreshToken> {
+    return await this.db.refreshToken.delete({ where: { id: tokenId } });
+  }
+
   async deleteTokenByValue(token: string): Promise<RefreshToken> {
     return await this.db.refreshToken.delete({ where: { value: token } });
   }
