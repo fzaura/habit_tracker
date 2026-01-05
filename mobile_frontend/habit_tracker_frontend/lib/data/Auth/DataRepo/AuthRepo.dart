@@ -7,7 +7,7 @@ import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataSource/AuthRemoteDataSource.dart';
 import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepoistoryInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 class AuthRepo extends AuthRepositoryInterFace {

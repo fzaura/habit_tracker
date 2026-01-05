@@ -1,5 +1,5 @@
 // domain/Auth/Features/logoutUseCase.dart
-import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepoistoryInterface.dart';
 
 class LogoutUseCase {
   final AuthRepositoryInterFace repository;

@@ -61,11 +61,14 @@ class AuthInterceptor extends Interceptor {
       isRefreshingToken = true; // We Are Refreshing the Token
       try {
         final success = await repo.refreshTokens(oldRefreshToken!);
+        //The Refresh Token Method already saved the new tokens 
+        //Step2 Now we just pass the new token to the retry request
         success.fold((errorObject) {}, (tokenObject) async {
           final reponse = await repo.retryRequest(
             requestOptions,
             tokenObject.refreshToken,
           );
+
           reponse.fold((errorObject) {}, (tokenObject) {
             handler.resolve(tokenObject);
           });

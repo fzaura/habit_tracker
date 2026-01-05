@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepoistoryInterface.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DomainLayerInterfaces/loginInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
