@@ -1,4 +1,5 @@
 
+import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 
@@ -18,5 +19,9 @@ abstract class AuthRemoteDataSourceInterFace {
   });
 
     Future<TokenModel> refreshTokens(String oldRefreshToken);
+
+
+ Future<Response<dynamic>> retryRequest(RequestOptions requestOptions, String newAccessToken );
+
 
 }

@@ -110,4 +110,27 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
       throw Exception(e.response?.data['message'] ?? 'Connection Failed');
     }
   }
+
+@override
+Future<Response<dynamic>> retryRequest(RequestOptions requestOptions , String newAccessToken) async {
+    //This Happens After The refresh token Process
+    final String updatedAccessToken = newAccessToken;
+    //Inject the Token to the old Header
+    requestOptions.headers['Authorization'] = 'Bearer $updatedAccessToken';
+    //Auth Is the header name  so it can pass.
+    //Bearer Is the one holding the Updated token (it's the type of the token)
+
+//Refire the Request
+    return _dioClient.request(
+      requestOptions.path,
+      options: Options(
+        method: requestOptions.method,//The same Request Method
+        headers: requestOptions.headers,//Same Updated Header
+        extra: requestOptions.extra,//Same Extra info
+      ),
+      data: requestOptions.data, //Ensures the habit data isn't lost during the save.
+      queryParameters: requestOptions.queryParameters,
+    );
+  }
+
 }
