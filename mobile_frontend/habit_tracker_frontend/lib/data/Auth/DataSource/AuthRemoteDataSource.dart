@@ -1,35 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
-import 'package:habit_tracker/data/Habits/DataModels/TokenModel.dart';
+import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/authRemoteDataSourceInterFace.dart';
+
 class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
   final Dio _dioClient;
   AuthRemoteDataSource({required Dio dioClient}) : _dioClient = dioClient;
-
 
   @override
   Future<TokenModel> refreshTokens(String oldRefreshToken) async {
     try {
       final response = await _dioClient.post(
         'access-token',
-        data: {'refreshToken': oldRefreshToken},
+        data: 'refreshToken :$oldRefreshToken',
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(response.data);
-        return (TokenModel.fromJson(response.data));
-        //Return the New Tokens That were added after verifying the request
-        //Is Right
+        print('Request was done SuccessFully : ${response.data}');
+        return TokenModel.fromJson(response.data);
       } else {
         throw DioException(
           requestOptions: response.requestOptions,
           response: response,
           type: DioExceptionType.badResponse,
-          message: 'Error Occured At the Remote Data Server',
         );
       }
     } on DioException catch (e) {
       print(
-        'refresh tokens Failed: From RemoteServerDataSource ${e.response?.data}',
+        'Refresh Token Process Failed at the Auth remote Data Source ${e.response}',
       );
       rethrow;
     }
@@ -91,12 +88,9 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
         'auth/login',
         data: {"email": email, "password": password},
       );
-      if(request.statusCode==200 || request.statusCode==201)
-      {
+      if (request.statusCode == 200 || request.statusCode == 201) {
         return UserModel.fromJson(request.data);
-      }
-
-      else {
+      } else {
         //4- Configure Errors and Give it to the repo
         throw DioException(
           requestOptions: request.requestOptions,
@@ -116,6 +110,4 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
       throw Exception(e.response?.data['message'] ?? 'Connection Failed');
     }
   }
-
-  
 }

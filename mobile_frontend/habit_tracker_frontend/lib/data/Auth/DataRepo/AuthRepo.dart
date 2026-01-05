@@ -3,25 +3,32 @@ import 'package:dio/dio.dart';
 import 'package:habit_tracker/core/Errors/accessDeniedFailure.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/core/Errors/undefinedFailure.dart';
+import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataSource/AuthRemoteDataSource.dart';
-import 'package:habit_tracker/data/Habits/DataModels/TokenModel.dart';
+import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 class AuthRepo extends AuthRepositoryInterFace {
   final AuthRemoteDataSource remoteDataSource;
-  final TokenStorage tokenStorage;
+  final SecureTokenStorage tokenStorage;
   //local data source
   AuthRepo({required this.remoteDataSource, required this.tokenStorage});
 
-@override
+  @override
   Future<Either<ErrorInterface, TokenModel>> refreshTokens(
     String oldRefreshToken,
   ) async {
     try {
       final habits = await remoteDataSource.refreshTokens(oldRefreshToken);
+      //1-Clear the Old Tokens.
+      tokenStorage.clearTokens();
+      //2-Save the New Tokens
+      tokenStorage.saveTokens(
+        accessToken: habits.accessToken,
+        refreshToken: habits.refreshToken,
+      );
       print(oldRefreshToken);
       return right(habits); //A Lits of Habit Models
     } on DioException catch (e) {
@@ -31,6 +38,8 @@ class AuthRepo extends AuthRepositoryInterFace {
 
       if (statusCode == 401 || statusCode == 403) {
         // 401/403: Indicates token/permission failure
+        //Clear The STorage THE TOKENS ARE DEAD 
+        tokenStorage.clearTokens();
         return left(
           AccessDeniedfailure(
             errorMessage:
@@ -120,4 +129,10 @@ class AuthRepo extends AuthRepositoryInterFace {
       );
     }
   }
+// data/Auth/DataRepo/AuthRepo.dart
+@override
+Future<void> logout() async {
+  // Logic: Logging out means the local credentials must be destroyed.
+  await tokenStorage.clearTokens();
+}
 }

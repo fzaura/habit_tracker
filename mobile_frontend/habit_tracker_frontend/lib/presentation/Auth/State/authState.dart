@@ -23,3 +23,8 @@ class AuthFailure extends AuthState {
   final ErrorInterface error;
   const AuthFailure(this.error);
 }
+
+//unvalid user
+class AuthUnauthenticated extends AuthState {
+  const AuthUnauthenticated();
+}

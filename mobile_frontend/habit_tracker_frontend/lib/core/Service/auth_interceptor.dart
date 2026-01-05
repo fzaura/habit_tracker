@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
+import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
+import 'package:habit_tracker/data/Auth/DataRepo/AuthRepo.dart';
 
 class AuthInterceptor extends Interceptor {
   bool isRefreshingToken = false;
-  final TokenStorage tokenStorage;
+  final SecureTokenStorage tokenStorage;
   final Dio dioClient; //Used to get new token from the server
-  AuthInterceptor({required this.tokenStorage, required this.dioClient});
+  final AuthRepo repo;
+  AuthInterceptor({
+    required this.tokenStorage,
+    required this.dioClient,
+    required this.repo,
+  });
   @override
   void onRequest(
     RequestOptions options,
@@ -30,33 +36,6 @@ class AuthInterceptor extends Interceptor {
     handler.next(response);
   }
 
-  //Helper Methods That Actually do the Work :
-  Future<bool> _refreshToken() async {
-    final String? refreshToken = await tokenStorage.getRefreshToken();
-    if (refreshToken == null) {
-      return false;
-    }
-    try {
-      final reponse = await dioClient.post(
-        'auth/refresh',
-        data: {'refreshToken': refreshToken},
-      );
-      if (reponse.statusCode == '200') {
-        final newAccessToken = reponse.data['accessToken'];
-        final newRefreshToken = reponse.data['refreshToken'];
-        tokenStorage.saveTokens(
-          accessToken: newAccessToken,
-          refreshToken: newRefreshToken,
-        );
-        return true;
-      }
-    } on DioException catch (e) {
-      print(e);
-    }
-
-    return false;
-  }
-
   Future<Response<dynamic>> _retryRequest(RequestOptions requestOptions) async {
     //This Happens After The refresh token Process
     final newAccessToken = await tokenStorage.getAccessToken();
@@ -78,9 +57,13 @@ class AuthInterceptor extends Interceptor {
   //The Server Calls The On Error Method to handel stuff
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final oldRefreshToken = await tokenStorage.getRefreshToken();
+
     //1- We Should Know the Status code.
     final errorStatus = err.response?.statusCode; //Status Code (401)
-    final requestOptions = err.requestOptions; // All the Info that Comes From the response (Header , Methods , body).
+    final requestOptions = err
+        .requestOptions; // All the Info that Comes From the response (Header , Methods , body).
+    if (oldRefreshToken == null) {}
 
     if (errorStatus == 401) {
       //We Need to check the failing request , if it has a refresh request that will cause an infinite Loop.
@@ -95,11 +78,11 @@ class AuthInterceptor extends Interceptor {
       }
       isRefreshingToken = true; // We Are Refreshing the Token
       try {
-        final sucess = await _refreshToken();
-        if (sucess) {
+        final success = await repo.refreshTokens(oldRefreshToken!);
+        success.fold((errorObject) {}, (tokenObject) async {
           final reponse = await _retryRequest(requestOptions);
           return handler.resolve(reponse);
-        }
+        });
       } catch (e) {
         await tokenStorage.clearTokens();
       } finally {

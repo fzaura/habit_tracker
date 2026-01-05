@@ -1,6 +1,6 @@
 
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
-import 'package:habit_tracker/data/Habits/DataModels/TokenModel.dart';
+import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 
 abstract class AuthRemoteDataSourceInterFace {
   
