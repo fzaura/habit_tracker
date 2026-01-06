@@ -4,7 +4,7 @@ import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepoisto
 class LogoutUseCase {
   final AuthRepositoryInterFace repository;
 
-  LogoutUseCase(this.repository);
+  const LogoutUseCase(this.repository);
 
   Future<void> execute() async {
     return await repository.logout();

@@ -1,4 +1,5 @@
 import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+
 abstract class DataSourceInterface {
   const DataSourceInterface();
   Future<List<HabitModel>> getHabits();
@@ -8,6 +9,8 @@ abstract class DataSourceInterface {
 
   Future<HabitModel> addNewHabit(HabitModel newHabit);
 
-  Future<HabitModel> editHabit(HabitModel oldHabit);
+//This Shiuld be a HAbit Model But am Waiting for the backend to update
+  Future<String> editHabit(HabitModel habitID);
 
+  Future<String> deleteHabit(String habit);
 }

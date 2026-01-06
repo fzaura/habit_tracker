@@ -12,9 +12,9 @@ import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/logoutUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
-
-import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
+import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
+import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
 import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 
@@ -110,10 +110,16 @@ final registerFeatureProvider = Provider<RegisterUseCase>((ref) {
 });
 final loginFeatureProvider = Provider<LoginUseCase>((ref) {
   return LoginUseCase(ref.watch(authRepositoryProvider));
-
 });
 final logoutFeatureProvider = Provider<LogoutUseCase>((ref) {
   return LogoutUseCase(ref.watch(authRepositoryProvider));
-
 });
 
+final deleteHabitFeatureProvider = Provider<DeleteHabitUseCase>((ref) {
+  return DeleteHabitUseCase(repo: ref.watch(habitsRepoProvider));
+});
+
+
+final editHabitFeatureProvider = Provider<EditHabitUseCase>((ref) {
+  return EditHabitUseCase(repo: ref.watch(habitsRepoProvider));
+});

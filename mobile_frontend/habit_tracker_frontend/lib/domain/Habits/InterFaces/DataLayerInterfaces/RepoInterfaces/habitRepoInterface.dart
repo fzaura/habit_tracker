@@ -9,5 +9,8 @@ abstract class HabitRepoInterface {
 
   Future<Either<ErrorInterface, HabitModel>> addNewHabit(HabitModel newHabit);
 
+Future<Either<ErrorInterface,String>> deleteHabit(String habitID);
   
+  Future<Either<ErrorInterface,String>> editHabit(String habitID);
+
 }

@@ -59,10 +59,55 @@ class RemoteServerDataSource extends DataSourceInterface {
     }
   }
 
+  @override
+  Future<String> deleteHabit(String habitID) async {
+    try {
+      final response = await dio.delete('habits/$habitID');
+      //The Habit dio Calls the To json methods automatically
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+        return response.data.toString();
+        //Return the New Habit ID to the Front So We can update it with the NEW
+        //ID and have our habits in sync.
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Error Occured At the Remote Data Server',
+        );
+      }
+    } on DioException catch (e) {
+      print('Habit Add Failed: ${e.response?.data}');
+      rethrow;
+    }
+  }
 
   @override
-  Future<HabitModel> editHabit(HabitModel oldHabit) {
-    // TODO: implement editHabit
-    throw UnimplementedError();
+  Future<String> editHabit(HabitModel habit) async {
+    //The Only thing that the Backend Updates is the Backend Name
+    try {
+      //We want to return the newly ediited habit so we have synced data.
+      final response = await dio.put(
+        'habits/${habit.id}',
+        data: {'name': habit.habitName},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(
+          'The Response Data at the Remote Server Data Source is : ${response.data}',
+        );
+        return response.data.toString();
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Error Occured At the Remote Data Server',
+        );
+      }
+    } on DioException catch (e) {
+      print('Habit Editting Failed: ${e.response?.data}');
+      rethrow;
+    }
   }
 }
