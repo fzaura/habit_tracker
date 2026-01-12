@@ -6,11 +6,13 @@
 const express = require("express");
 
 const {
-  addHabitValidator,
-  markCompleteValidator,
-  updateHabitValidator,
-  validateIdParam,
+  createHabitSchema,
+  markCompleteSchema,
+  updateHabitSchema,
+  validateIdParamSchema,
 } = require("../validators/habit.validator");
+
+const validateResource = require("../middleware/validateResource");
 
 module.exports = ({ habitController, authMiddleware }) => {
   const router = express.Router();
@@ -44,7 +46,7 @@ module.exports = ({ habitController, authMiddleware }) => {
    */
   router
     .route("/")
-    .post(addHabitValidator, habitController.createHabit)
+    .post(validateResource(createHabitSchema), habitController.createHabit)
     .get(habitController.getHabits);
 
   /**
@@ -76,8 +78,11 @@ module.exports = ({ habitController, authMiddleware }) => {
    */
   router
     .route("/:id")
-    .delete(validateIdParam, habitController.deleteHabit)
-    .put(validateIdParam, updateHabitValidator, habitController.updateHabit);
+    .delete(
+      validateResource(validateIdParamSchema),
+      habitController.deleteHabit
+    )
+    .patch(validateResource(updateHabitSchema), habitController.updateHabit);
 
   /**
    * @name POST /:id/completions
@@ -95,8 +100,7 @@ module.exports = ({ habitController, authMiddleware }) => {
    */
   router.post(
     "/:id/completions",
-    validateIdParam,
-    markCompleteValidator,
+    validateResource(markCompleteSchema),
     habitController.markAsCompleted
   );
 
