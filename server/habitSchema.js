@@ -77,9 +77,6 @@ module.exports = {
     body: z.object({
       date: strictDateRule,
     }),
-    params: z.object({
-      id: idRule,
-    }),
   }),
 
   validateIdParamSchema: z.object({

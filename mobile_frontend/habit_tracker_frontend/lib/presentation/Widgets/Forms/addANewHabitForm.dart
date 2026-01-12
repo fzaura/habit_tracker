@@ -133,6 +133,7 @@ class _AddANewHabitFormState extends ConsumerState<AddANewHabitForm> {
                           updatedAt: DateTime.now(),
                         ),
                       );
+                      Navigator.pop(context);
                 }
               },
             ),
