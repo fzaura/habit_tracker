@@ -1,14 +1,4 @@
 /**
- * @fileoverview Habit management controller handling CRUD operations for habits.
- * Processes habit creation, updates, deletion, retrieval, and completion tracking.
- *
- * @module controllers/habit
- * @requires express-validator
- * @requires ../services/HabitService
- */
-const { validationResult } = require("express-validator");
-
-/**
  * Factory function to create habit controller with injected dependencies.
  *
  * @memberof module:controllers/habit
@@ -36,11 +26,6 @@ const createHabitController = ({ habitService }) => {
    * @returns {Promise<void>} JSON response with created habit
    */
   const createHabit = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { name, goal, frequency, endDate } = req.body;
 
     try {
@@ -73,11 +58,6 @@ const createHabitController = ({ habitService }) => {
    * @returns {Promise<void>} JSON success message
    */
   const deleteHabit = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { id: habitId } = req.params;
     const userId = req.user.userId;
 
@@ -111,17 +91,6 @@ const createHabitController = ({ habitService }) => {
    * @returns {Promise<void>} JSON response with updated habit
    */
   const updateHabit = async (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { name, goal, frequency, endDate } = req.body;
-
-    const { id: habitId } = req.params;
-    const userId = req.user.userId;
-
     try {
       const updateHabit = await habitService.updateHabit(
         habitId,
@@ -185,12 +154,6 @@ const createHabitController = ({ habitService }) => {
    * @returns {Promise<void>} JSON success message
    */
   const markAsCompleted = async (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { id: habitId } = req.params;
     const userId = req.user.userId;
     const { dateString } = req.body;
