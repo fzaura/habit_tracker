@@ -24,13 +24,13 @@ export default class AuthService implements IAuthService {
   private userRepo: IUserRepository;
   private tokenRepo: ITokenRepository;
   private tokenService: TokenService;
-  private saltRounds: number;
+  private config: AuthConfig;
 
   constructor({ userRepo, tokenRepo, tokenService, config }: IAuthServiceDeps) {
     this.userRepo = userRepo;
     this.tokenRepo = tokenRepo;
     this.tokenService = tokenService;
-    this.saltRounds = config.saltRounds;
+    this.config = config;
   }
 
   private async generateAuthResponse(user: User): Promise<AuthResponse> {
@@ -62,13 +62,13 @@ export default class AuthService implements IAuthService {
     const { username, email, password } = data;
 
     if (!username) {
-      throw new Error("Username is required");
+      throw new AppError("Username is required", 400);
     }
     if (!email) {
-      throw new Error("Email is required");
+      throw new AppError("Email is required", 400);
     }
     if (!password) {
-      throw new Error("Password is required");
+      throw new AppError("Password is required", 400);
     }
 
     const userExists: User | null =
@@ -78,11 +78,11 @@ export default class AuthService implements IAuthService {
       if (userExists.email === email) {
         throw new AppError("Email already in use.", 400);
       } else {
-        throw new AppError("username already in use.", 400);
+        throw new AppError("Username already in use.", 400);
       }
     }
 
-    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
+    const hashedPassword = await bcrypt.hash(password, this.config.saltRounds);
 
     const userData = { username, email, password: hashedPassword };
     const newUser = await this.userRepo.createUser(userData);
@@ -94,10 +94,10 @@ export default class AuthService implements IAuthService {
   async loginUser(data: LoginRequest): Promise<AuthResponse> {
     const { email, password } = data;
     if (!email) {
-      throw new Error("Email is required.");
+      throw new AppError("Email is required.", 400);
     }
     if (!password) {
-      throw new Error("Password is required.");
+      throw new AppError("Password is required.", 400);
     }
 
     const user = await this.userRepo.findUserByEmail(email);
@@ -110,7 +110,7 @@ export default class AuthService implements IAuthService {
       throw new AppError("Invalid credentials.", 401);
     }
 
-    const authResponse = this.generateAuthResponse(user);
+    const authResponse = await this.generateAuthResponse(user);
 
     return authResponse;
   }
@@ -118,7 +118,7 @@ export default class AuthService implements IAuthService {
     oldRefreshToken: RefreshTokenRequest
   ): Promise<AuthResponse> {
     if (!oldRefreshToken) {
-      throw new Error("Refresh token is required.");
+      throw new AppError("Refresh token is required.", 400);
     }
 
     const storedToken = await this.tokenRepo.findTokenByValue(
@@ -132,26 +132,22 @@ export default class AuthService implements IAuthService {
       await this.tokenRepo.deleteTokenById(storedToken.id);
       throw new AppError("Token is expired.", 403);
     }
+    await this.tokenRepo.deleteTokenById(storedToken.id);
     try {
       const decoded = this.tokenService.verifyRefreshToken(
         oldRefreshToken.refreshToken
       ) as TokenPayload;
 
-      await this.tokenRepo.deleteTokenById(storedToken.id);
-
       const user = await this.userRepo.findUserById(decoded.userId);
 
       if (user) {
-        const authResponse = this.generateAuthResponse(user);
+        const authResponse = await this.generateAuthResponse(user);
 
         return authResponse;
       } else {
         throw new AppError("User is restricted", 401);
       }
     } catch (error) {
-      if (storedToken) {
-        await this.tokenRepo.deleteTokenById(storedToken.id);
-      }
       if (error instanceof Error) {
         if (
           error.name === "TokenExpiredError" ||
