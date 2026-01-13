@@ -1,95 +1,51 @@
-/**
- * @module validators/auth
- * @description Express-validator middleware chains for authentication endpoints.
- * Provides validation for registration, login, user updates, and token refresh.
- * Also re-exports validationResult from express-validator for convenience.
- */
-const { body } = require("express-validator");
+const { z } = require("zod");
 
-/**
- * Validation chain for user registration.
- * Validates username (5-12 chars), email format, password strength, and password confirmation.
- *
- * @memberof module:validators/auth
- * @constant {Array} registerValidator
- * @type {Array}
- */
-const registerValidator = [
-  body("username")
-    .trim()
-    .notEmpty()
-    .withMessage("Username is required.")
-    .isLength({ max: 12, min: 5 })
-    .withMessage("Username has to be between 5 and 12 characters long."),
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Email is required.")
-    .isEmail()
-    .withMessage("Please enter a valid email address.")
-    .normalizeEmail(),
-  body("password")
-    .trim()
-    .notEmpty()
-    .withMessage("Password is required.")
-    .isLength({ min: 10 })
-    .withMessage("Password cannot be shorter than 10 characters.")
-    .matches(/\d/)
-    .withMessage("Password must contain at least one number.")
-    .matches(/[!@#$%^&*(),.?":{}|<>]/)
-    .withMessage(
-      "Password must contain at least at least one special character."
-    ),
+const usernameRule = z
+  .string()
+  .trim()
+  .min(5, "Username cannot be shorter than 5 characters.")
+  .max(12, "Username length cannot exceed 12 characters.");
 
-  body("confirmPassword")
-    .trim()
-    .notEmpty()
-    .withMessage("Please re-enter your password for confirmation.")
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("Passwords do not match.");
-      }
+const emailRule = z.email("Please provide a valid email.");
 
-      return true;
-    }),
-];
+const registerPasswordRule = z
+  .string()
+  .trim()
+  .min(10, "Password cannot be shorter than 10 characters.")
+  .regex(/\d/, "Password must contain at least one number.")
+  .regex(
+    /[!@#$%^&*(),.?":{}|<>]/,
+    "Password must contain at least one special characters."
+  );
 
-/**
- * Validation chain for user login.
- * Validates email and password presence.
- *
- * @memberof module:validators/auth
- * @constant {Array} loginValidator
- * @type {Array}
- */
-const loginValidator = [
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Email is required.")
-    .normalizeEmail(),
-
-  body("password").trim().notEmpty().withMessage("Password is required."),
-];
-
-/**
- * Validation chain for refresh token requests.
- * Validates presence of refresh token.
- *
- * @memberof module:validators/auth
- * @constant {Array} refreshTokenValidator
- * @type {Array}
- */
-const refreshTokenValidator = [
-  body("refreshToken")
-    .trim()
-    .notEmpty()
-    .withMessage("Refresh token is required."),
-];
+const loosePasswordRule = z.string().trim().min(1, "Password is required.");
+const refreshTokenRule = z.string().trim().min(1, "Refresh token is required.");
 
 module.exports = {
-  registerValidator,
-  loginValidator,
-  refreshTokenValidator,
-  validationResult: require("express-validator").validationResult,
+  registerSchema: z.object({
+    body: z
+      .object({
+        username: usernameRule,
+        email: emailRule,
+        password: registerPasswordRule,
+        confirmPassword: loosePasswordRule,
+      })
+      .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match.",
+        path: ["confirmPassword"],
+      }),
+  }),
+
+  loginSchema: z.object({
+    body: z.object({
+      email: emailRule,
+      password: loosePasswordRule,
+    }),
+  }),
+
+  refreshTokenSchema: z.object({
+    body: z.object({
+      refreshToken: refreshTokenRule,
+    }),
+  }),
 };
