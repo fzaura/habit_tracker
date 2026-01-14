@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import {
   AuthResponse,
   LoginRequest,
-  RefreshTokenRequest,
+  RefreshUserSessionRequest,
 } from "../dtos/auth.dto";
 import { IAuthService } from "./IAuthService";
 import { IAuthServiceDeps } from "./IAuthService";
@@ -115,7 +115,7 @@ export default class AuthService implements IAuthService {
     return authResponse;
   }
   async refreshUserSession(
-    oldRefreshToken: RefreshTokenRequest
+    oldRefreshToken: RefreshUserSessionRequest
   ): Promise<AuthResponse> {
     if (!oldRefreshToken) {
       throw new AppError("Refresh token is required.", 400);

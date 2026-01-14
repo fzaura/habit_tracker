@@ -5,13 +5,13 @@ import { AuthConfig } from "../types/Config";
 import { AuthResponse } from "../dtos/auth.dto";
 import { CreateUserRequest } from "../dtos/user.dto";
 import { LoginRequest } from "../dtos/auth.dto";
-import { RefreshTokenRequest } from "../dtos/auth.dto";
+import { RefreshUserSessionRequest } from "../dtos/auth.dto";
 
 export interface IAuthService {
   registerUser(data: CreateUserRequest): Promise<AuthResponse>;
   loginUser(data: LoginRequest): Promise<AuthResponse>;
   refreshUserSession(
-    oldRefreshToken: RefreshTokenRequest
+    oldRefreshToken: RefreshUserSessionRequest
   ): Promise<AuthResponse>;
 }
 
