@@ -12,7 +12,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface RefreshTokenRequest {
+export interface RefreshUserSessionRequest {
   refreshToken: string;
 }
 
