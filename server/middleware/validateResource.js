@@ -1,12 +1,21 @@
+const AppError = require("../utils/AppError");
+
 const validateResource = (schema) => {
   return async (req, res, next) => {
     const { body, query, params } = req;
 
     try {
-      await schema.parseAsync({ body, query, params });
+      const parsed = await schema.parseAsync({ body, query, params });
+
+      body = parsed.body;
+      query = parsed.query;
+      params = parsed.params;
+
       next();
     } catch (e) {
-      return res.status(400).json({ errors: e.errors });
+      const message = e.errors ? e.errors[0].message : "Invalid input data.";
+
+      next(new AppError(message, 400));
     }
   };
 };
