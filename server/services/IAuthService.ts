@@ -11,7 +11,7 @@ export interface IAuthService {
   registerUser(data: CreateUserRequest): Promise<AuthResponse>;
   loginUser(data: LoginRequest): Promise<AuthResponse>;
   refreshUserSession(
-    oldRefreshToken: RefreshUserSessionRequest
+    tokenPayload: RefreshUserSessionRequest
   ): Promise<AuthResponse>;
 }
 
