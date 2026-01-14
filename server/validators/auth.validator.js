@@ -19,7 +19,10 @@ const registerPasswordRule = z
   );
 
 const loosePasswordRule = z.string().trim().min(1, "Password is required.");
-const refreshTokenRule = z.string().trim().min(1, "Refresh token is required.");
+const refreshUserSessionRule = z
+  .string()
+  .trim()
+  .min(1, "Refresh token is required.");
 
 module.exports = {
   registerSchema: z.object({
@@ -43,9 +46,9 @@ module.exports = {
     }),
   }),
 
-  refreshTokenSchema: z.object({
+  refreshUserSessionSchema: z.object({
     body: z.object({
-      refreshToken: refreshTokenRule,
+      refreshToken: refreshUserSessionRule,
     }),
   }),
 };
