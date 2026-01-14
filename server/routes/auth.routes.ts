@@ -7,15 +7,19 @@
  * @requires ../validators/auth.validator
  * @requires ../controllers/auth.controller
  */
-import { express } from "express";
+import express from "express";
 
-const {
-  registerValidator,
-  loginValidator,
-  refreshTokenValidator,
-} = require("../validators/auth.validator");
+import {
+  registerSchema,
+  loginSchema,
+  refreshUserSessionSchema,
+} from "../validators/auth.validator";
 
-module.exports = ({ authController }) => {
+import validateResource from "../middleware/validateResource";
+
+import { IAuthController } from "../controllers/IAuthController";
+
+export default (authController: IAuthController) => {
   const router = express.Router();
 
   /**
@@ -30,7 +34,9 @@ module.exports = ({ authController }) => {
    * @returns {Object} 201 - User registered with tokens
    * @returns {Object} 400 - Validation errors
    */
-  router.post("/register", registerValidator, authController.registerUser);
+  router.post("/register", validateResource(registerSchema), (req, res, next) =>
+    authController.registerUser(req, res, next)
+  );
 
   /**
    * @name POST /login
@@ -43,7 +49,9 @@ module.exports = ({ authController }) => {
    * @returns {Object} 400 - Validation errors
    * @returns {Object} 401 - Invalid credentials
    */
-  router.post("/login", loginValidator, authController.loginUser);
+  router.post("/login", validateResource(loginSchema), (req, res, next) =>
+    authController.loginUser(req, res, next)
+  );
 
   /**
    * @name POST /access-token
@@ -57,8 +65,8 @@ module.exports = ({ authController }) => {
    */
   router.post(
     "/access-token",
-    refreshTokenValidator,
-    authController.getNewAccessToken
+    validateResource(refreshUserSessionSchema),
+    (req, res, next) => authController.refreshUserSession(req, res, next)
   );
 
   return router;
