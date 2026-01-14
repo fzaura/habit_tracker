@@ -61,16 +61,6 @@ export default class AuthService implements IAuthService {
   async registerUser(data: CreateUserRequest): Promise<AuthResponse> {
     const { username, email, password } = data;
 
-    if (!username) {
-      throw new AppError("Username is required", 400);
-    }
-    if (!email) {
-      throw new AppError("Email is required", 400);
-    }
-    if (!password) {
-      throw new AppError("Password is required", 400);
-    }
-
     const userExists: User | null =
       await this.userRepo.findUserByUsernameOrEmail(username, email);
 
@@ -93,12 +83,6 @@ export default class AuthService implements IAuthService {
   }
   async loginUser(data: LoginRequest): Promise<AuthResponse> {
     const { email, password } = data;
-    if (!email) {
-      throw new AppError("Email is required.", 400);
-    }
-    if (!password) {
-      throw new AppError("Password is required.", 400);
-    }
 
     const user = await this.userRepo.findUserByEmail(email);
     if (!user) {
@@ -117,10 +101,6 @@ export default class AuthService implements IAuthService {
   async refreshUserSession(
     oldRefreshToken: RefreshUserSessionRequest
   ): Promise<AuthResponse> {
-    if (!oldRefreshToken) {
-      throw new AppError("Refresh token is required.", 400);
-    }
-
     const storedToken = await this.tokenRepo.findTokenByValue(
       oldRefreshToken.refreshToken
     );
@@ -128,10 +108,6 @@ export default class AuthService implements IAuthService {
       throw new AppError("Token has been revoked or previously used.", 403);
     }
 
-    if (new Date() > storedToken.expiresAt) {
-      await this.tokenRepo.deleteTokenById(storedToken.id);
-      throw new AppError("Token is expired.", 403);
-    }
     await this.tokenRepo.deleteTokenById(storedToken.id);
     try {
       const decoded = this.tokenService.verifyRefreshToken(
