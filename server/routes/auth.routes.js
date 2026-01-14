@@ -7,7 +7,7 @@
  * @requires ../validators/auth.validator
  * @requires ../controllers/auth.controller
  */
-const express = require("express");
+import { express } from "express";
 
 const {
   registerValidator,
