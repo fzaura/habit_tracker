@@ -13,9 +13,13 @@ const validateResource = (schema) => {
 
       next();
     } catch (e) {
-      const message = e.errors ? e.errors[0].message : "Invalid input data.";
+      if (e.name === "ZodError") {
+        const message = e.errors ? e.errors[0].message : "Invalid input data.";
 
-      next(new AppError(message, 400));
+        next(new AppError(message, 400));
+      }
+
+      next(e);
     }
   };
 };
