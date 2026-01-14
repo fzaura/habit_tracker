@@ -84,6 +84,9 @@ class _HomescreenState extends ConsumerState<Homescreen>
         .length;
     final int unCheckedHabits = habitsState.length;
 
+    print('The Number of Habits is : ${checkedHabits}');
+    
+
     return Scaffold(
       backgroundColor: Color(0xFFEDEDED),
       floatingActionButton: Container(

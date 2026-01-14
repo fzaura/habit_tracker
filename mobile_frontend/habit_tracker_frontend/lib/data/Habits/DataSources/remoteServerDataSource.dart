@@ -18,7 +18,7 @@ class RemoteServerDataSource extends DataSourceInterface {
       if (response.statusCode == 200) {
         print('The response Status Code : ${response.statusCode}');
 
-        print('The whole habit List : ${response.data}');
+        print('The whole habit List : ${response.data} and The Count is ${response.data}');
 
         return HabitModel.fromJsonToModels(response.data);
       }
@@ -61,8 +61,20 @@ class RemoteServerDataSource extends DataSourceInterface {
 
   @override
   Future<String> deleteHabit(String habitID) async {
+    print('THE HABIT ID IS $habitID and THE LENGTH IS ${habitID.length}');
+
+    final regex = RegExp(r'[a-f0-9\-]');
+    final strictlyCleanId = habitID
+        .trim()
+        .toLowerCase()
+        .split('')
+        .where((char) => regex.hasMatch(char))
+        .join('');
     try {
-      final response = await dio.delete('habits/$habitID');
+      // 2. Use a leading slash
+      print('DEBUG: Calling DELETE on: ${dio.options.baseUrl}');
+      print('The STRICLY CLEANED  ID IS :${strictlyCleanId}');
+      final response = await dio.delete('habits/$strictlyCleanId');
       //The Habit dio Calls the To json methods automatically
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
@@ -78,7 +90,40 @@ class RemoteServerDataSource extends DataSourceInterface {
         );
       }
     } on DioException catch (e) {
-      print('Habit Add Failed: ${e.response?.data}');
+      print(
+        '===================== DIO ERROR DEBUG START =====================',
+      );
+
+      // 1. THE EXACT URL CALLED
+      // Check if there are double slashes like /api//habits or %20 (spaces)
+      print('FULL URI: ${e.requestOptions.uri}');
+      print('METHOD:   ${e.requestOptions.method}');
+
+      // 2. THE HEADERS (The "Secret" stuff)
+      // Check if "Authorization" is actually there and says "Bearer <token>"
+      print('HEADERS:  ${e.requestOptions.headers}');
+
+      // 3. THE DATA SENT (Body)
+      print('BODY DATA: ${e.requestOptions.data}');
+
+      // 4. THE SERVER'S RESPONSE
+      if (e.response != null) {
+        print('STATUS CODE: ${e.response?.statusCode}');
+        print(
+          'SERVER DATA: ${e.response?.data}',
+        ); // This usually contains the "Invalid ID" explanation
+      } else {
+        print('SERVER RESPONSE IS NULL: Likely a timeout or connection issue.');
+      }
+
+      // 5. DIO-SPECIFIC ERROR INFO
+      print('DIO ERROR TYPE: ${e.type}');
+      print('RAW ERROR:      ${e.error}');
+      print('STACK TRACE:    ${e.stackTrace}');
+
+      print(
+        '===================== DIO ERROR DEBUG END =======================',
+      );
       rethrow;
     }
   }

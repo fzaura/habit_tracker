@@ -29,10 +29,36 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
   ) : super(HabitInitial()) {
     loadNewHabits();
   }
-  void _updateState(List<Habit> updateHabits) {
+
+  void _optimisticUpdateForAdd(final Habit newHabit) {
+    final optimisticList = [...habitsList, newHabit];
+    state = HabitSuccess(optimisticList, null);
+  }
+
+  List<Habit> _optimisticUpdateForDelete(String id) {
+    final List<Habit> newList = habitsList.where((item) {
+      if (item.id != id) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
+    final optimisticList = [...newList];
+
+    state = HabitSuccess(optimisticList, null);
+    return optimisticList;
+  }
+
+  void _updateStateAfterAdd(List<Habit> updateHabits) {
     habitsList = updateHabits; // Sync the Vault
     state = HabitSuccess(habitsList, null); // Notify the Screen
     //This Method Is used to update the RAM List after each method
+  }
+
+  void _updateListAfterDelete(String id, List<Habit> updatedList) async {
+    print('The Number of Habits in the New List is : ${updatedList.length}');
+    habitsList = updatedList;
+    state = HabitSuccess(updatedList, null);
   }
 
   Future<void> loadNewHabits() async {
@@ -59,36 +85,50 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
 
   //B- Variables that Change that Data in a non immutable way
   Future<void> addNewHabit(Habit newHabit) async {
-    state = HabitLoading();
-
+    //I don't Need the Habit State Loading Because of Optimisitc Updates
+    //2-Do Optimistic Update
+    final List<Habit> rollBackToOldList = [...habitsList];
+    _optimisticUpdateForAdd(
+      newHabit,
+    ); // This List is only a preview not the real List btw
+    //3-Wait For the Result of the
     final addedHabit = await _addNewHabitFeature.addNewHabit(newHabit);
     addedHabit.fold(
       (wrongObject) {
+        habitsList = rollBackToOldList; //GoBack to the Old
+
         state = HabitFailure(wrongObject);
       },
       (rightObject) {
-        final newList = [...habitsList, rightObject];
-        _updateState(newList);
-        //Here We Returned a Success Object and Updated the Habits
+        //WE NEED TO UPDATE THE HABIT WITH THE NEW GENERATED ID
+        final finalNewList = [...habitsList, rightObject];
+        _updateStateAfterAdd(finalNewList);
       },
     );
   }
 
   //Immutabe State So we make the whole List Again without the habit we want to delete.
   void deleteHabits(String id) async {
-    state = HabitLoading();
-
-    final deletinhHabit = await _deleteHabit.deleteHabit(id);
-    deletinhHabit.fold(
+    // state = HabitLoading();
+    //1-OPtimistic
+    final List<Habit> rollBackToOldList = [...habitsList];
+    final optimisicList = _optimisticUpdateForDelete(id);
+    final deleteHabit = await _deleteHabit.deleteHabit(id);
+    deleteHabit.fold(
       (wrongObject) {
         state = HabitFailure(wrongObject);
+        habitsList = [...rollBackToOldList];
       },
       (rightObject) {
+        //Update the Local List
+        _updateListAfterDelete(id, optimisicList);
       },
     );
   }
 
-  void updateHabits(String oldHabitId, Habit newEdittedHabit) {}
+  void updateHabits(String oldHabitId, Habit newEdittedHabit) {
+    state = HabitLoading();
+  }
 
   List<DateTime> _updateCurrentDatesList(
     List<DateTime> currentDates,

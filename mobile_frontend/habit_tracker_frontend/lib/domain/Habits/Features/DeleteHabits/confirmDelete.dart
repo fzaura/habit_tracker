@@ -48,6 +48,8 @@ class ConfirmDelete extends ConsumerWidget {
   }
 
   void _deleteHabitLogic(String deletedHabitId, WidgetRef ref) {
+    print('We Called the Delete Habits MEthod of the Notifier');
+    print('THE HABIT ID SENT FROM THE UI ${deletedHabitId}');
     ref.watch(habitsProvider.notifier).deleteHabits(deletedHabitId);
   }
 

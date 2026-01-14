@@ -103,8 +103,10 @@ class HabitRepo implements HabitRepoInterface {
 
   @override
   Future<Either<ErrorInterface, String>> deleteHabit(String habitID) async {
+    print('THE ACTUAL HABIT ID FROM THE REPO IS ${habitID}');
+    final cleanId = habitID.trim();
     try {
-      final habits = await dataSource.deleteHabit(habitID);
+      final habits = await dataSource.deleteHabit(cleanId);
       print('The Response Message athe HAbit repo  is : $habits');
       return right(habits); //A Lits of Habit Models
     } on DioException catch (e) {
