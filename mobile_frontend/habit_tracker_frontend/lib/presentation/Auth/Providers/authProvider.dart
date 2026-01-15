@@ -3,7 +3,7 @@ import 'package:habit_tracker/core/Config/providers.dart';
 import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/logoutUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
-import 'package:habit_tracker/presentation/Auth/State/authState.dart';
+import 'package:habit_tracker/presentation/Auth/StateClasses/Auth/authState.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   // We assume you have a repository passed in

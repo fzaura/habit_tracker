@@ -5,7 +5,8 @@ import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFea
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
 import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
-import 'package:habit_tracker/presentation/Auth/State/habitsState.dart';
+import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/habitListerBundle.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }
@@ -30,9 +31,24 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     loadNewHabits();
   }
 
+  HabitListerBundle bundleHabitLists(List<Habit> habits, Habit? habit) {
+    if (habit == null) {
+      return HabitListerBundle(habitsToList: habits);
+    } else {
+      return HabitListerBundle(habitsToList: habits, habit: habit);
+    }
+  }
+
   void _optimisticUpdateForAdd(final Habit newHabit) {
     final optimisticList = [...habitsList, newHabit];
-    state = HabitSuccess(optimisticList, null);
+    //The Bundle Needs to be made so it can be sent to the Habit State Builder.
+    //From There Habit State Builder Will Match Between the results of the
+    //notifier and the result of the builder
+    final bundle = HabitListerBundle(
+      habitsToList: optimisticList,
+      habit: newHabit,
+    );
+    state = HabitSuccess(data: bundle);
   }
 
   List<Habit> _optimisticUpdateForDelete(String id) {
@@ -44,21 +60,23 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       }
     }).toList();
     final optimisticList = [...newList];
-
-    state = HabitSuccess(optimisticList, null);
+    final bundle = HabitListerBundle(habitsToList: optimisticList);
+    state = HabitSuccess(data: bundle);
     return optimisticList;
   }
 
   void _updateStateAfterAdd(List<Habit> updateHabits) {
     habitsList = updateHabits; // Sync the Vault
-    state = HabitSuccess(habitsList, null); // Notify the Screen
+    final bundle = HabitListerBundle(habitsToList: habitsList);
+    state = HabitSuccess(data: bundle); // Notify the Screen
     //This Method Is used to update the RAM List after each method
   }
 
   void _updateListAfterDelete(String id, List<Habit> updatedList) async {
     print('The Number of Habits in the New List is : ${updatedList.length}');
     habitsList = updatedList;
-    state = HabitSuccess(updatedList, null);
+
+    state = HabitSuccess(data: updatedList);
   }
 
   Future<void> loadNewHabits() async {
@@ -77,8 +95,8 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       // Right (Success): Update the state with the list of habits
       (rightObject) {
         habitsList = rightObject;
-
-        state = HabitSuccess(rightObject, null);
+        final dataBundle=HabitListerBundle(habitsToList: habitsList);
+        state = HabitSuccess(data: dataBundle);
       },
     );
   }
@@ -100,7 +118,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
         state = HabitFailure(wrongObject);
       },
       (rightObject) {
-        //WE NEED TO UPDATE THE HABIT WITH THE NEW GENERATED ID
+        //WE NEED TO UPDATE THE HABIT WITH THE NEW GENERATED ID.
         final finalNewList = [...habitsList, rightObject];
         _updateStateAfterAdd(finalNewList);
       },

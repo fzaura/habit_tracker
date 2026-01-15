@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
+import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenWelcomeCardBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/HomeScreen/habitsDoneTodayChart.dart';
+import 'package:habit_tracker/presentation/Widgets/GlobalStateBuilder/habitStateBuilder.dart';
 
 class HomeScreenWelcomeCard extends StatelessWidget {
-  const HomeScreenWelcomeCard({
-    super.key,
-    required this.habitsCheckedToday,
-    required this.allTheHabits,
-  });
+  const HomeScreenWelcomeCard({super.key, required this.state});
+  final HabitState state;
 
-  final int habitsCheckedToday;
-  final int allTheHabits;
-
-  @override
-  Widget build(BuildContext context) {
-    //For Debug Purposes :
-    print('All the Habits checked todsy Number  : ${habitsCheckedToday}');
-    print('All the Habits Number : ${allTheHabits}');
-
-    final double mainPecetnage = (allTheHabits > 0)
-        ? (habitsCheckedToday / allTheHabits * 100)
+  Widget onSuccess(HomeScreenWelcomeCardBundle dataBundle) {
+    print('THE ON SUCCESS HOME SCREEN WELCOME CARD GOT RENDERED');
+    final double mainPercentage = (dataBundle.allTheHabits > 0)
+        ? (dataBundle.habitsCheckedToday / dataBundle.allTheHabits * 100)
         : 0.0;
-    print('All the Main Percentage  Number : ${mainPecetnage}');
+    print('All the Main Percentage  Number : ${mainPercentage}');
 
     return Container(
       width: double.infinity,
@@ -43,8 +36,8 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             top: 34,
             left: 26,
             child: HabitsDoneTodayChart(
-              habitsCheckedToday: habitsCheckedToday,
-              allTheHabits: allTheHabits,
+              habitsCheckedToday: dataBundle.habitsCheckedToday,
+              allTheHabits: dataBundle.allTheHabits,
             ),
           ),
           Positioned(
@@ -55,7 +48,7 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             right: 234,
 
             child: Text(
-              '${mainPecetnage.isNaN ? mainPecetnage.toInt() : 0}%',
+              '${mainPercentage.isNaN ? mainPercentage.toInt() : 0}%',
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 fontSize: 21,
                 fontWeight: FontWeight.bold,
@@ -71,8 +64,8 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             right: 10.24,
 
             child: Text(
-              (allTheHabits > 0)
-                  ? '$habitsCheckedToday of $allTheHabits \nCompleted Today!'
+              (dataBundle.allTheHabits > 0)
+                  ? '${dataBundle.habitsCheckedToday} of ${dataBundle.allTheHabits}\nCompleted Today!'
                   : "No habits yet? \n Let's build a better routine together!",
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 shadows: [
@@ -106,6 +99,14 @@ class HomeScreenWelcomeCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return HabitStateBuilder<HomeScreenWelcomeCardBundle>(
+      state: state,
+      successWidget: onSuccess,
     );
   }
 }

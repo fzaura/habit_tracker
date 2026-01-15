@@ -6,7 +6,7 @@ import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/core/utility/Validations/validations.dart';
 import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
-import 'package:habit_tracker/presentation/Auth/State/authState.dart';
+import 'package:habit_tracker/presentation/Auth/StateClasses/Auth/authState.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
