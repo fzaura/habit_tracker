@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
-import 'package:habit_tracker/presentation/Habits/DataBundles/habitListerBundle.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/SnackBars/HabitsSnackBar.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
@@ -21,9 +21,9 @@ class Habitslister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  Widget onSuccessWidget(HabitListerBundle bundle) {
+  Widget onSuccessWidget(HabitHomeScreenDataBundle bundle) {
     print('THE HABIT LISTER GOT CALLED');
-
+    print('THE DATA BUNDLE INSIDE THE HABIT LSITER IS ${bundle.habitsToList}');
     print(
       bundle.habitsToList
           .map((h) => 'ID: ${h.id} | Name: ${h.habitName}')
@@ -103,7 +103,7 @@ class Habitslister extends ConsumerWidget {
     // }
     return HabitStateBuilder(
       state: state,
-      successWidget: onSuccessWidget,
+      successHomeScreenWidget: onSuccessWidget,
       failureWidget: onFailureObject(),
       loadingWidget: onLoadingWidget(),
       providedError: ServerFailure(errorMessage: 'nega'),

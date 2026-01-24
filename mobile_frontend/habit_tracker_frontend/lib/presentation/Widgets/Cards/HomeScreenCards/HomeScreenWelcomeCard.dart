@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
-import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenWelcomeCardBundle.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/HomeScreen/habitsDoneTodayChart.dart';
 import 'package:habit_tracker/presentation/Widgets/GlobalStateBuilder/habitStateBuilder.dart';
 
-class HomeScreenWelcomeCard extends StatelessWidget {
+class HomeScreenWelcomeCard extends ConsumerWidget {
   const HomeScreenWelcomeCard({super.key, required this.state});
   final HabitState state;
 
-  Widget onSuccess(HomeScreenWelcomeCardBundle dataBundle) {
+  Widget onSuccess(HabitHomeScreenDataBundle dataBundle) {
     print('THE ON SUCCESS HOME SCREEN WELCOME CARD GOT RENDERED');
-    final double mainPercentage = (dataBundle.allTheHabits > 0)
-        ? (dataBundle.habitsCheckedToday / dataBundle.allTheHabits * 100)
+    final double mainPercentage = (dataBundle.allTheHabits! > 0)
+        ? (dataBundle.habitsCheckedToday! / dataBundle.allTheHabits! * 100)
         : 0.0;
     print('All the Main Percentage  Number : ${mainPercentage}');
 
@@ -66,7 +67,7 @@ class HomeScreenWelcomeCard extends StatelessWidget {
             child: Text(
               (dataBundle.allTheHabits > 0)
                   ? '${dataBundle.habitsCheckedToday} of ${dataBundle.allTheHabits}\nCompleted Today!'
-                  : "No habits yet? \n Let's build a better routine together!",
+                  : "Add Your Habits To get Started",
               style: mainAppTheme.textTheme.labelMedium?.copyWith(
                 shadows: [
                   Shadow(
@@ -102,11 +103,16 @@ class HomeScreenWelcomeCard extends StatelessWidget {
     );
   }
 
+Widget onLoadingWidget()
+{
+  return CircularProgressIndicator();
+}
   @override
-  Widget build(BuildContext context) {
-    return HabitStateBuilder<HomeScreenWelcomeCardBundle>(
+  Widget build(BuildContext context,WidgetRef ref) {
+    return HabitStateBuilder(
       state: state,
-      successWidget: onSuccess,
+      successHomeScreenWidget:onSuccess ,
+      loadingWidget: onLoadingWidget(),
     );
   }
 }

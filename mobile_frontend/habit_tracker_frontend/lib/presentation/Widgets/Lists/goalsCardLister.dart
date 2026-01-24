@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
-import 'package:habit_tracker/presentation/Habits/DataBundles/habitListerBundle.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goalsCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/loadingIndicator.dart';
@@ -20,7 +20,7 @@ class GoalsCardLister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  Widget onSuccess(HabitListerBundle bundle) {
+  Widget onSuccess(HabitHomeScreenDataBundle bundle) {
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 500),
       child: ListView.builder(
@@ -69,9 +69,9 @@ class GoalsCardLister extends ConsumerWidget {
     //   );
     // }
 
-    return HabitStateBuilder<HabitListerBundle>(
+    return HabitStateBuilder(
       state: state,
-      successWidget: onSuccess,
+      successHomeScreenWidget: onSuccess,
       failureWidget: onErrorFailure(),
       loadingWidget: loadWidget(),
       providedError: ServerFailure(errorMessage: 'YEs'),

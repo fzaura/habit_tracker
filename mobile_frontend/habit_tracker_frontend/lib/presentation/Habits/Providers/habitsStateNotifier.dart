@@ -6,7 +6,7 @@ import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.da
 import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
-import 'package:habit_tracker/presentation/Habits/DataBundles/habitListerBundle.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum HabitGoal { buildHabit, breakHabit, maintain }
@@ -31,11 +31,20 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     loadNewHabits();
   }
 
-  HabitListerBundle bundleHabitLists(List<Habit> habits, Habit? habit) {
+  void loadWelcomeCardData()
+  {
+    int allHabitNumber=habitsList.length;
+    int checkedHabitsNumber=habitsList.where((habit) => habit.isCompleted).length;
+    final bundle=HabitHomeScreenDataBundle(habitsToList: habitsList,habitsCheckedToday: checkedHabitsNumber, allTheHabits: allHabitNumber);
+    state=HabitSuccess(data: bundle);
+  }
+ 
+
+  HabitHomeScreenDataBundle bundleHabitLists(List<Habit> habits, Habit? habit) {
     if (habit == null) {
-      return HabitListerBundle(habitsToList: habits);
+      return HabitHomeScreenDataBundle(habitsToList: habits);
     } else {
-      return HabitListerBundle(habitsToList: habits, habit: habit);
+      return HabitHomeScreenDataBundle(habitsToList: habits, habit: habit);
     }
   }
 
@@ -44,10 +53,13 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     //The Bundle Needs to be made so it can be sent to the Habit State Builder.
     //From There Habit State Builder Will Match Between the results of the
     //notifier and the result of the builder
-    final bundle = HabitListerBundle(
+         loadWelcomeCardData();
+
+    final bundle = HabitHomeScreenDataBundle(
       habitsToList: optimisticList,
       habit: newHabit,
     );
+ 
     state = HabitSuccess(data: bundle);
   }
 
@@ -60,23 +72,29 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       }
     }).toList();
     final optimisticList = [...newList];
-    final bundle = HabitListerBundle(habitsToList: optimisticList);
+    final bundle = HabitHomeScreenDataBundle(habitsToList: optimisticList);
+        loadWelcomeCardData();
+
     state = HabitSuccess(data: bundle);
     return optimisticList;
   }
 
   void _updateStateAfterAdd(List<Habit> updateHabits) {
     habitsList = updateHabits; // Sync the Vault
-    final bundle = HabitListerBundle(habitsToList: habitsList);
+    final bundle = HabitHomeScreenDataBundle(habitsToList: habitsList);
     state = HabitSuccess(data: bundle); // Notify the Screen
     //This Method Is used to update the RAM List after each method
+    loadWelcomeCardData();
   }
 
   void _updateListAfterDelete(String id, List<Habit> updatedList) async {
     print('The Number of Habits in the New List is : ${updatedList.length}');
     habitsList = updatedList;
+    final HabitHomeScreenDataBundle bundle = bundleHabitLists(habitsList, null);
+    state = HabitSuccess(data: bundle);
 
-    state = HabitSuccess(data: updatedList);
+            loadWelcomeCardData();
+
   }
 
   Future<void> loadNewHabits() async {
@@ -95,10 +113,11 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       // Right (Success): Update the state with the list of habits
       (rightObject) {
         habitsList = rightObject;
-        final dataBundle=HabitListerBundle(habitsToList: habitsList);
+        final dataBundle = HabitHomeScreenDataBundle(habitsToList: habitsList);
         state = HabitSuccess(data: dataBundle);
       },
     );
+    loadWelcomeCardData();
   }
 
   //B- Variables that Change that Data in a non immutable way
