@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
+import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 abstract class AuthRepositoryInterFace {
@@ -14,4 +16,15 @@ abstract class AuthRepositoryInterFace {
     required String password,
     required String email,
   });
-}
+
+
+  Future<Either<ErrorInterface, TokenModel>> refreshTokens(
+    String oldRefreshToken,
+  ); 
+  Future<void> logout();
+
+Future<Either<ErrorInterface,Response<dynamic>>> retryRequest(RequestOptions requestOptions , String newAccessToken);
+
+  }
+
+

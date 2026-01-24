@@ -4,7 +4,7 @@ import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 
 class TodayTempContainer extends StatelessWidget {
-  TodayTempContainer({
+ const TodayTempContainer({
     super.key,
     required this.habits,
     required this.listToView,
@@ -59,6 +59,7 @@ class TodayTempContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('The TODAY HABIT CONATINER GOT CALLED');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

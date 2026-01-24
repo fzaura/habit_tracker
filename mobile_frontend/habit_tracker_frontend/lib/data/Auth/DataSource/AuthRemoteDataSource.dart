@@ -1,9 +1,37 @@
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
+import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/authRemoteDataSourceInterFace.dart';
+
 class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
   final Dio _dioClient;
   AuthRemoteDataSource({required Dio dioClient}) : _dioClient = dioClient;
+
+  @override
+  Future<TokenModel> refreshTokens(String oldRefreshToken) async {
+    try {
+      final response = await _dioClient.post(
+        'access-token',
+        data: 'refreshToken :$oldRefreshToken',
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Request was done SuccessFully : ${response.data}');
+        return TokenModel.fromJson(response.data);
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+        );
+      }
+    } on DioException catch (e) {
+      print(
+        'Refresh Token Process Failed at the Auth remote Data Source ${e.response}',
+      );
+      rethrow;
+    }
+  }
+
   @override
   Future<UserModel> register({
     required String username,
@@ -60,12 +88,9 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
         'auth/login',
         data: {"email": email, "password": password},
       );
-      if(request.statusCode==200 || request.statusCode==201)
-      {
+      if (request.statusCode == 200 || request.statusCode == 201) {
         return UserModel.fromJson(request.data);
-      }
-
-      else {
+      } else {
         //4- Configure Errors and Give it to the repo
         throw DioException(
           requestOptions: request.requestOptions,
@@ -85,4 +110,27 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
       throw Exception(e.response?.data['message'] ?? 'Connection Failed');
     }
   }
+
+@override
+Future<Response<dynamic>> retryRequest(RequestOptions requestOptions , String newAccessToken) async {
+    //This Happens After The refresh token Process
+    final String updatedAccessToken = newAccessToken;
+    //Inject the Token to the old Header
+    requestOptions.headers['Authorization'] = 'Bearer $updatedAccessToken';
+    //Auth Is the header name  so it can pass.
+    //Bearer Is the one holding the Updated token (it's the type of the token)
+
+//Refire the Request
+    return _dioClient.request(
+      requestOptions.path,
+      options: Options(
+        method: requestOptions.method,//The same Request Method
+        headers: requestOptions.headers,//Same Updated Header
+        extra: requestOptions.extra,//Same Extra info
+      ),
+      data: requestOptions.data, //Ensures the habit data isn't lost during the save.
+      queryParameters: requestOptions.queryParameters,
+    );
+  }
+
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
-import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goalsCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/loadingIndicator.dart';
@@ -21,7 +20,7 @@ class GoalsCardLister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  Widget onSuccess(List<Habit> habitLister, Habit? habit) {
+  Widget onSuccess(HabitHomeScreenDataBundle bundle) {
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 500),
       child: ListView.builder(
@@ -29,13 +28,13 @@ class GoalsCardLister extends ConsumerWidget {
         physics: canUserScroll
             ? AlwaysScrollableScrollPhysics()
             : NeverScrollableScrollPhysics(),
-        itemCount: (habitLister.length <= 3) || (seeAll)
-            ? habitLister.length
+        itemCount: (bundle.habitsToList.length <= 3) || (seeAll)
+            ? bundle.habitsToList.length
             : 3,
         itemBuilder: (context, index) {
-          final habitToDisplay = habitLister[index];
+          final habitToDisplay = bundle.habitsToList[index];
           return GoalsCard(
-            key: ValueKey(habitLister[index]),
+            key: ValueKey(bundle.habitsToList[index]),
             habitGoals: habitToDisplay,
           );
         },
@@ -72,7 +71,7 @@ class GoalsCardLister extends ConsumerWidget {
 
     return HabitStateBuilder(
       state: state,
-      successWidget: onSuccess,
+      successHomeScreenWidget: onSuccess,
       failureWidget: onErrorFailure(),
       loadingWidget: loadWidget(),
       providedError: ServerFailure(errorMessage: 'YEs'),

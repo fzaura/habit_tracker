@@ -10,25 +10,25 @@ import 'package:habit_tracker/data/Auth/DataSource/AuthRemoteDataSource.dart';
 import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dart';
 import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
+import 'package:habit_tracker/domain/Auth/Features/logoutUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
-import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepo.dart';
-
-import 'package:habit_tracker/domain/Auth/InterFaces/TokenStorage/tokenStorage.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
+import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
+import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
 import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 
-
 const _headers = {
-  'Content-Type': 'application/json',//We Are sending json
-  'Accept': 'application/json', //We Tell the backend what type of data do we recieve 
+  'Content-Type': 'application/json', //We Are sending json
+  'Accept':
+      'application/json', //We Tell the backend what type of data do we recieve
 };
 // Inside lib/core/config/dependency_providers.dart (Conceptual Location)
 final flutterSecureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return FlutterSecureStorage();
 });
 
-final tokenStorage = Provider<TokenStorage>((ref) {
+final tokenStorage = Provider<SecureTokenStorage>((ref) {
   return SecureTokenStorage(
     safeStorage: ref.watch(flutterSecureStorageProvider),
   );
@@ -38,6 +38,7 @@ final authInterceptorProvider = Provider<AuthInterceptor>((ref) {
   return AuthInterceptor(
     dioClient: ref.watch(unInterceptedDioProvider),
     tokenStorage: ref.watch(tokenStorage),
+    repo: ref.watch(authRepositoryProvider),
   );
 });
 //
@@ -67,41 +68,35 @@ final mainDioProvider = Provider<Dio>((ref) {
   return dio;
 });
 
-
 //Habit Providers
 final remoteDataSourceProvider = Provider<RemoteServerDataSource>((ref) {
   return RemoteServerDataSource(dio: ref.watch(mainDioProvider));
 });
 
 final habitsRepoProvider = Provider<HabitRepo>((ref) {
-    return HabitRepo(dataSource: ref.watch(remoteDataSourceProvider));
+  return HabitRepo(dataSource: ref.watch(remoteDataSourceProvider));
+});
 
-},);
-
-final listFeatureProvider =Provider<ListHabitsFeature> ((ref) {
+final listFeatureProvider = Provider<ListHabitsFeature>((ref) {
   return ListHabits(repo: ref.watch(habitsRepoProvider));
-},);
+});
 //Habit Provider
 
-final addNewHabitFeatureProvider =Provider<AddNewHabitFeature> ((ref) {
+final addNewHabitFeatureProvider = Provider<AddNewHabitFeature>((ref) {
   return AddNewHabitFeature(repo: ref.watch(habitsRepoProvider));
-},);
+});
 //Habit Provider
-
-
 
 //Auth Providers
 // 1. Auth Data Source Provider
 // We use 'unInterceptedDioProvider' because registration doesn't need an old token.
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  return AuthRemoteDataSource(
-    dioClient: ref.watch(unInterceptedDioProvider),
-  );
+  return AuthRemoteDataSource(dioClient: ref.watch(unInterceptedDioProvider));
 });
 
 // 2. Auth Repository Provider
 // This needs the Remote Data Source AND your Token Storage to save the tokens.
-final authRepositoryProvider = Provider<AuthRepositoryInterFace>((ref) {
+final authRepositoryProvider = Provider<AuthRepo>((ref) {
   return AuthRepo(
     remoteDataSource: ref.watch(authRemoteDataSourceProvider),
     tokenStorage: ref.watch(tokenStorage), // You already defined this!
@@ -111,12 +106,20 @@ final authRepositoryProvider = Provider<AuthRepositoryInterFace>((ref) {
 // 3. Register Feature (Use Case) Provider
 // This is the "Commander" that the Notifier will talk to.
 final registerFeatureProvider = Provider<RegisterUseCase>((ref) {
-  return RegisterUseCase(
-    ref.watch(authRepositoryProvider),
-  );
+  return RegisterUseCase(ref.watch(authRepositoryProvider));
 });
 final loginFeatureProvider = Provider<LoginUseCase>((ref) {
-  return LoginUseCase(
-    ref.watch(authRepositoryProvider),
-  );
+  return LoginUseCase(ref.watch(authRepositoryProvider));
+});
+final logoutFeatureProvider = Provider<LogoutUseCase>((ref) {
+  return LogoutUseCase(ref.watch(authRepositoryProvider));
+});
+
+final deleteHabitFeatureProvider = Provider<DeleteHabitUseCase>((ref) {
+  return DeleteHabitUseCase(repo: ref.watch(habitsRepoProvider));
+});
+
+
+final editHabitFeatureProvider = Provider<EditHabitUseCase>((ref) {
+  return EditHabitUseCase(repo: ref.watch(habitsRepoProvider));
 });

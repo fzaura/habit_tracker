@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/SnackBars/HabitsSnackBar.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
@@ -20,9 +21,13 @@ class Habitslister extends ConsumerWidget {
   final bool shrinkWrap;
   final bool canUserScroll;
 
-  Widget onSuccessWidget(List<Habit> habitsToList, Habit? habit) {
+  Widget onSuccessWidget(HabitHomeScreenDataBundle bundle) {
+    print('THE HABIT LISTER GOT CALLED');
+    print('THE DATA BUNDLE INSIDE THE HABIT LSITER IS ${bundle.habitsToList}');
     print(
-      habitsToList.map((h) => 'ID: ${h.id} | Name: ${h.habitName}').toList(),
+      bundle.habitsToList
+          .map((h) => 'ID: ${h.id} | Name: ${h.habitName}')
+          .toList(),
     );
 
     return Container(
@@ -32,11 +37,11 @@ class Habitslister extends ConsumerWidget {
             ? AlwaysScrollableScrollPhysics()
             : NeverScrollableScrollPhysics(),
         shrinkWrap: shrinkWrap,
-        itemCount: seeAll || (habitsToList.length <= 3)
-            ? habitsToList.length
+        itemCount: seeAll || (bundle.habitsToList.length <= 3)
+            ? bundle.habitsToList.length
             : 3,
         itemBuilder: (context, index) {
-          final habit = habitsToList[index];
+          final habit = bundle.habitsToList[index];
           return Dismissible(
             background: Container(
               width: 335,
@@ -52,9 +57,9 @@ class Habitslister extends ConsumerWidget {
                 ],
               ),
             ),
-            key: ValueKey(habitsToList[index].id),
+            key: ValueKey(bundle.habitsToList[index].id),
             child: Habitscheckcard(
-              key: ValueKey(habitsToList[index].id),
+              key: ValueKey(bundle.habitsToList[index].id),
               habitToDisplay: habit,
             ),
             onDismissed: (direction) {
@@ -70,11 +75,17 @@ class Habitslister extends ConsumerWidget {
   }
 
   Widget onLoadingWidget() {
+  print('LOADING THE HABIT LITSER');
     return Center(child: HabitLoadingIndicator());
   }
 
   Widget onFailureObject() {
-    return HabitASnackBar(message: 'Failed to Add New Habit',icon: Icons.wrong_location_outlined,);
+      print('FAILED THE HABIT LITSER');
+
+    return HabitASnackBar(
+      message: 'Failed to Add New Habit',
+      icon: Icons.wrong_location_outlined,
+    );
   }
 
   @override
@@ -92,7 +103,7 @@ class Habitslister extends ConsumerWidget {
     // }
     return HabitStateBuilder(
       state: state,
-      successWidget: onSuccessWidget,
+      successHomeScreenWidget: onSuccessWidget,
       failureWidget: onFailureObject(),
       loadingWidget: onLoadingWidget(),
       providedError: ServerFailure(errorMessage: 'nega'),
