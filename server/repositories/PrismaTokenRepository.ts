@@ -16,7 +16,7 @@ export default class PrismaTokenRepository implements ITokenRepository {
   async createToken(
     userId: string,
     token: string,
-    expiresAt: Date
+    expiresAt: Date,
   ): Promise<RefreshToken> {
     return await this.db.refreshToken.create({
       data: { userId, value: token, expiresAt },
