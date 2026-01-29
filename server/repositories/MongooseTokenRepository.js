@@ -6,7 +6,7 @@
  * @requires ./ITokenRepository
  * @requires ../models/refreshToken.model
  */
-const ITokenRepo = require("./ITokenRepository");
+import ITokenRepo from "./ITokenRepository";
 const TokenModel = require("../models/refreshToken.model");
 
 /**
