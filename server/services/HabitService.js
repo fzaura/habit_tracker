@@ -39,19 +39,6 @@ class HabitService {
    * @throws {Error} If required fields are missing
    */
   async createHabit(habitData, userId) {
-    if (!habitData.name) {
-      throw new Error("Habit name is required");
-    }
-    if (!habitData.goal) {
-      throw new Error("Habit goal is required");
-    }
-    if (!habitData.frequency) {
-      throw new Error("Habit frequency is required");
-    }
-    if (!habitData.endDate) {
-      throw new Error("Habit end date is required");
-    }
-
     if (habitData.frequency === "daily") {
       habitData.frequency = {
         type: "daily",
@@ -122,7 +109,7 @@ class HabitService {
     const updatedHabit = await this.habitRepo.updateHabit(
       habitId,
       habitData,
-      userId
+      userId,
     );
 
     if (!updatedHabit) {
@@ -147,7 +134,7 @@ class HabitService {
     const { habits, total } = await this.habitRepo.getHabits(
       page,
       limit,
-      userId
+      userId,
     );
 
     const totalPages = Math.ceil(total / limit);
@@ -200,11 +187,11 @@ class HabitService {
     const completionsToday = await this.habitRepo.getCompletedHabitsByDateRange(
       userId,
       startOfDay,
-      endOfDay
+      endOfDay,
     );
 
     const isCompleted = completionsToday.some(
-      (c) => c.habitId.toString() === habitId
+      (c) => c.habitId.toString() === habitId,
     );
     if (isCompleted) {
       throw new Error("Habit is already completed.");
