@@ -3,10 +3,10 @@ import 'package:habit_tracker/core/Config/providers.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataHabit.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
-import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
-import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
+import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/delete_habit._feature.dart';
+import 'package:habit_tracker/domain/Habits/Features/EditHabits/edit_habit_feature.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
-import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
+import 'package:habit_tracker/presentation/Habits/BLoC/habit_state.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -17,10 +17,10 @@ enum PeriodUnit { daily, weekly, monthly }
 enum SortGoalsBYs { all, achieved, notAchieved }
 
 class HabitsStateNotifier extends StateNotifier<HabitState> {
-  final ListHabitsFeature _listHabitsFeature;
+  final ListHabitsFeatureInterface _listHabitsFeature;
   final AddNewHabitFeature _addNewHabitFeature;
-  final DeleteHabitUseCase _deleteHabit;
-  final EditHabitUseCase _editHabitUseCase;
+  final DeleteHabitFeature _deleteHabit;
+  final EditHabitFeature _editHabitUseCase;
   List<Habit> habitsList =HabitSamples.getSampleHabits();
 
   HabitsStateNotifier(
@@ -37,7 +37,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     int allHabitNumber=habitsList.length;
     int checkedHabitsNumber=habitsList.where((habit) => habit.isCompleted).length;
     final bundle=HabitHomeScreenDataBundle(habitsToList: habitsList,habitsCheckedToday: checkedHabitsNumber, allTheHabits: allHabitNumber);
-    state=HabitSuccess(data: bundle);
+    state=HabitSuccess(bundle: bundle);
   }
  
 
@@ -61,7 +61,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       habit: newHabit,
     );
  
-    state = HabitSuccess(data: bundle);
+    state = HabitSuccess(bundle: bundle);
   }
 
   List<Habit> _optimisticUpdateForDelete(String id) {
@@ -76,14 +76,14 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     final bundle = HabitHomeScreenDataBundle(habitsToList: optimisticList);
         loadWelcomeCardData();
 
-    state = HabitSuccess(data: bundle);
+    state = HabitSuccess(bundle: bundle);
     return optimisticList;
   }
 
   void _updateStateAfterAdd(List<Habit> updateHabits) {
     habitsList = updateHabits; // Sync the Vault
     final bundle = HabitHomeScreenDataBundle(habitsToList: habitsList);
-    state = HabitSuccess(data: bundle); // Notify the Screen
+    state = HabitSuccess(bundle : bundle); // Notify the Screen
     //This Method Is used to update the RAM List after each method
     loadWelcomeCardData();
   }
@@ -92,7 +92,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     print('The Number of Habits in the New List is : ${updatedList.length}');
     habitsList = updatedList;
     final HabitHomeScreenDataBundle bundle = bundleHabitLists(habitsList, null);
-    state = HabitSuccess(data: bundle);
+    state = HabitSuccess(bundle: bundle);
 
             loadWelcomeCardData();
 
@@ -108,14 +108,14 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     result.fold(
       // Left (Failure): Handle the error (e.g., log it, or set an error state if using a complex state object)
       (failure) {
-        state = HabitFailure(failure);
+        state = HabitFailure(errorMessage:  'failure');
         print('Failed to load habits: ${failure.errorMessage}');
       },
       // Right (Success): Update the state with the list of habits
       (rightObject) {
         habitsList = rightObject;
         final dataBundle = HabitHomeScreenDataBundle(habitsToList: habitsList);
-        state = HabitSuccess(data: dataBundle);
+        state = HabitSuccess(bundle: dataBundle);
       },
     );
     loadWelcomeCardData();
@@ -135,7 +135,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
       (wrongObject) {
         habitsList = rollBackToOldList; //GoBack to the Old
 
-        state = HabitFailure(wrongObject);
+        state = HabitFailure(errorMessage:  'wrongObject');
       },
       (rightObject) {
         //WE NEED TO UPDATE THE HABIT WITH THE NEW GENERATED ID.
@@ -154,7 +154,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     final deleteHabit = await _deleteHabit.deleteHabit(id);
     deleteHabit.fold(
       (wrongObject) {
-        state = HabitFailure(wrongObject);
+        state = HabitFailure(errorMessage:  'wrongObject');
         habitsList = [...rollBackToOldList];
       },
       (rightObject) {
@@ -168,52 +168,8 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
     state = HabitLoading();
   }
 
-  List<DateTime> _updateCurrentDatesList(
-    List<DateTime> currentDates,
-    DateTime todayDate,
-    DateTime now,
-  ) {
-    //Using an index to get better perferomance
-    int currentIndexToUpdate = currentDates.indexWhere(
-      (currentDate) => isSameDay(todayDate, currentDate),
-    );
-    if (currentIndexToUpdate != -1) {
-      currentDates = [...currentDates]..[currentIndexToUpdate] = now;
-    }
-    return currentDates;
-  }
+  
 
-  List<DateTime> _updateCompletedDates(
-    List<DateTime> currentDates,
-    bool isHabitCompleted,
-  ) {
-    final now = DateTime.now();
-    final todayDate = DateTime(now.year, now.month, now.day);
-    final hasToday = currentDates.any(
-      (date) => isSameDay(DateTime(date.year, date.month, date.day), todayDate),
-    );
-
-    if (isHabitCompleted) {
-      if (hasToday) {
-        //Update the List with a new update Date
-        return _updateCurrentDatesList(currentDates, todayDate, now);
-      } else {
-        return [...currentDates, now]; //Just add a new Date
-      }
-    } else {
-      if (hasToday) {
-        return currentDates
-            .where(
-              (dayToIterateThrough) =>
-                  !isSameDay(dayToIterateThrough, todayDate),
-            )
-            .toList();
-        //Delete Day
-      }
-    }
-
-    return currentDates;
-  }
 
   // In your StateNotifier
   void toggleHabit(String habitID) {

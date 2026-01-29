@@ -13,9 +13,9 @@ import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/logoutUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
-import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
-import 'package:habit_tracker/domain/Habits/Features/EditHabits/editHabit.dart';
-import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/listHabits.dart';
+import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/delete_habit._feature.dart';
+import 'package:habit_tracker/domain/Habits/Features/EditHabits/edit_habit_feature.dart';
+import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/list_habits_feature.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 
 const _headers = {
@@ -77,7 +77,7 @@ final habitsRepoProvider = Provider<HabitRepo>((ref) {
   return HabitRepo(dataSource: ref.watch(remoteDataSourceProvider));
 });
 
-final listFeatureProvider = Provider<ListHabitsFeature>((ref) {
+final listFeatureProvider = Provider<ListHabitsFeatureInterface>((ref) {
   return ListHabits(repo: ref.watch(habitsRepoProvider));
 });
 //Habit Provider
@@ -115,11 +115,11 @@ final logoutFeatureProvider = Provider<LogoutUseCase>((ref) {
   return LogoutUseCase(ref.watch(authRepositoryProvider));
 });
 
-final deleteHabitFeatureProvider = Provider<DeleteHabitUseCase>((ref) {
-  return DeleteHabitUseCase(repo: ref.watch(habitsRepoProvider));
+final deleteHabitFeatureProvider = Provider<DeleteHabitFeature>((ref) {
+  return DeleteHabitFeature(repo: ref.watch(habitsRepoProvider));
 });
 
 
-final editHabitFeatureProvider = Provider<EditHabitUseCase>((ref) {
-  return EditHabitUseCase(repo: ref.watch(habitsRepoProvider));
+final editHabitFeatureProvider = Provider<EditHabitFeature>((ref) {
+  return EditHabitFeature(repo: ref.watch(habitsRepoProvider));
 });

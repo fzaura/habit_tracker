@@ -5,7 +5,7 @@ import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
-class ListHabits implements ListHabitsFeature {
+class ListHabits implements ListHabitsFeatureInterface {
   final HabitRepo repo;
   const ListHabits({required this.repo});
 

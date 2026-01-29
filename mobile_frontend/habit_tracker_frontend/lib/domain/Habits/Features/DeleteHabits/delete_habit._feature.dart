@@ -3,10 +3,10 @@ import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoI
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/deleteHabitInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
-class DeleteHabitUseCase implements DeleteHabitInterface {
+class DeleteHabitFeature implements DeleteHabitInterface {
   @override
   final HabitRepoInterface repo;
-  const DeleteHabitUseCase({required this.repo});
+  const DeleteHabitFeature({required this.repo});
 
   Future<Either<ErrorInterface, String>> deleteHabit(String habitID) async {
     final deleteHabitMessage = await repo.deleteHabit(habitID);

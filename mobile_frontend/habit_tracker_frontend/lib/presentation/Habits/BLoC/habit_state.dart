@@ -8,24 +8,29 @@ sealed class HabitState extends Equatable {
   List<Object?> get props => [];
 }
 
-
-sealed class HabitInitial extends HabitState {
+class HabitInitial extends HabitState {
   const HabitInitial();
 
   @override
   List<Object?> get props => [];
 }
 
-
-sealed class HabitLoading extends HabitState {
+class HabitLoading extends HabitState {
   const HabitLoading();
 
   @override
   List<Object?> get props => [];
 }
 
+class HabitFailure extends HabitState {
+  const HabitFailure({required this.errorMessage});
+  final String errorMessage;
 
-sealed class HabitSuccess extends HabitState {
+  @override
+  List<Object?> get props => [errorMessage];
+}
+
+class HabitSuccess extends HabitState {
   const HabitSuccess({required this.bundle});
   final HabitHomeScreenDataBundle bundle;
   @override

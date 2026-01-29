@@ -4,10 +4,10 @@ import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoI
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/editHabitInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
-class EditHabitUseCase implements EditHabitInterface {
+class EditHabitFeature implements EditHabitInterface {
   @override
   final HabitRepoInterface repo;
-  const EditHabitUseCase({required this.repo});
+  const EditHabitFeature({required this.repo});
   @override
   Future<Either<ErrorInterface, String>> editHabit(Habit habit) async {
     final newHabitName = await repo.editHabit(habit.id);
