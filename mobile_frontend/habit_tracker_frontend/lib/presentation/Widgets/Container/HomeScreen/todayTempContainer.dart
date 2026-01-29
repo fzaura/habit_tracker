@@ -44,7 +44,7 @@ class TodayTempContainer extends StatelessWidget {
             TextButton(
               onPressed: onPressButton,
               child: Text(
-                'See all',
+                '+',
                 style: GoogleFonts.nunito(
                   color: mainAppTheme.colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -59,7 +59,6 @@ class TodayTempContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('The TODAY HABIT CONATINER GOT CALLED');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

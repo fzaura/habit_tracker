@@ -1,9 +1,10 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/homeScreen.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/home_Screen.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/ProgressScreen/progressScreen.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/SettingsScreen/settingsScreen.dart';
+import 'package:habit_tracker/presentation/Widgets/BottomNavBar/main_bottom_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 class MainTabScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activeScreen = Homescreen();
+    Widget activeScreen = HomeScreen();
 
     if (activePageIndex == 1 || activeScreenName == 'ProgressScreen') {
       activeScreen = ProgressScreen();
@@ -48,28 +49,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
     return Scaffold(
       body: activeScreen,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: _changeScreen,
-        currentIndex: activePageIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined,size: 33,),
-            label: 'Home',
-          
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.add_chart_outlined,size: 33,),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.settings_outlined,size: 33,),
-            label: 'Settings',
-          ),
-        ],
-      ),
+      bottomNavigationBar: HabitaNavbar(currentIndex: 1, onTap: (num){}),
     );
   }
 }

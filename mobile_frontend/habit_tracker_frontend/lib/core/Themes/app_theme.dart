@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static const Color _background = Color(0xFFD9D9D9);
-  static const Color _primaryBrand = Color(0xFF6B2A77);
-  static const Color _secondaryBrand = Color(0xFF197278);
+  static const Color _primaryBrand = Color.fromRGBO(107, 42, 119, 1);
+  static const Color _secondaryBrand = Color.fromARGB(255, 24, 112, 118);
   static const Color _tertiaryBrand = Color(0xFF686B6B);
   static const Color _accentAction = Color(0xFF283D3B);
 
@@ -12,18 +12,19 @@ class AppTheme {
       useMaterial3: true,
       scaffoldBackgroundColor: _background,
       
-      // 1. Color Scheme Mapping - AccentAction is now Primary
+      // 1. Color Scheme
       colorScheme: ColorScheme.fromSeed(
         seedColor: _accentAction,
-        primary: _accentAction,        // Main UI color
+        primary: _accentAction,
         secondary: _secondaryBrand,
-        tertiary: _primaryBrand,       // Purple moved here
+        tertiary: _primaryBrand,
         surface: Colors.white,
         onSurface: _accentAction,
         onPrimary: Colors.white,
+        surfaceTint: Colors.transparent, // Clean iPhone look
       ),
 
-      // 2. Component Styling - FIXED CardThemeData
+      // 2. Component Styling
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -36,23 +37,12 @@ class AppTheme {
         ),
       ),
 
-      // FIXED: Use CardThemeData instead of CardTheme
       cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 0,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-
-      checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return _accentAction;
-          return Colors.transparent;
-        }),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
         ),
       ),
 
@@ -63,16 +53,8 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           fontSize: 24,
         ),
-        bodyLarge: TextStyle(
-          color: _accentAction,
-          fontWeight: FontWeight.normal,
-          fontSize: 16,
-        ),
-        bodyMedium: TextStyle(
-          color: _accentAction,
-          fontWeight: FontWeight.normal,
-          fontSize: 14,
-        ),
+        bodyLarge: TextStyle(color: _accentAction, fontSize: 16),
+        bodyMedium: TextStyle(color: _accentAction, fontSize: 14),
       ),
 
       // 4. Custom Theme Extensions
@@ -87,7 +69,7 @@ class AppTheme {
   }
 }
 
-// Custom Extension updated with more semantic names
+// Updated Extension with Helper Logic
 class GoalCardColors extends ThemeExtension<GoalCardColors> {
   final Color? purpleGoal;
   final Color? tealGoal;
@@ -98,6 +80,16 @@ class GoalCardColors extends ThemeExtension<GoalCardColors> {
     required this.tealGoal,
     required this.greyGoal,
   });
+
+  /// Helper to rotate colors based on index automatically
+  Color getColorByIndex(int index) {
+    switch (index % 3) {
+      case 0: return tealGoal ?? const Color(0xFF197278);
+      case 1: return purpleGoal ?? const Color(0xFF6B2A77);
+      case 2: return greyGoal ?? const Color(0xFF686B6B);
+      default: return tealGoal ?? const Color(0xFF197278);
+    }
+  }
 
   @override
   GoalCardColors copyWith({Color? purple, Color? teal, Color? grey}) {

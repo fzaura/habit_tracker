@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/app/Themes/themes.dart';
 import 'package:habit_tracker/core/Themes/app_theme.dart';
-import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
-import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/homeScreen.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 //import 'package:flutter/services.dart';
 
