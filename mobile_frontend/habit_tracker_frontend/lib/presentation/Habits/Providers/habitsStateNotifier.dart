@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:habit_tracker/core/Config/providers.dart';
+import 'package:habit_tracker/data/Habits/Dummy%20Data/dummyDataHabit.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/AddNewHabits/addNewHabitFeature.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/deleteHabit.dart';
@@ -20,7 +21,7 @@ class HabitsStateNotifier extends StateNotifier<HabitState> {
   final AddNewHabitFeature _addNewHabitFeature;
   final DeleteHabitUseCase _deleteHabit;
   final EditHabitUseCase _editHabitUseCase;
-  List<Habit> habitsList = [];
+  List<Habit> habitsList =HabitSamples.getSampleHabits();
 
   HabitsStateNotifier(
     this._listHabitsFeature,

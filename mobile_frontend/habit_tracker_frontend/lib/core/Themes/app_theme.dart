@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color _background = Color(0xFFD9D9D9);
+  static const Color _background = Color(0xDDD9D9D9);
   static const Color _primaryBrand = Color.fromRGBO(107, 42, 119, 1);
   static const Color _secondaryBrand = Color.fromARGB(255, 24, 112, 118);
   static const Color _tertiaryBrand = Color(0xFF686B6B);
   static const Color _accentAction = Color(0xFF283D3B);
+  static const Color _creamColor= Color(0xEEEDDDD4);
+    static const Color _test= Color.fromARGB(255, 201, 81, 11);
+
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -21,7 +24,9 @@ class AppTheme {
         surface: Colors.white,
         onSurface: _accentAction,
         onPrimary: Colors.white,
-        surfaceTint: Colors.transparent, // Clean iPhone look
+        onSecondary: _creamColor,
+        surfaceTint: Colors.transparent, 
+        // Clean iPhone look
       ),
 
       // 2. Component Styling
@@ -38,7 +43,7 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        color: Colors.white,
+        color:_background,
         elevation: 0,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(

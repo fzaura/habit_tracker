@@ -11,4 +11,19 @@ class HabitHomeScreenDataBundle {
   });
   final List<Habit> habitsToList;
   final Habit? habit;
+
+  // The "Pro" Addition:
+  HabitHomeScreenDataBundle copyWith({
+    List<Habit>? habitsToList,
+    Habit? habit,
+    int? allTheHabits,
+    int? habitsCheckedToday,
+  }) {
+    return HabitHomeScreenDataBundle(
+      habitsToList: habitsToList ?? this.habitsToList,
+      habit: habit ?? this.habit,
+      allTheHabits: allTheHabits ?? this.allTheHabits,
+      habitsCheckedToday: habitsCheckedToday ?? this.habitsCheckedToday,
+    );
+  }
 }

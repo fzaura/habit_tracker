@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
-import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
+import 'package:habit_tracker/presentation/Widgets/Cards/To%20do%20Cards/to_do_card.dart';
 import 'package:habit_tracker/presentation/Widgets/SnackBars/HabitsSnackBar.dart';
-import 'package:habit_tracker/presentation/Widgets/Cards/Habit%20Cards/habitsCheckCard.dart';
 import 'package:habit_tracker/presentation/Habits/Providers/habitsStateNotifier.dart';
 import 'package:habit_tracker/presentation/Widgets/CircularPercentIndicator/loadingIndicator.dart';
 import 'package:habit_tracker/presentation/Widgets/GlobalStateBuilder/habitStateBuilder.dart';
 
-class Habitslister extends ConsumerWidget {
-  const Habitslister({
+class ToDoLister extends ConsumerWidget {
+  const ToDoLister({
     super.key,
     required this.seeAll,
     required this.shrinkWrap,
@@ -22,13 +21,11 @@ class Habitslister extends ConsumerWidget {
   final bool canUserScroll;
 
   Widget onSuccessWidget(HabitHomeScreenDataBundle bundle) {
-    print('THE HABIT LISTER GOT CALLED');
-    print('THE DATA BUNDLE INSIDE THE HABIT LSITER IS ${bundle.habitsToList}');
-    print(
+   
       bundle.habitsToList
           .map((h) => 'ID: ${h.id} | Name: ${h.habitName}')
-          .toList(),
-    );
+          .toList();
+    
 
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
@@ -58,10 +55,7 @@ class Habitslister extends ConsumerWidget {
               ),
             ),
             key: ValueKey(bundle.habitsToList[index].id),
-            child: Habitscheckcard(
-              key: ValueKey(bundle.habitsToList[index].id),
-              habitToDisplay: habit,
-            ),
+            child: ToDoCard(taskName: habit.habitName),
             onDismissed: (direction) {
               showDialog(
                 context: context,
@@ -75,12 +69,10 @@ class Habitslister extends ConsumerWidget {
   }
 
   Widget onLoadingWidget() {
-  print('LOADING THE HABIT LITSER');
     return Center(child: HabitLoadingIndicator());
   }
 
   Widget onFailureObject() {
-      print('FAILED THE HABIT LITSER');
 
     return HabitASnackBar(
       message: 'Failed to Add New Habit',
@@ -91,16 +83,7 @@ class Habitslister extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(habitsProvider);
-    // 2. Use Pattern Matching to find the list
 
-    // final habitsToList = ref.watch(habitsProvider.notifier).habitsList;
-    // if (habitsToList.isEmpty) {
-    //   return Emptylists.emptyGoalsList(
-    //     mainMessage: 'Your Habit List Is Looking a Bit Lonely!',
-    //     secondMessage:
-    //         'Add Your First Habit so we can start building your routine',
-    //   );
-    // }
     return HabitStateBuilder(
       state: state,
       successHomeScreenWidget: onSuccessWidget,

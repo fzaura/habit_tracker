@@ -14,7 +14,7 @@ class GoalCardDesign {
   // ========== DIMENSIONS ==========
 
   static const double width = 206.0;
-  static const double height = 244.0;
+  static const double height = 230.0;
   static const double borderRadius = 30.0;
   static const double horizontalPadding = 12.0;
   static const double verticalPadding = 10.0;
@@ -100,11 +100,7 @@ class GoalCardDesign {
       color: cardColor,
       borderRadius: BorderRadius.circular(borderRadius),
       boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.5),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
+       
       ],
     );
   }

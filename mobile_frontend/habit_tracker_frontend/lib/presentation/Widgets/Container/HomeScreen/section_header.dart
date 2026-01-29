@@ -3,29 +3,33 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  final bool showAddButton;
   final VoidCallback? onAddPressed;
+  final bool viewDetails;
 
   const SectionHeader({
     super.key,
     required this.title,
-    this.showAddButton = true,
     this.onAddPressed,
+    this.viewDetails = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
-      width: 440, // As per spec
-      height: 31,  // As per spec
+      width: 440,
+      // As per spec
+      height: viewDetails ? 58 : 31, // As per spec
       padding: const EdgeInsets.symmetric(horizontal: 20), // Left/Right padding
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildTitleText(theme.textTheme),
-          if (showAddButton) _buildAddAction(theme.colorScheme.primary),
+          if(viewDetails)
+          _buildColumn(context),
+        if(viewDetails==false)
+          _buildTitleText(context),
+          _buildAddAction(theme.colorScheme.primary),
         ],
       ),
     );
@@ -33,14 +37,14 @@ class SectionHeader extends StatelessWidget {
 
   // --- Clean Methods (SRP) ---
 
-  Widget _buildTitleText(TextTheme textTheme) {
+  Widget _buildTitleText(BuildContext context) {
     return Text(
       title,
       style: GoogleFonts.inter(
         fontSize: 25, // As per spec
         fontWeight: FontWeight.w600, // Exact Semi-Bold
-        height: 1.26, // 126% line height
-        color: const Color(0xFF283D3B), // Your _mainColor/accentAction
+        height: viewDetails ? 1.36 : 1.26, // 126% line height
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -50,9 +54,36 @@ class SectionHeader extends StatelessWidget {
       onTap: onAddPressed,
       behavior: HitTestBehavior.opaque,
       child: Icon(
+        fontWeight: FontWeight.w100,
         Icons.add,
-        size: 29, 
+        size: 29,
         color: iconColor, // Using _accentAction from AppTheme
+      ),
+    );
+  }
+
+  Widget _buildColumn(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_buildTitleText(context),const SizedBox(height: 3,),_buildViewDetailsText(context)],
+    );
+  }
+
+  Widget _buildViewDetailsText(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Handle view details tap
+      },
+      child: Text(
+        'View Details',
+        style: GoogleFonts.inter(
+          decoration: TextDecoration.underline,
+          fontSize: 14, // As per spec
+          fontWeight: FontWeight.w400, // Medium weight
+          color: Theme.of(
+            context,
+          ).colorScheme.primary, // Your _mainColor/accentAction
+        ),
       ),
     );
   }

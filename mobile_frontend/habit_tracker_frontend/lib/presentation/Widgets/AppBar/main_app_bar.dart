@@ -16,11 +16,11 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   // This defines the exact height the Scaffold will reserve for your widget
   @override
-  Size get preferredSize => const Size.fromHeight(138.0);
+  Size get preferredSize => const Size.fromHeight(118.0);
 List<BoxShadow> get _headerShadow => [
         // 1. Ambient Shadow: Large blur, low opacity for soft transition
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
+          color: Colors.black.withValues(alpha: 0.14),
           blurRadius: 30,
           offset: const Offset(0, 15),
         ),
@@ -76,8 +76,9 @@ Widget _buildGreeting(TextTheme textTheme) {
     return Text(
       'Hi $userName',
       style: GoogleFonts.inter(
-        textStyle: textTheme.displayMedium, // Base size/weight from theme
-        color: const Color(0xFFF3E9E2),
+        textStyle: textTheme.displayMedium,
+        fontWeight: FontWeight.w500, // Base size/weight from theme
+        color: AppTheme.lightTheme.colorScheme.onSecondary
       ),
     );
   }
@@ -97,7 +98,7 @@ Widget _buildGreeting(TextTheme textTheme) {
     return Text(
       goalDescription,
       style: textTheme.bodyLarge?.copyWith(
-        color: AppTheme.lightTheme.cardColor
+        color: AppTheme.lightTheme.colorScheme.onSecondary
       ),
     );
   }
@@ -106,7 +107,7 @@ Widget _buildGreeting(TextTheme textTheme) {
     return Text(
       date.toUpperCase(),
       style: textTheme.bodyMedium?.copyWith( fontSize: 16,
-        color: AppTheme.lightTheme.canvasColor
+        color: AppTheme.lightTheme.colorScheme.onSecondary
       ),
     );
   }
