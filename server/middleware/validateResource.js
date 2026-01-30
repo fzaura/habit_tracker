@@ -2,14 +2,16 @@ const AppError = require("../utils/AppError");
 
 const validateResource = (schema) => {
   return async (req, res, next) => {
-    const { body, query, params } = req;
-
     try {
-      const parsed = await schema.parseAsync({ body, query, params });
+      const parsed = await schema.parseAsync({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
 
-      body = parsed.body;
-      query = parsed.query;
-      params = parsed.params;
+      req.body = parsed.body;
+      req.query = parsed.query;
+      req.params = parsed.params;
 
       next();
     } catch (e) {
