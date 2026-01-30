@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/data/Habits/Dummy%20Data/dummy_data_goal_card.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
@@ -61,7 +60,7 @@ class GoalsCardLister extends ConsumerWidget {
     return HabitASnackBar(message: error.errorMessage);
   }
 
-  Widget onErrorFailure() {
+  Widget onErrorFailure(ErrorInterface error) {
     return HabitASnackBar(
       message: 'Failed to Load Goals',
       icon: Icons.wrong_location_outlined,
@@ -79,9 +78,8 @@ class GoalsCardLister extends ConsumerWidget {
     return HabitStateBuilder(
       state: state,
       successHomeScreenWidget: onSuccess,
-      failureWidget: onErrorFailure(),
+      failureWidget: onErrorFailure,
       loadingWidget: loadWidget(),
-      providedError: ServerFailure(errorMessage: 'Failed to load goals'),
     );
   }
 }

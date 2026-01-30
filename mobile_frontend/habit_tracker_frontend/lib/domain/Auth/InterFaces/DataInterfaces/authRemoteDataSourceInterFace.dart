@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 
-abstract class AuthRemoteDataSourceInterFace {
+abstract interface class AuthRemoteDataSourceInterFace {
+  const AuthRemoteDataSourceInterFace({required this.client});
+  final Dio client;
   
   Future<UserModel> register({
     required String username,

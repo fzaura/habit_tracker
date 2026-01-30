@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
-import 'package:habit_tracker/presentation/Auth/StateClasses/Habits/habitsState.dart';
+import 'package:habit_tracker/presentation/Habits/BLoC/habit_state.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 
 class HabitStateBuilder extends StatelessWidget {
@@ -8,35 +8,34 @@ class HabitStateBuilder extends StatelessWidget {
     super.key,
     required this.state,
     this.successHomeScreenWidget,
-    this.failureWidget,
+    this.failureWidget, // A function that accepts the error
     this.loadingWidget,
-    this.providedError,
+    this.initialWidget,
   });
-  final HabitState state;
-  final Widget Function(HabitHomeScreenDataBundle data) ? successHomeScreenWidget;
 
+  final HabitState state;
+  final Widget Function(HabitHomeScreenDataBundle data)?
+  successHomeScreenWidget;
+  final Widget Function(ErrorInterface error)? failureWidget;
   final Widget? loadingWidget;
-  final Widget? failureWidget;
-  final ErrorInterface? providedError;
+  final Widget? initialWidget;
+
   @override
   Widget build(BuildContext context) {
-    final currentState = state; // Capture state
+    // Using Dart 3 Switch Expression for maximum "Cleanliness"
+    return switch (state) {
+      HabitInitial() => initialWidget ?? const SizedBox.shrink(),
 
-    if (currentState is HabitLoading) {
-      return loadingWidget ?? const SizedBox.shrink();
-    }
+      HabitLoading() =>
+        loadingWidget ?? const Center(child: CircularProgressIndicator()),
 
-    if (currentState is HabitFailure) {
-      return failureWidget ?? const SizedBox.shrink();
-    }
+      HabitSuccess(bundle: final data) =>
+        successHomeScreenWidget?.call(data) ?? const SizedBox.shrink(),
 
-    // KEY FIX: Use 'is' check with the Template
-    if (currentState is HabitSuccess) {
-      print('THE CURRENT STATE INSIDE THE HABIT LISTER IS ${currentState.data}');
-      return successHomeScreenWidget!(currentState.data) ?? const SizedBox.shrink();
-    }
-    else {
-      return const SizedBox.shrink();
-    }
+      HabitFailure(errorMessage: final error) => Center(child: Text(error)),
+
+      // Fallback for safety
+      _ => const SizedBox.shrink(),
+    };
   }
 }

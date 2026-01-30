@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/loginScreenNarrow.dart';
 import 'package:habit_tracker/presentation/Auth/Screens/Sign/LoginScreens/signupScreenNarrow.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/mainTabScreen.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/sucessScreenUtil.dart';
 import 'package:habit_tracker/presentation/Habits/Screens/SeeAllTemp/seeAllTodayHabits.dart';
@@ -55,15 +56,15 @@ static void onLoginInPressButton(BuildContext context) {
   }
 
 // Inside your NavigationService class
-static void handleAuthState(BuildContext context, AuthState state) {
-  if (state is AuthSuccess) {
+static void handleAuthState(BuildContext context, AuthBlocState state) {
+  if (state is AuthBlocState) {
     onSignUpPressButton(context);
-  } else if (state is AuthFailure) {
+  } else if (state is AuthBlocFailure) {
     print('Failed AT UI');
   }
 }
 
-static void navToSucessScreen(BuildContext context, AuthState state) {
+static void navToSucessScreen(BuildContext context, AuthBlocState state) {
  Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SucessScreenUtil()),

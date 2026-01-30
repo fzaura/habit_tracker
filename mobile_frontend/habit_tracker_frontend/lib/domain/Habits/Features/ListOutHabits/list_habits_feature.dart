@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
-import 'package:habit_tracker/data/Habits/Repository/habitRepo.dart';
 import 'package:habit_tracker/domain/Habits/Entities/habitUI.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoInterfaces/habitRepoInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DomainLayerInterfaces/listHabitsInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 class ListHabits implements ListHabitsFeatureInterface {
-  final HabitRepo repo;
+  final HabitRepoInterface repo;
   const ListHabits({required this.repo});
 
   @override

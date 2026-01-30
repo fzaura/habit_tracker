@@ -4,12 +4,12 @@ import 'package:habit_tracker/core/Errors/accessDeniedFailure.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/core/Errors/undefinedFailure.dart';
 import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
-import 'package:habit_tracker/data/Habits/DataSources/remoteServerDataSource.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoInterfaces/habitRepoInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 class HabitRepo implements HabitRepoInterface {
-  final RemoteServerDataSource dataSource;
+  final DataSourceInterface dataSource;
   const HabitRepo({required this.dataSource});
   @override
   Future<Either<ErrorInterface, List<HabitModel>>> getHabits() async {

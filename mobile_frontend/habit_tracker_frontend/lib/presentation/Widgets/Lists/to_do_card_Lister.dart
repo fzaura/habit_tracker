@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/domain/Habits/Features/DeleteHabits/confirmDelete.dart';
+import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/To%20do%20Cards/to_do_card.dart';
 import 'package:habit_tracker/presentation/Widgets/SnackBars/HabitsSnackBar.dart';
@@ -72,7 +72,7 @@ class ToDoLister extends ConsumerWidget {
     return Center(child: HabitLoadingIndicator());
   }
 
-  Widget onFailureObject() {
+  Widget onFailureObject(ErrorInterface error) {
 
     return HabitASnackBar(
       message: 'Failed to Add New Habit',
@@ -87,9 +87,8 @@ class ToDoLister extends ConsumerWidget {
     return HabitStateBuilder(
       state: state,
       successHomeScreenWidget: onSuccessWidget,
-      failureWidget: onFailureObject(),
+      failureWidget: onFailureObject,
       loadingWidget: onLoadingWidget(),
-      providedError: ServerFailure(errorMessage: 'nega'),
     );
   }
 }

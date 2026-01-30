@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:habit_tracker/core/Service/secureTokenStorage.dart';
-import 'package:habit_tracker/data/Auth/DataRepo/AuthRepo.dart';
+import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/AuthRepoistoryInterface.dart';
 
 class AuthInterceptor extends Interceptor {
   bool isRefreshingToken = false; //The Flag So we Don't get stuck inside a loop
   final SecureTokenStorage tokenStorage;
   final Dio dioClient; //Used to get new token from the server
-  final AuthRepo repo;
+  final AuthRepositoryInterFace repo;
   AuthInterceptor({
     required this.tokenStorage,
     required this.dioClient,

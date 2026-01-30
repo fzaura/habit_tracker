@@ -3,9 +3,11 @@ import 'package:habit_tracker/core/Config/providers.dart';
 import 'package:habit_tracker/domain/Auth/Features/loginUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/logoutUseCase.dart';
 import 'package:habit_tracker/domain/Auth/Features/registerUseCase.dart';
-import 'package:habit_tracker/presentation/Auth/StateClasses/Auth/authState.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
 
-class AuthNotifier extends StateNotifier<AuthState> {
+
+
+class AuthNotifier extends StateNotifier<AuthBlocState> {
   // We assume you have a repository passed in
   final RegisterUseCase _authUseCase;
   final LoginUseCase _loginUseCase;
@@ -14,7 +16,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   String tempErrorMessage1 = '';
   String tempErrorMessage2 = '';
   AuthNotifier(this._authUseCase, this._loginUseCase , this._logoutUseCase)
-    : super(const AuthInitial());
+    : super( AuthBlocInitial());
 
   Future<void> register({
     required String name,
@@ -23,7 +25,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String confirmPassword,
   }) async {
     // 1. Immediately tell the UI to show a loading spinner
-    state = const AuthLoading();
+    state =  AuthBlocLoading();
 
     try {
       // 2. Call your actual backend/API logic
@@ -37,7 +39,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 3. If successful, update state with the user data
       user.fold(
         (wrongObject) {
-          state = AuthFailure(wrongObject);
+          state = AuthBlocFailure(message:  wrongObject.errorMessage);
           print(
             'Error from auth provider : ${wrongObject.errorMessage} and ${wrongObject.stackTrace} ',
           );
@@ -45,7 +47,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           tempErrorMessage2 = wrongObject.stackTrace.toString();
         },
         (trueObject) {
-          state = AuthSuccess(trueObject);
+          state = AuthBlocSuccess(user:  trueObject);
         },
       );
     } catch (e) {
@@ -57,7 +59,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> login({required String email, required String password}) async {
-    state = const AuthLoading();
+    state =  AuthBlocLoading();
     try {
       final loginUser = await _loginUseCase.execute(
         email: email,
@@ -65,7 +67,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       loginUser.fold(
         (wrongObject) {
-          state = AuthFailure(wrongObject);
+          state = AuthBlocFailure(message:  wrongObject.errorMessage);
           print(
             'Error from auth provider : ${wrongObject.errorMessage} and ${wrongObject.stackTrace} ',
           );
@@ -73,7 +75,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           tempErrorMessage2 = wrongObject.stackTrace.toString();
         },
         (rightObject) {
-          state = AuthSuccess(rightObject);
+          state = AuthBlocSuccess(user:  rightObject);
         },
       );
     } catch (e) {
@@ -90,12 +92,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     
     // Piece B: Update the State (UI Logic)
     // This tells the whole app: "There is no longer a user here."
-    state = const AuthUnauthenticated(); 
+    state =  AuthBlocUnauthenticated(); 
   }
 }
 // 1. First type: The Class (AuthNotifier)
 // 2. Second type: The State (AuthState - the Sealed Class)
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authProvider = StateNotifierProvider<AuthNotifier, AuthBlocState>((ref) {
   // Get your repository/usecase from your core providers
   final regUsecase = ref.watch(registerFeatureProvider);
   final logUsecase = ref.watch(loginFeatureProvider);

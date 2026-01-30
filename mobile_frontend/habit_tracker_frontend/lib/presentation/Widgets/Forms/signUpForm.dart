@@ -5,7 +5,6 @@ import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidge
 import 'package:habit_tracker/core/utility/Validations/validations.dart';
 import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
-import 'package:habit_tracker/presentation/Auth/StateClasses/Auth/authState.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class SignUpForm extends ConsumerStatefulWidget {

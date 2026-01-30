@@ -3,14 +3,15 @@ import 'package:habit_tracker/data/Auth/DataModels/userModelOnRegister.dart';
 import 'package:habit_tracker/data/Auth/DataModels/TokenModel.dart';
 import 'package:habit_tracker/domain/Auth/InterFaces/DataInterfaces/authRemoteDataSourceInterFace.dart';
 
-class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
-  final Dio _dioClient;
-  AuthRemoteDataSource({required Dio dioClient}) : _dioClient = dioClient;
-
+class AuthRemoteDataSource implements AuthRemoteDataSourceInterFace {
+  @override
+  final Dio client;
+AuthRemoteDataSource({required Dio dioClient}) 
+      : client = dioClient;
   @override
   Future<TokenModel> refreshTokens(String oldRefreshToken) async {
     try {
-      final response = await _dioClient.post(
+      final response = await client.post(
         'access-token',
         data: 'refreshToken :$oldRefreshToken',
       );
@@ -42,7 +43,7 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
     //1-Call the Dio Client knowing that our data is configured into json.
 
     try {
-      final response = await _dioClient.post(
+      final response = await client.post(
         'auth/register', //2-Place the whole path here
         data: {
           'username': username,
@@ -84,7 +85,7 @@ class AuthRemoteDataSource extends AuthRemoteDataSourceInterFace {
   }) async {
     print('These are the things : $email and $password');
     try {
-      final request = await _dioClient.post(
+      final request = await client.post(
         'auth/login',
         data: {"email": email, "password": password},
       );
@@ -121,7 +122,7 @@ Future<Response<dynamic>> retryRequest(RequestOptions requestOptions , String ne
     //Bearer Is the one holding the Updated token (it's the type of the token)
 
 //Refire the Request
-    return _dioClient.request(
+    return client.request(
       requestOptions.path,
       options: Options(
         method: requestOptions.method,//The same Request Method
