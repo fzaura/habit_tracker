@@ -19,7 +19,7 @@ import validateResource from "../middleware/validateResource";
 
 import { IAuthController } from "../controllers/IAuthController";
 
-export default (authController: IAuthController) => {
+export default ({ authController }: { authController: IAuthController }) => {
   const router = express.Router();
 
   /**
@@ -35,7 +35,7 @@ export default (authController: IAuthController) => {
    * @returns {Object} 400 - Validation errors
    */
   router.post("/register", validateResource(registerSchema), (req, res, next) =>
-    authController.registerUser(req, res, next)
+    authController.registerUser(req, res, next),
   );
 
   /**
@@ -50,7 +50,7 @@ export default (authController: IAuthController) => {
    * @returns {Object} 401 - Invalid credentials
    */
   router.post("/login", validateResource(loginSchema), (req, res, next) =>
-    authController.loginUser(req, res, next)
+    authController.loginUser(req, res, next),
   );
 
   /**
@@ -66,7 +66,7 @@ export default (authController: IAuthController) => {
   router.post(
     "/access-token",
     validateResource(refreshUserSessionSchema),
-    (req, res, next) => authController.refreshUserSession(req, res, next)
+    (req, res, next) => authController.refreshUserSession(req, res, next),
   );
 
   return router;
