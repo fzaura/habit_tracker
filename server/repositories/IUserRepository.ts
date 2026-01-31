@@ -1,4 +1,4 @@
-import { User } from "../models/User";
+import { User } from "@prisma/client";
 import { CreateUserRequest } from "../dtos/user.dto";
 
 export interface IUserRepository {
@@ -7,15 +7,15 @@ export interface IUserRepository {
   findUserByEmail(email: string): Promise<User | null>;
   findUserByUsernameOrEmail(
     username: string,
-    email: string
+    email: string,
   ): Promise<User | null>;
   findUserConflicts(
     userId: string,
     username: string,
-    email: string
+    email: string,
   ): Promise<User | null>;
   updateUser(
     userId: string,
-    data: Partial<CreateUserRequest>
+    data: Partial<CreateUserRequest>,
   ): Promise<User | null>;
 }

@@ -11,7 +11,7 @@ import { IUserRepository } from "../repositories/IUserRepository";
 import { ITokenRepository } from "../repositories/ITokenRepository";
 import TokenService from "./TokenService";
 import { AuthConfig } from "../types/Config";
-import { User } from "../models/User";
+import { User } from "@prisma/client";
 import AppError from "../utils/AppError";
 import { toUserResponse } from "../dtos/user.dto";
 
@@ -50,7 +50,7 @@ export default class AuthService implements IAuthService {
     const savedRefreshToken = await this.tokenRepo.createToken(
       user.id,
       refreshToken,
-      expiresAt
+      expiresAt,
     );
 
     const safeUser = toUserResponse(user);
@@ -99,10 +99,10 @@ export default class AuthService implements IAuthService {
     return authResponse;
   }
   async refreshUserSession(
-    oldRefreshToken: RefreshUserSessionRequest
+    oldRefreshToken: RefreshUserSessionRequest,
   ): Promise<AuthResponse> {
     const storedToken = await this.tokenRepo.findTokenByValue(
-      oldRefreshToken.refreshToken
+      oldRefreshToken.refreshToken,
     );
     if (!storedToken) {
       throw new AppError("Token has been revoked or previously used.", 403);
@@ -111,7 +111,7 @@ export default class AuthService implements IAuthService {
     await this.tokenRepo.deleteTokenById(storedToken.id);
     try {
       const decoded = this.tokenService.verifyRefreshToken(
-        oldRefreshToken.refreshToken
+        oldRefreshToken.refreshToken,
       ) as TokenPayload;
 
       const user = await this.userRepo.findUserById(decoded.userId);

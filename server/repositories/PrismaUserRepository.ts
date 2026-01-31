@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { IUserRepository } from "./IUserRepository";
-import { User } from "../models/User";
 import { CreateUserRequest } from "../dtos/user.dto";
 
 type PrismaRepoDeps = {
@@ -28,7 +27,7 @@ export default class PrismaUserRepository implements IUserRepository {
 
   async findUserByUsernameOrEmail(
     username: string,
-    email: string
+    email: string,
   ): Promise<User | null> {
     return await this.db.user.findFirst({
       where: { OR: [{ username }, { email }] },
@@ -38,7 +37,7 @@ export default class PrismaUserRepository implements IUserRepository {
   async findUserConflicts(
     userId: string,
     username: string,
-    email: string
+    email: string,
   ): Promise<User | null> {
     return await this.db.user.findFirst({
       where: {
@@ -49,7 +48,7 @@ export default class PrismaUserRepository implements IUserRepository {
 
   async updateUser(
     userId: string,
-    data: Partial<CreateUserRequest>
+    data: Partial<CreateUserRequest>,
   ): Promise<User | null> {
     return this.db.user.update({
       where: { id: userId },
