@@ -17,9 +17,18 @@
  * - SALT_ROUNDS: Number of rounds for bcrypt hashing
  */
 require("dotenv").config();
+
+const { sendErrorEmail } = require("./utils/emailService");
+process.on("uncaughtException", async (err) => {
+  console.log("Uncaught exception, shutting down.");
+  console.log(err.name, err.message);
+
+  await sendErrorEmail(err);
+  process.exit(1);
+});
+
 const express = require("express");
 const prisma = require("./config/prisma");
-const mongoose = require("mongoose");
 const helmet = require("helmet");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
@@ -28,8 +37,6 @@ const container = require("./container");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATABASE_URL = process.env.DATABASE_URL;
-const DB_NAME = process.env.DB_NAME;
 
 app.use(helmet());
 app.use(express.json());
@@ -55,42 +62,33 @@ app.use("/api/users", userRoutes);
  * @param {Function} next - Express next function
  */
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  const status = err.status || 500;
-  res
-    .status(status)
-    .json({ message: err.message || "An internal server error has occurred." });
+  console.error(err);
+  const statusCode = err.statusCode || 500;
+  const status = err.status || "error";
+  const isOperational = err.isOperational || false;
+
+  if (!isOperational) {
+    sendErrorEmail(err);
+
+    return res
+      .status(500)
+      .json({ status: "error", message: "something went wrong." });
+  }
+  return res.status(statusCode).json({ message: err.message });
 });
 
 module.exports = app;
 
-/*
-if (require.main === module) {
-  mongoose
-    .connect(DATABASE_URL, { dbName: DB_NAME })
-    .then(() => {
-      console.log("Successfully connected to the database via mongoose.");
-      app.listen(PORT, () => {
-        console.log(
-          `Server is running on https://habit-tracker-19q1.onrender.com/`
-        );
-      });
-    })
-    .catch((err) => {
-      console.error("Database connection error: ", err);
-      process.exit(1);
-    });
-}
-    */
+let server;
 
 if (require.main === module) {
   prisma
     .$connect()
     .then(() => {
       console.log("Successfully connected to the database via prisma.");
-      app.listen(PORT, () => {
+      server = app.listen(PORT, () => {
         console.log(
-          `Server is running on https://habit-tracker-19q1.onrender.com/`
+          `Server is running on https://habit-tracker-19q1.onrender.com/`,
         );
       });
     })
@@ -99,3 +97,17 @@ if (require.main === module) {
       process.exit(1);
     });
 }
+
+process.on("unhandledRejection", async (err) => {
+  console.log("Unhandled rejection, shutting down.");
+  console.log(err.name, err.message);
+
+  await sendErrorEmail(err);
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+});
