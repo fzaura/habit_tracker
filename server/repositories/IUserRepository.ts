@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import { CreateUserRequest } from "../dtos/user.dto";
+import { CreateUserRequest, UpdateUserRequest } from "../dtos/user.dto";
 
 export interface IUserRepository {
   createUser(data: CreateUserRequest): Promise<User>;
@@ -14,8 +14,5 @@ export interface IUserRepository {
     username: string,
     email: string,
   ): Promise<User | null>;
-  updateUser(
-    userId: string,
-    data: Partial<CreateUserRequest>,
-  ): Promise<User | null>;
+  updateUser(userId: string, data: UpdateUserRequest): Promise<User | null>;
 }

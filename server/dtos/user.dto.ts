@@ -5,6 +5,8 @@ export interface CreateUserRequest {
   password: string;
 }
 
+export type UpdateUserRequest = Partial<CreateUserRequest>;
+
 export interface UserResponse {
   id: string;
   username: string;
