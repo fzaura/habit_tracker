@@ -1,10 +1,10 @@
-import { RefreshToken } from "../models/RefreshToken";
+import { RefreshToken } from "@prisma/client";
 
 export interface ITokenRepository {
   createToken(
     userId: string,
     token: string,
-    expiresAt: Date
+    expiresAt: Date,
   ): Promise<RefreshToken>;
   findTokenByValue(token: string): Promise<RefreshToken | null>;
   deleteTokenById(tokenId: string): Promise<RefreshToken>;

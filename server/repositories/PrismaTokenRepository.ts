@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ITokenRepository } from "./ITokenRepository";
-import { RefreshToken } from "../models/RefreshToken";
+import { RefreshToken } from "@prisma/client";
 
 type PrismaRepoDeps = {
   db: PrismaClient;
