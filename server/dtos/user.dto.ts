@@ -1,5 +1,4 @@
-import { User } from "../models/User";
-
+import { User } from "@prisma/client";
 export interface CreateUserRequest {
   username: string;
   email: string;
