@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_tracker/app/Themes/themes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habit_tracker/core/Config/init_dependencies.dart';
+
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
 import 'package:habit_tracker/presentation/Widgets/Forms/loginForm.dart';
-import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,9 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
- 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? 400
                 : double.infinity,
           ),
-          child: LoginForm()
+          child: LoginForm(),
         ),
       ),
     );

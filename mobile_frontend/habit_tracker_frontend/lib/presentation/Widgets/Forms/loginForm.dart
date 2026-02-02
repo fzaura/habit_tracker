@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_tracker/app/Themes/themes.dart';
-import 'package:habit_tracker/core/Service/NavigationService.dart';
+import 'package:habit_tracker/core/Themes/app_theme.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/core/utility/Validations/validations.dart';
-import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
-import 'package:habit_tracker/presentation/Auth/StateClasses/Auth/authState.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
+import 'package:habit_tracker/presentation/Habits/Screens/HomeScreens/home_screen.dart';
+import 'package:habit_tracker/presentation/Widgets/GlobalStateBuilder/auth_state_builder.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
+  const LoginForm({super.key});
   @override
   ConsumerState<LoginForm> createState() => _LoginFormState();
 }
@@ -29,42 +32,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     _passwordController = TextEditingController();
   }
 
-  bool _givenValue = false;
-
-  Row _rememberMeForgetPassword() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-
-      children: [
-        Checkbox(
-          value: _givenValue,
-          onChanged: (isTrue) {
-            setState(() {
-              _givenValue = isTrue ?? false;
-            });
-          },
-        ),
-        Text(' Remember me '),
-        const SizedBox(width: 64),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            'Forgot Password?',
-            style: GoogleFonts.nunito(color: mainAppTheme.colorScheme.primary),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //Listen to The Button's Result
-    ref.listen<AuthState>(
-      authProvider,
-      (prev, next) => NavigationService.handleAuthState(context, next),
-    );
-
+  Widget initialState() {
     return Form(
       key: _formKey,
       child: Column(
@@ -101,15 +69,15 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             onPressed: (context) {
               print('Key is Pressed');
               if (_formKey.currentState!.validate()) {
-                ref
-                    .watch(authProvider.notifier)
-                    .login(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                    );
+                BlocProvider.of<AuthBlocBloc>(context).add(
+                  LoginEvent(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
+                  ),
+                );
               } else {
                 print("Form has errors");
-            }
+              }
             },
             ctxt: context,
           ),
@@ -117,11 +85,73 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           const SizedBox(height: 36),
           defaultSignLogInGoogleButton(
             aboveText: 'Or Log in with : ',
-            onPressed: (context){},
+            onPressed: (context) {},
             ctxt: context,
           ),
         ],
       ),
+    );
+  }
+
+  bool _givenValue = false;
+
+  Row _rememberMeForgetPassword() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+
+      children: [
+        Checkbox(
+          value: _givenValue,
+          onChanged: (isTrue) {
+            setState(() {
+              _givenValue = isTrue ?? false;
+            });
+          },
+        ),
+        Text(' Remember me '),
+        const SizedBox(width: 64),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            'Forgot Password?',
+            style: GoogleFonts.nunito(color: mainAppTheme.colorScheme.primary),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //Listen to The Button's Result
+
+    return BlocConsumer<AuthBlocBloc, AuthBlocState>(
+      listener: (context, state) {
+        if (state is AuthBlocSuccess) {
+          final snackBar = SnackBar(
+            content: Text('Logged in Successfully!'),
+            backgroundColor: AppTheme.lightTheme.primaryColor,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(userName: state.user.username),
+            ),
+          );
+        }
+
+        if (state is AuthBlocFailure) {
+          final snackBar = SnackBar(
+            content: Text(state.message),
+            backgroundColor: AppTheme.lightTheme.primaryColor,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      builder: (context, state) {
+        return AuthStateBuilder(state: state, initialWidget: initialState());
+      },
     );
   }
 

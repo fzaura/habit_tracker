@@ -6,37 +6,34 @@ import 'package:habit_tracker/presentation/Habits/BLoC/habits_event.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 
 class HabitBloc extends Bloc<HabitsEvent, HabitState> {
-  //1-Define Vars
-  //The Single Source of Truth for RAM
   List<Habit> _currentHabits = [];
-  //Define the Used Features
-  //Private so no one can reach the usecase so the events and the
-  //usecase stay in sync
+  //Define the FEatures that should be used
   final ListHabitsFeatureInterface _listHabits;
+
   HabitBloc({required ListHabitsFeatureInterface listHabits})
     : _listHabits = listHabits,
       super(HabitInitial()) {
-    //2-Define Event Handlers
-  on<HabitsLoadStarted>(_onListHabits);
+    //Initialize the Event Handler after making the method
+    on<HabitsLoadStarted>(_onListHabits);
   }
-  
 
   Future<void> _onListHabits(
     HabitsLoadStarted event,
     Emitter<HabitState> emit,
   ) async {
-    //The Loading State
     emit(HabitLoading());
-    //2-
     final result = await _listHabits.getHabitsList();
     result.fold(
       (failure) {
         emit(
-          HabitFailure(errorMessage: 'FAILED TO LOAD HABITS FROM BLOC COMING'),
+          HabitFailure(
+            errorMessage: 'Failed to load habits message coming fro BLoC',
+          ),
         );
       },
-      (habits) {
-        _currentHabits = habits;
+      (habitsList) {
+        _currentHabits = habitsList;
+
         emit(
           HabitSuccess(
             bundle: HabitHomeScreenDataBundle(habitsToList: _currentHabits),

@@ -5,7 +5,9 @@ import 'package:habit_tracker/presentation/Widgets/Lists/goalsCardLister.dart';
 import 'package:habit_tracker/presentation/Widgets/Lists/to_do_card_Lister.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String userName;
+  
+  const HomeScreen({super.key, required this.userName});
   Widget mainHomeBody() {
     return Column(
       children: [
@@ -40,7 +42,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       
       appBar: MainAppBar(
-        userName: "Aser",
+        userName: userName,
         goalDescription: "Goal Task Is Drinking 2L\nOf Water",
         date: "MON / 3 / 20",
       ),

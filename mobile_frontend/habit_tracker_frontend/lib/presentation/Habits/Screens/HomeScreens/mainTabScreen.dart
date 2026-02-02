@@ -39,7 +39,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activeScreen = HomeScreen();
+   Widget activeScreen = HomeScreen(userName: 'User',);
 
     if (activePageIndex == 1 || activeScreenName == 'ProgressScreen') {
       activeScreen = ProgressScreen();

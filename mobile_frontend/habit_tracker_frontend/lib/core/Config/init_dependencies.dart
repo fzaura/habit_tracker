@@ -23,6 +23,7 @@ import 'package:habit_tracker/domain/Habits/Features/EditHabits/edit_habit_featu
 import 'package:habit_tracker/domain/Habits/Features/ListOutHabits/list_habits_feature.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoInterfaces/habitRepoInterface.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
 import 'package:habit_tracker/presentation/Habits/BLoC/habit_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -69,24 +70,29 @@ Future<void> initDependencies() async {
   _initAuth();
   _initHabit();
 }
-
 void _initAuth() {
   serviceLocator
     ..registerLazySingleton<AuthRemoteDataSourceInterFace>(() => AuthRemoteDataSource(
           dioClient: serviceLocator<Dio>(instanceName: 'uninterceptedDio'),
         ))
     ..registerLazySingleton<AuthRepositoryInterFace>(() => AuthRepo(
-          remoteDataSource: serviceLocator<AuthRemoteDataSourceInterFace>(), // FIXED: Use Interface
+          remoteDataSource: serviceLocator<AuthRemoteDataSourceInterFace>(),
           tokenStorage: serviceLocator<SecureTokenStorage>(),
         ))
     ..registerLazySingleton<RegisterInterFace>(() => RegisterUseCase(
-          serviceLocator<AuthRepositoryInterFace>(), // FIXED: Use Interface
+          serviceLocator<AuthRepositoryInterFace>(),
         ))
     ..registerLazySingleton<LoginInterface>(() => LoginUseCase(
-          serviceLocator<AuthRepositoryInterFace>(), // FIXED: Use Interface
+          serviceLocator<AuthRepositoryInterFace>(),
         ))
     ..registerLazySingleton(() => LogoutUseCase(
-          serviceLocator<AuthRepositoryInterFace>(), // FIXED: Use Interface
+          serviceLocator<AuthRepositoryInterFace>(),
+        ))
+        
+    // ADD THIS PART:
+    ..registerFactory(() => AuthBlocBloc(
+          login: serviceLocator<LoginInterface>(),
+          // register: serviceLocator<RegisterInterFace>(), // if you have it in your constructor
         ));
 }
 

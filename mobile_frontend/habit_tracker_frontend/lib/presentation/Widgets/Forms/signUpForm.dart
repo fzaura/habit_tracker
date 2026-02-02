@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/Service/NavigationService.dart';
 import 'package:habit_tracker/core/utility/SignLogScreenUtil/utilitySignLogWidgets.dart';
 import 'package:habit_tracker/core/utility/Validations/validations.dart';
-import 'package:habit_tracker/domain/Auth/Entities/AuthUser.dart';
 import 'package:habit_tracker/presentation/Auth/Providers/authProvider.dart';
+import 'package:habit_tracker/presentation/Auth/bloc/auth_bloc_bloc.dart';
 import 'package:habit_tracker/presentation/Widgets/TextFields/Auth/SignLoginField.dart';
 
 class SignUpForm extends ConsumerStatefulWidget {
@@ -34,12 +34,12 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
   // initialized NOW
   @override
   Widget build(BuildContext context) {
-    ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next is AuthSuccess) {
+    ref.listen<AuthBlocState>(authProvider, (previous, next) {
+      if (next is AuthBlocSuccess) {
         // SUCCESS: The user is in memory. Take them home!
         print('Sucess');
         NavigationService.onSignUpPressButton(context);
-      } else if (next is AuthFailure) {
+      } else if (next is AuthBlocFailure) {
         // ERROR: Show the backend error message (e.g., "Email already exists")
         print('Fail Huge LLLLLLLLLLLLLLLLLL');
       }
