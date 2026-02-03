@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+import 'package:habit_tracker/data/ToDo/DataModels/HabitModel.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 
 abstract class HabitRepoInterface {

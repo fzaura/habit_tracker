@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:habit_tracker/core/Errors/accessDeniedFailure.dart';
 import 'package:habit_tracker/core/Errors/serverFailure.dart';
 import 'package:habit_tracker/core/Errors/undefinedFailure.dart';
-import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+import 'package:habit_tracker/data/ToDo/DataModels/HabitModel.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/DataSourcesInterfaces/dataSourceInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/DataLayerInterfaces/RepoInterfaces/habitRepoInterface.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';

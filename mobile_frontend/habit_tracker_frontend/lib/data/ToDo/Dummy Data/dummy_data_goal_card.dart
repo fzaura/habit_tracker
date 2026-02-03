@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goal_card.dart';
-import 'package:habit_tracker/presentation/core/Design/goal_card_design.dart';
+
 import 'package:habit_tracker/presentation/core/Enums/activity_level.dart';
 
 /// Dummy data for testing Goal Cards UI

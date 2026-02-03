@@ -1,4 +1,4 @@
-import 'package:habit_tracker/data/Habits/DataModels/HabitModel.dart';
+import 'package:habit_tracker/data/ToDo/DataModels/HabitModel.dart';
 
 abstract class DataSourceInterface {
   const DataSourceInterface();

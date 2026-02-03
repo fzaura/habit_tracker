@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker/data/Habits/Dummy%20Data/dummy_data_goal_card.dart';
+import 'package:habit_tracker/data/ToDo/Dummy%20Data/dummy_data_goal_card.dart';
 import 'package:habit_tracker/domain/Habits/InterFaces/ErrorInterface/errorInterface.dart';
 import 'package:habit_tracker/presentation/Habits/DataBundles/homeScreenDataBundle.dart';
 import 'package:habit_tracker/presentation/Widgets/Cards/Goals%20Cards/goal_card.dart';

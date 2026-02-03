@@ -21,11 +21,9 @@ class ToDoLister extends ConsumerWidget {
   final bool canUserScroll;
 
   Widget onSuccessWidget(HabitHomeScreenDataBundle bundle) {
-   
-      bundle.habitsToList
-          .map((h) => 'ID: ${h.id} | Name: ${h.habitName}')
-          .toList();
-    
+    bundle.habitsToList
+        .map((h) => 'ID: ${h.id} | Name: ${h.habitName}')
+        .toList();
 
     return Container(
       constraints: BoxConstraints(minHeight: 300, maxHeight: 450),
@@ -73,7 +71,6 @@ class ToDoLister extends ConsumerWidget {
   }
 
   Widget onFailureObject(ErrorInterface error) {
-
     return HabitASnackBar(
       message: 'Failed to Add New Habit',
       icon: Icons.wrong_location_outlined,
