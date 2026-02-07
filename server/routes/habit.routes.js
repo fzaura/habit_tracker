@@ -80,7 +80,7 @@ module.exports = ({ habitController, authMiddleware }) => {
     .route("/:id")
     .delete(
       validateResource(validateIdParamSchema),
-      habitController.deleteHabit
+      habitController.deleteHabit,
     )
     .patch(validateResource(updateHabitSchema), habitController.updateHabit);
 
@@ -101,7 +101,7 @@ module.exports = ({ habitController, authMiddleware }) => {
   router.post(
     "/:id/completions",
     validateResource(markCompleteSchema),
-    habitController.markAsCompleted
+    habitController.markAsCompleted,
   );
 
   return router;
