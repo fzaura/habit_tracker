@@ -9,13 +9,12 @@
  */
 import express from "express";
 
+import { validationMiddleware } from "../middleware/validation.middleware";
 import {
-  registerSchema,
-  loginSchema,
-  refreshUserSessionSchema,
-} from "../validators/auth.validator";
-
-import validateResource from "../middleware/validateResource";
+  RegisterUserRequest,
+  LoginRequest,
+  RefreshUserSessionRequest,
+} from "../dtos/auth.dto";
 
 import { IAuthController } from "../controllers/IAuthController";
 
@@ -34,8 +33,10 @@ export default ({ authController }: { authController: IAuthController }) => {
    * @returns {Object} 201 - User registered with tokens
    * @returns {Object} 400 - Validation errors
    */
-  router.post("/register", validateResource(registerSchema), (req, res, next) =>
-    authController.registerUser(req, res, next),
+  router.post(
+    "/register",
+    validationMiddleware<RegisterUserRequest>(RegisterUserRequest),
+    (req, res, next) => authController.registerUser(req, res, next),
   );
 
   /**
@@ -49,8 +50,10 @@ export default ({ authController }: { authController: IAuthController }) => {
    * @returns {Object} 400 - Validation errors
    * @returns {Object} 401 - Invalid credentials
    */
-  router.post("/login", validateResource(loginSchema), (req, res, next) =>
-    authController.loginUser(req, res, next),
+  router.post(
+    "/login",
+    validationMiddleware<LoginRequest>(LoginRequest),
+    (req, res, next) => authController.loginUser(req, res, next),
   );
 
   /**
@@ -65,7 +68,7 @@ export default ({ authController }: { authController: IAuthController }) => {
    */
   router.post(
     "/access-token",
-    validateResource(refreshUserSessionSchema),
+    validationMiddleware<RefreshUserSessionRequest>(RefreshUserSessionRequest),
     (req, res, next) => authController.refreshUserSession(req, res, next),
   );
 
