@@ -7,6 +7,7 @@
  * @requires ../repositories/IUserRepository
  */
 const bcrypt = require("bcrypt");
+const AppError = require("../utils/AppError");
 
 /**
  * Service class for user management operations.
@@ -59,14 +60,14 @@ class UserService {
       const userConflicts = await this.userRepo.findUserConflicts(
         userId,
         safeUpdates.username,
-        safeUpdates.email
+        safeUpdates.email,
       );
 
       if (userConflicts) {
         if (userConflicts.email === safeUpdates.email) {
-          throw new Error("Email already in use.");
+          throw new AppError("Email already in use.", 409);
         } else {
-          throw new Error("Username already in use.");
+          throw new AppError("Username already in use.", 409);
         }
       }
     }
@@ -74,7 +75,7 @@ class UserService {
     if (updateData.password) {
       const hashedPassword = await bcrypt.hash(
         safeUpdates.password,
-        parseInt(this.saltRounds)
+        parseInt(this.saltRounds),
       );
       safeUpdates.password = hashedPassword;
     }
