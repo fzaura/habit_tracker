@@ -3,7 +3,7 @@ import {
   AuthResponse,
   LoginRequest,
   RefreshUserSessionRequest,
-  RegisterRequest,
+  RegisterUserRequest,
 } from "../dtos/auth.dto";
 import { IAuthController, IAuthControllerDeps } from "./IAuthController";
 import { IAuthService } from "../services/IAuthService";
@@ -15,9 +15,9 @@ export default class AuthController implements IAuthController {
     this.authService = authService;
   }
   async registerUser(
-    req: Request<{}, AuthResponse, RegisterRequest>,
+    req: Request<{}, AuthResponse, RegisterUserRequest>,
     res: Response<AuthResponse>,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> {
     const { username, email, password } = req.body;
 
@@ -38,7 +38,7 @@ export default class AuthController implements IAuthController {
   async loginUser(
     req: Request<{}, AuthResponse, LoginRequest>,
     res: Response<AuthResponse>,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> {
     const { email, password } = req.body;
 
@@ -59,7 +59,7 @@ export default class AuthController implements IAuthController {
   async refreshUserSession(
     req: Request<{}, AuthResponse, RefreshUserSessionRequest>,
     res: Response<AuthResponse>,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> {
     try {
       const { user, refreshToken, accessToken } =
