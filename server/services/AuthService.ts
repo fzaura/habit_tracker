@@ -6,7 +6,7 @@ import {
 } from "../dtos/auth.dto";
 import { IAuthService } from "./IAuthService";
 import { IAuthServiceDeps } from "./IAuthService";
-import { CreateUserRequest } from "../dtos/user.dto";
+import { RegisterUserRequest } from "../dtos/auth.dto";
 import { IUserRepository } from "../repositories/IUserRepository";
 import { ITokenRepository } from "../repositories/ITokenRepository";
 import TokenService from "./TokenService";
@@ -58,7 +58,7 @@ export default class AuthService implements IAuthService {
     return { user: safeUser, accessToken, refreshToken };
   }
 
-  async registerUser(data: CreateUserRequest): Promise<AuthResponse> {
+  async registerUser(data: RegisterUserRequest): Promise<AuthResponse> {
     const { username, email, password } = data;
 
     const userExists: User | null =
