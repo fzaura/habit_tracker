@@ -1,5 +1,5 @@
-const AppError = require("../utils/AppError");
-const { ZodError } = require("zod").default;
+const AppError = require("../utils/AppError").default;
+const { ZodError } = require("zod");
 
 const validateResource = (schema) => {
   return async (req, res, next) => {
