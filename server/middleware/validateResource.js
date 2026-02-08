@@ -1,4 +1,5 @@
 const AppError = require("../utils/AppError");
+const { ZodError } = require("zod");
 
 const validateResource = (schema) => {
   return async (req, res, next) => {
@@ -15,7 +16,7 @@ const validateResource = (schema) => {
 
       return next();
     } catch (e) {
-      if (e.name === "ZodError") {
+      if (e instanceof ZodError) {
         const message = e.errors ? e.errors[0].message : "Invalid input data.";
 
         return next(new AppError(message, 400));
