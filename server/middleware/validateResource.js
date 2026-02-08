@@ -13,15 +13,15 @@ const validateResource = (schema) => {
       req.query = parsed.query;
       req.params = parsed.params;
 
-      next();
+      return next();
     } catch (e) {
       if (e.name === "ZodError") {
         const message = e.errors ? e.errors[0].message : "Invalid input data.";
 
-        next(new AppError(message, 400));
+        return next(new AppError(message, 400));
       }
 
-      next(e);
+      return next(e);
     }
   };
 };
