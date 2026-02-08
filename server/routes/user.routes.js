@@ -9,7 +9,8 @@
  * @requires ../controllers/user.controller
  */
 const express = require("express");
-const { updateUserValidator } = require("../validators/user.validator");
+const { validationMiddleware } = require("../middleware/validation.middleware");
+const { UpdateUserRequest } = require("../dtos/user.dto");
 
 module.exports = ({ userController, authMiddleware }) => {
   /**
@@ -37,7 +38,11 @@ module.exports = ({ userController, authMiddleware }) => {
    */
   const router = express.Router();
   router.use(authMiddleware);
-  router.patch("/me", updateUserValidator, userController.updateUser);
+  router.patch(
+    "/me",
+    validationMiddleware(UpdateUserRequest),
+    (req, res, next) => userController.updateUser(req, res, next),
+  );
 
   return router;
 };
