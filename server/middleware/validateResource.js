@@ -17,7 +17,8 @@ const validateResource = (schema) => {
       return next();
     } catch (e) {
       if (e instanceof ZodError) {
-        const message = e.errors ? e.errors[0].message : "Invalid input data.";
+        console.log("🚨 Validation Error:", JSON.stringify(e, null, 2));
+        const message = e.errors?.[0]?.message || "Invalid input data.";
 
         return next(new AppError(message, 400));
       }
