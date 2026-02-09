@@ -22,17 +22,13 @@ const frequencySchema = z.discriminatedUnion("type", [
           .number()
           .int()
           .min(0, "Invalid day selected.")
-          .max(6, "Invalid day selected.")
+          .max(6, "Invalid day selected."),
       )
       .nonempty("Weekly habits must have at least one selected day."),
   }),
   z.object({
     type: z.literal("custom"),
-    interval: z
-      .number()
-      .int()
-      .positive()
-      .min(1, "Interval must be one day at least."),
+    interval: z.number().int().min(1, "Interval must be one day at least."),
   }),
 ]);
 
