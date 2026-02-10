@@ -1,31 +1,26 @@
+const { z } = require("zod");
+
 const AppError = require("../utils/AppError").default;
-const { ZodError } = require("zod");
 
-const validateResource = (schema) => {
-  return async (req, res, next) => {
-    try {
-      const parsed = await schema.parseAsync({
-        body: req.body,
-        query: req.query,
-        params: req.params,
-      });
+const validateResource = (schema) => async (req, res, next) => {
+  const result = await schema.safeParseAsync({
+    body: req.body,
+    query: req.query,
+    params: req.params,
+  });
 
-      req.body = parsed.body;
-      req.query = parsed.query;
-      req.params = parsed.params;
+  if (result.success) {
+    req.body = result.data.body;
+    req.query = result.data.query;
+    req.params = result.data.params;
+    return next();
+  }
 
-      return next();
-    } catch (e) {
-      if (e instanceof ZodError) {
-        const firstError = e.errors[0];
-        const message = firstError ? firstError.message : "Invalid input data";
+  const errorParams = result.error.errors[0];
 
-        return next(new AppError(message, 400));
-      }
+  const errorMessage = errorParams?.message || "Invalid input data";
 
-      return next(e);
-    }
-  };
+  return next(new AppError(errorMessage, 400));
 };
 
 module.exports = validateResource;
