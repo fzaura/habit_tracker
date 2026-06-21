@@ -6,20 +6,85 @@ datasource db {
   provider = "postgresql"
 }
 
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum DeviceOs {
+  ANDROID
+  IOS
+  WEB
+}
+
+enum GoalStatus {
+  UPCOMING
+  IN_PROGRESS
+  PAUSED
+  FINISHED
+}
+
+enum TaskType {
+  FOCUS
+  REMINDER
+}
+
+enum TaskFrequency {
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum OutboxAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum SyncStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum RestrictionType {
+  FULL
+  PARTIAL
+}
+
+// ==========================================
+// MODELS
+// ==========================================
+
 model User {
-  id           String    @id @default(uuid()) @db.Uuid
-  email        String    @unique @db.VarChar
-  username     String    @unique @db.VarChar
-  passwordHash String    @map("password_hash") @db.VarChar
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  id           String       @id @default(uuid()) @db.Uuid
+  email        String       @unique @db.VarChar
+  username     String       @unique @db.VarChar
+  passwordHash String       @map("password_hash") @db.VarChar
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime     @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime?    @map("deleted_at") @db.Timestamptz
 
   devices UserDevice[]
   goals   Goal[]
   outbox  Outbox[]
+  avatar  UserAvatar?
 
   @@map("users")
+}
+
+model UserAvatar {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @unique @map("user_id") @db.Uuid
+  storageKey String    @map("storage_key") @db.VarChar
+  mimeType   String    @map("mime_type") @db.VarChar
+  fileSize   Int       @map("file_size")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_avatars")
 }
 
 model UserDevice {
@@ -27,7 +92,7 @@ model UserDevice {
   userId       String    @map("user_id") @db.Uuid
   fcmToken     String?   @map("fcm_token") @db.Text
   refreshToken String    @unique @map("refresh_token") @db.VarChar
-  deviceOs     String    @map("device_os") @db.VarChar
+  deviceOs     DeviceOs  @map("device_os")
   isActive     Boolean   @default(true) @map("is_active")
   expiresAt    DateTime  @map("expires_at") @db.Timestamptz
   lastActiveAt DateTime  @map("last_active_at") @db.Timestamptz
@@ -35,27 +100,27 @@ model UserDevice {
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("user_devices")
 }
 
 model Goal {
-  id        String    @id @default(uuid()) @db.Uuid
-  userId    String    @map("user_id") @db.Uuid
-  title     String    @db.VarChar
-  notes     String?   @db.Text
-  iconName  String?   @map("icon_name") @db.VarChar
-  type      String    @db.VarChar
-  status    String    @default("upcoming") @db.VarChar
-  startDate DateTime  @map("start_date") @db.Timestamptz
-  endDate   DateTime? @map("end_date") @db.Timestamptz
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @map("user_id") @db.Uuid
+  title     String     @db.VarChar
+  notes     String?    @db.Text
+  iconName  String?    @map("icon_name") @db.VarChar
+  type      String     @db.VarChar
+  status    GoalStatus @default(UPCOMING)
+  startDate DateTime   @map("start_date") @db.Timestamptz
+  endDate   DateTime?  @map("end_date") @db.Timestamptz
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime?  @map("deleted_at") @db.Timestamptz
 
-  user  User   @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks Task[]
 
   @@index([userId])
@@ -63,19 +128,19 @@ model Goal {
 }
 
 model Task {
-  id        String    @id @default(uuid()) @db.Uuid
-  goalId    String    @map("goal_id") @db.Uuid
-  title     String    @db.VarChar
-  notes     String?   @db.Text
-  type      String    @db.VarChar
-  frequency String    @db.VarChar
-  startTime DateTime? @map("start_time") @db.Time
-  endTime   DateTime? @map("end_time") @db.Time
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  id        String        @id @default(uuid()) @db.Uuid
+  goalId    String        @map("goal_id") @db.Uuid
+  title     String        @db.VarChar
+  notes     String?       @db.Text
+  type      TaskType
+  frequency TaskFrequency
+  startTime DateTime?     @map("start_time") @db.Time
+  endTime   DateTime?     @map("end_time") @db.Time
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime?     @map("deleted_at") @db.Timestamptz
 
-  goal              Goal                    @relation(fields: [goalId], references: [id])
+  goal              Goal                    @relation(fields: [goalId], references: [id], onDelete: Cascade)
   appLocks          TaskAppLock[]
   completionHistory TaskCompletionHistory[]
   focusSessions     TaskFocusSession[]
@@ -85,15 +150,15 @@ model Task {
 }
 
 model TaskAppLock {
-  id              String    @id @default(uuid()) @db.Uuid
-  taskId          String    @map("task_id") @db.Uuid
-  appIdentifier   String    @map("app_identifier") @db.VarChar
-  restrictionType String    @default("full") @map("restriction_type") @db.VarChar
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz
+  id              String          @id @default(uuid()) @db.Uuid
+  taskId          String          @map("task_id") @db.Uuid
+  appIdentifier   String          @map("app_identifier") @db.VarChar
+  restrictionType RestrictionType @default(FULL) @map("restriction_type")
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt       DateTime?       @map("deleted_at") @db.Timestamptz
 
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("task_app_locks")
@@ -107,7 +172,7 @@ model TaskCompletionHistory {
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
 
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("task_completion_history")
@@ -122,24 +187,24 @@ model TaskFocusSession {
   updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt       DateTime? @map("deleted_at") @db.Timestamptz
 
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("task_focus_sessions")
 }
 
 model Outbox {
-  id        BigInt   @id @default(autoincrement())
-  userId    String   @map("user_id") @db.Uuid
-  tableName String   @map("table_name") @db.VarChar
-  entityId  String   @map("entity_id") @db.Uuid
-  action    String   @db.VarChar
-  payload   Json     @db.JsonB
-  status    String   @default("pending") @db.VarChar
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id        BigInt       @id @default(autoincrement())
+  userId    String       @map("user_id") @db.Uuid
+  tableName String       @map("table_name") @db.VarChar
+  entityId  String       @map("entity_id") @db.Uuid
+  action    OutboxAction
+  payload   Json         @db.JsonB
+  status    SyncStatus   @default(PENDING)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime     @updatedAt @map("updated_at") @db.Timestamptz
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
